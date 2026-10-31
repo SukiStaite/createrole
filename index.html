@@ -6,8 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="搭角色 V4.2 · AIRA · 浏览器捏角色工具（离线可用）">
 <meta name="theme-color" content="#e56a9a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="搭角色">
 <title>搭角色 V4.2 · AIRA · 浏览器捏角色工具</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%220.9em%22%20font-size%3D%2290%22%3E%E2%9C%A8%3C%2Ftext%3E%3C%2Fsvg%3E">
+<link rel="manifest" href='data:application/manifest+json,{"name":"搭角色 AIRA","short_name":"搭角色","start_url":".","display":"standalone","background_color":"%23fdf6f9","theme_color":"%23e56a9a"}'>
 <style>
 /* ===== 搭角色 V4.0 网页样式 ===== */
 :root {
@@ -695,6 +699,158 @@ body {
   .manual-banner, .test-warn { font-size: 12.5px; }
 }
 
+/* ===== V4.2 第二批次：预设/搜索/进度增强/主题/暗色 ===== */
+.header-tools { display: flex; gap: 6px; align-items: center; }
+.hbtn {
+  min-width: 38px; min-height: 38px; border: 1px solid var(--card-border);
+  background: var(--card-bg); border-radius: 10px; cursor: pointer; font-size: 16px;
+}
+.hbtn:hover { border-color: var(--primary); }
+
+.preset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.preset-chip {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 12px 8px;
+  border: 1px solid var(--card-border); background: var(--card-bg); border-radius: 12px; cursor: pointer;
+}
+.preset-chip:hover { border-color: var(--primary); background: var(--primary-light-soft); }
+.preset-chip .p-icon { font-size: 22px; }
+.preset-chip .p-name { font-weight: 700; font-size: 14px; }
+.preset-chip .p-desc { font-size: 11px; color: var(--text-soft); text-align: center; }
+
+.search-bar { display: flex; gap: 8px; }
+.search-bar .custom-input { flex: 1; }
+
+.layer-bar { margin-bottom: 10px; }
+.lb-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+.lb-num { color: var(--text-soft); }
+
+.answered-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; max-height: 140px; overflow: auto; }
+.answer-chip {
+  min-height: 34px; padding: 0 10px; border: 1px solid var(--card-border);
+  background: var(--card-bg); border-radius: 8px; cursor: pointer; font-size: 12.5px;
+}
+.answer-chip:hover { border-color: var(--primary); }
+
+.theme-picker { display: flex; flex-wrap: wrap; gap: 8px; }
+.theme-chip {
+  display: flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--card-border);
+  background: var(--card-bg); border-radius: 10px; cursor: pointer; font-size: 13px;
+}
+.theme-chip.on { border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+.theme-chip .dot { width: 14px; height: 14px; border-radius: 50%; }
+
+.search-hit {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--card-border);
+  cursor: pointer;
+}
+.search-hit:hover { background: var(--primary-light-soft); }
+.sh-qid { color: var(--text-faint); font-size: 12px; }
+.sh-title { flex: 1; font-size: 13.5px; }
+.sh-layer { font-size: 11px; color: var(--text-soft); }
+
+.history-list { max-height: 320px; overflow: auto; }
+.history-item { padding: 6px 4px; border-bottom: 1px solid var(--card-border); font-size: 13px; }
+.h-time { color: var(--text-faint); margin-right: 8px; font-size: 12px; }
+
+/* ===== 暗色模式 ===== */
+:root[data-dark="1"] {
+  --bg: #1a1418; --card-bg: #241c22; --card-border: #3a2c35;
+  --text: #f5e9f0; --text-soft: #c9b4c2; --text-faint: #9a8390;
+  --primary-light: rgba(229, 106, 154, 0.18); --primary-light-soft: rgba(229, 106, 154, 0.10);
+  --danger: #ff8fa3; --warn: #f0c979; --success: #8fdcab;
+}
+:root[data-dark="1"] .archive-table td { border-color: var(--card-border); }
+:root[data-dark="1"] input.custom-input,
+:root[data-dark="1"] select, :root[data-dark="1"] textarea { background: #2b2129; color: var(--text); }
+:root[data-dark="1"] .manual-banner, :root[data-dark="1"] .check-manual-note,
+:root[data-dark="1"] .q-naming-hint, :root[data-dark="1"] .test-warn { background: #3a2c22; border-color: #5a4326; color: #e8c98a; }
+
+/* ===== 打印样式 ===== */
+@media print {
+  .app-header, .bottom-nav, .btn-row, .header-tools, #toast-container, #modal-overlay { display: none !important; }
+  .card { box-shadow: none !important; border: none !important; }
+  body { background: #fff !important; }
+}
+
+/* ===== V4.2 第三批：沉浸感 ===== */
+/* 背景氛围：随当前层渐变 */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(160deg, rgba(229,106,154,0.05), rgba(243,166,194,0.03));
+  transition: background .6s;
+}
+body[data-layer="NSFW"]::before { background: linear-gradient(160deg, rgba(180,60,110,0.10), rgba(255,160,180,0.04)); }
+body[data-layer="DLC"]::before { background: linear-gradient(160deg, rgba(150,110,200,0.08), rgba(190,160,230,0.03)); }
+body[data-layer="REGISTER"]::before { background: linear-gradient(160deg, rgba(80,150,120,0.08), rgba(160,210,180,0.03)); }
+body[data-layer="COMPLETE"]::before { background: linear-gradient(160deg, rgba(230,190,90,0.09), rgba(250,220,140,0.03)); }
+
+/* 打字机光标 */
+.q-title { position: relative; }
+.q-title::after { content: '▍'; color: var(--primary); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* 思考动画（提交时） */
+.thinking .q-avatar { animation: pulse 0.5s ease; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+
+/* 小片段（提交后的描写） */
+.snip {
+  position: fixed; bottom: 84px; left: 50%; transform: translateX(-50%);
+  background: var(--card-bg); border: 1px solid var(--primary-light); color: var(--text);
+  padding: 8px 16px; border-radius: 999px; font-size: 13px; box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 999; max-width: 88vw; transition: opacity .4s;
+}
+
+/* 语录 / 私密感 */
+.q-quote { font-size: 12.5px; color: var(--text-faint); font-style: italic; margin: 6px 0 10px; }
+.q-privacy {
+  font-size: 12px; color: #9a6b1e; background: #fff7e6; border: 1px solid #f5d9a8;
+  padding: 6px 10px; border-radius: 8px; margin-bottom: 10px;
+}
+
+/* 情感温度计 */
+.emotion-meter { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.emotion-meter .bar-track { flex: 1; height: 8px; }
+.emotion-meter .bar-fill { background: linear-gradient(90deg, var(--primary-light), var(--primary)); }
+.em-label { font-size: 12px; color: var(--text-soft); }
+.em-num { font-size: 12px; color: var(--primary); font-weight: 700; }
+
+/* 印章 */
+.stamp-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 12px 0; }
+.stamp {
+  display: inline-flex; align-items: center; gap: 4px; padding: 5px 10px;
+  border: 1.5px solid var(--primary); color: var(--primary); border-radius: 8px;
+  font-size: 12px; font-weight: 700; transform: rotate(-2deg); background: var(--card-bg);
+}
+.archive-stamps { justify-content: flex-start; margin: 4px 0 12px; }
+
+/* 成长日记 */
+.diary {
+  font-size: 13px; color: var(--text-soft); background: var(--primary-light-soft);
+  border-left: 3px solid var(--primary); padding: 8px 12px; border-radius: 0 8px 8px 0; margin-top: 6px;
+}
+
+/* 亲密深度滑块 */
+.intimacy-range { width: 100%; accent-color: var(--primary); }
+.range-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+.toggle-row { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+
+/* 档案卷轴展开 */
+.archive-reveal .card { animation: unroll .6s ease; }
+@keyframes unroll { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* 手账日记风档案 */
+.archive-block { border-left: 3px solid var(--primary-light); }
+
+/* 测试模式沉浸：气泡 */
+.chat-msg { animation: pop .3s ease; }
+@keyframes pop { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+/* 低端机降级：关闭部分动画 */
+@media (prefers-reduced-motion: reduce) {
+  .q-title::after, .snip, .archive-reveal .card, .chat-msg { animation: none !important; transition: none !important; }
+}
+
 </style>
 </head>
 <body>
@@ -715,6 +871,11 @@ body {
         <span id="progress-text">0/0</span>
         <span class="progress-sub" id="progress-layer"></span>
       </div>
+    </div>
+    <div class="header-tools">
+      <button class="hbtn" id="btn-theme" title="主题色">🎨</button>
+      <button class="hbtn" id="btn-dark" title="暗色模式">🌙</button>
+      <button class="hbtn" id="btn-lang" title="中/英">中</button>
     </div>
   </div>
 </header>
@@ -840,6 +1001,74 @@ body {
 
     /* 主题色（粉色系，可调深浅；后续暗色模式复用） */
     THEME: { primary: '#e56a9a', primaryDark: '#c94f7f', accent: '#f3a6c2', bg: '#fdf6f9' },
+
+    /* 主题色选项（可切换） */
+    THEMES: {
+      '祈宝粉': { primary: '#e56a9a', primaryDark: '#c94f7f', accent: '#f3a6c2', bg: '#fdf6f9' },
+      '樱草紫': { primary: '#9a6fd0', primaryDark: '#7b53b0', accent: '#cdb4f0', bg: '#f8f4fd' },
+      '青柠绿': { primary: '#4c9a6a', primaryDark: '#35794e', accent: '#a8d8b8', bg: '#f3faf5' },
+      '暖阳橙': { primary: '#d98a3d', primaryDark: '#b06f2a', accent: '#f0c9a0', bg: '#fdf7f0' },
+    },
+
+    /* 预设模板（一键填元信息） */
+    PRESETS: [
+      { id: 'sweet', icon: '🍬', name: '纯爱高甜', desc: 'SFW＋NSFW · 240 题 · 纯人类 · 严格命名', meta: { gender: '女', volume: 240, orientation: 'SFW＋NSFW', dlc9: '是', race: '纯人类', strictNaming: true } },
+      { id: 'slow', icon: '🌱', name: '慢热日常', desc: 'SFW · 180 题 · 纯人类 · 严格命名', meta: { gender: '女', volume: 180, orientation: 'SFW', dlc9: '是', race: '纯人类', strictNaming: true } },
+      { id: 'dom', icon: '🖤', name: '调教向', desc: 'SM · 300 题 · 魅魔 · 自由命名', meta: { gender: '女', volume: 300, orientation: 'SM', dlc9: '是', race: '魅魔', strictNaming: false } },
+      { id: 'daily', icon: '🌞', name: '日常向', desc: 'SFW · 120 题 · 猫娘 · 严格命名', meta: { gender: '女', volume: 120, orientation: 'SFW', dlc9: '否', race: '猫娘', strictNaming: true } },
+    ],
+
+    /* 题量预估：平均每题约 30 秒 */
+    SECONDS_PER_QUESTION: 30,
+
+    /* 祈宝语录（沉浸感，随机穿插） */
+    QUOTES: [
+      '呐呐，你在想什么呀？我陪着你哦～',
+      '这个问题…人家也想过好多次呢！',
+      '嘿嘿，你认真的样子，好可爱～',
+      '别急别急，我们慢慢来，我不走～',
+      '嗯…让我想想，你会怎么回答呢？',
+      '偷偷告诉你，我超喜欢这个环节的！',
+      '今天也要一起把角色养得胖胖的哦～',
+      '你答的每一句，我都记在心里啦。',
+    ],
+
+    /* 沉浸感：提交后的祈宝语气词（按层） */
+    MOOD_WORDS: {
+      SFW: ['嗯嗯，这个回答，人家很喜欢～', '记下啦记下啦！', '你好懂她呀！', '这个细节，超加分！'],
+      NSFW: ['…这个，人家害羞了啦～', '唔…这样也可以哦…', '你、你居然问到这个…', '（脸红）记下了…'],
+      DLC: ['嗯，这个设定可以哦～', '收到！放进小本本。', '哇，这个好有感觉！'],
+      REGISTER: ['体系登记好了，放心～', '嗯，这个很重要，记牢啦。'],
+      COMPLETE: ['补完了！她越来越完整啦～', '这一步做完，就更像她了！'],
+    },
+
+    /* 沉浸感：提交后的小片段（描写，按层随机） */
+    SNIPPETS: {
+      SFW: ['她悄悄弯起嘴角，把这个答案记进了心里。', '窗外的光落在她发梢，她轻轻点头。', '「嗯，这样就好。」她的声音软软的。'],
+      NSFW: ['她的耳尖悄悄红了，声音低了几分。', '她别开视线，指尖轻轻勾住衣角。', '「…再说下去，我会当真的哦。」'],
+      DLC: ['她把这份设定折进小册子，眼神亮晶晶的。', '「这个设定…你比我想得更用心呢。」'],
+    },
+
+    /* 沉浸感：印章收集（完成阶段得印章） */
+    STAMPS: { 基础: '🌸', 体系: '📜', 补完: '✨', 完整: '👑' },
+
+    /* 沉浸感：全部完成后的专属寄语 */
+    FINAL_WORDS: '谢谢你陪她走到这一步。她不再是纸上的字句——她活过来了。以后，请多关照。 —— 林晴祈',
+
+    /* 沉浸感：季节选项 */
+    SEASONS: ['春', '夏', '秋', '冬'],
+
+    /* 沉浸感：打字机速度（ms/字，0=关闭） */
+    TYPE_SPEED: 18,
+
+    /* 沉浸感：音效开关默认 */
+    DEFAULT_SOUND: true,
+
+    /* 基础多语言（关键文案） */
+    I18N: {
+      zh: { start: '开始搭角色 ✨', cont: '继续上次', confirm: '确认', cancel: '取消', close: '关闭' },
+      en: { start: 'Start ✨', cont: 'Resume', confirm: 'Confirm', cancel: 'Cancel', close: 'Close' },
+    },
   };
 });
 
@@ -1523,6 +1752,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       testScene: null, testStarted: false, testMsgs: [],
       memoryFreq: CONFIG.DEFAULT_MEMORY_FREQ,   // 记忆自动弹窗频率（题数，0=关闭）
       memNotified: 0,                            // 已触发过自动提示的答题数（防重复）
+      theme: '祈宝粉',                            // 主题色名
+      darkMode: false,                           // 暗色模式
+      lang: 'zh',                                // 语言
+      log: [],                                   // 操作日志
+      customMandatory: {},                       // 用户自定义必答 {qid:true}
+      season: '',                                // 季节（沉浸感）
+      sound: CONFIG.DEFAULT_SOUND,               // 音效开关
+      stamps: {},                                // 印章收集 {key:true}
       savedAt: null,
     };
   }
@@ -1541,6 +1778,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     out.testMsgs = Array.isArray(data.testMsgs) ? data.testMsgs : [];
     out.memoryFreq = typeof data.memoryFreq === 'number' ? data.memoryFreq : CONFIG.DEFAULT_MEMORY_FREQ;
     out.memNotified = typeof data.memNotified === 'number' ? data.memNotified : 0;
+    out.theme = (typeof data.theme === 'string' && CONFIG.THEMES[data.theme]) ? data.theme : '祈宝粉';
+    out.darkMode = !!data.darkMode;
+    out.lang = (data.lang === 'en') ? 'en' : 'zh';
+    out.log = Array.isArray(data.log) ? data.log : [];
+    out.customMandatory = (data.customMandatory && typeof data.customMandatory === 'object') ? data.customMandatory : {};
+    out.season = (typeof data.season === 'string' && CONFIG.SEASONS.includes(data.season)) ? data.season : '';
+    out.sound = typeof data.sound === 'boolean' ? data.sound : CONFIG.DEFAULT_SOUND;
+    out.stamps = (data.stamps && typeof data.stamps === 'object') ? data.stamps : {};
     out.version = VERSION;
     return out;
   }
@@ -1731,8 +1976,48 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     updateHeaderProgress();
     updateNav();
     syncHistory();
+    applyTheme();
+    applyMood();
     window.scrollTo(0, 0);
     scheduleSave();
+  }
+
+  /* ===== 沉浸感：背景氛围 + 小剧场层完成 ===== */
+  function applyMood() {
+    const cur = State.plan[State.currentIndex];
+    document.body.setAttribute('data-layer', cur ? (cur.layer || '') : '');
+    checkLayerDone();
+  }
+  function checkLayerDone() {
+    if (!State.plan || !State.plan.length || !State.answers) return;
+    State.stamps = State.stamps || {};
+    let layerDone = null;
+    Object.entries(ENGINE.countProgress(State.plan, State.answers).layerStats).forEach(([l, s]) => {
+      if (s.done === s.total && s.total > 0 && !State.stamps['layer_' + l]) layerDone = l;
+    });
+    if (layerDone) {
+      State.stamps['layer_' + layerDone] = true;
+      earnStamp(layerDone);
+      playSound('done');
+      setTimeout(() => UI.showModal('🎭 小剧场',
+        `${(CONFIG.LAYER_INFO[layerDone] || {}).icon || ''}「${layerDone}」这一层完成啦！她离完整又近了一步。`,
+        `<button class="btn btn-primary" onclick="UI.closeModal()">继续</button>`), 500);
+    }
+  }
+
+  /* ===== 主题 / 暗色 / 语言 应用 ===== */
+  function applyTheme() {
+    const t = CONFIG.THEMES[State.theme] || CONFIG.THEMES['祈宝粉'];
+    const st = document.documentElement.style;
+    st.setProperty('--primary', t.primary);
+    st.setProperty('--primary-dark', t.primaryDark);
+    st.setProperty('--primary-light', t.accent);
+    st.setProperty('--bg', t.bg);
+    document.documentElement.setAttribute('data-dark', State.darkMode ? '1' : '');
+    document.documentElement.setAttribute('data-theme', State.theme);
+    document.documentElement.setAttribute('data-lang', State.lang);
+    const bt = $('#btn-dark'); if (bt) bt.textContent = State.darkMode ? '☀️' : '🌙';
+    const bl = $('#btn-lang'); if (bl) bl.textContent = State.lang === 'en' ? 'EN' : '中';
   }
 
   /* ===== 顶部进度 ===== */
@@ -1792,7 +2077,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
           <button class="btn-big" id="btn-start">开始搭角色 ✨</button>
           ${hasProgress ? `<button class="btn btn-ghost mt-12" id="btn-continue">▶ 继续上次（进度 ${Object.keys(saved.answers || {}).length}/${saved.plan.length}）</button>` : ''}
           <div class="btn-row center mt-12">
-            ${memCount > 0 ? `<button class="btn btn-soft" id="btn-memories">💾 记忆（${memCount} 份）</button>` : ''}
+            <button class="btn btn-soft" id="btn-memories">💾 记忆存档（${memCount} 份）</button>
+            <button class="btn btn-soft" id="btn-import">📥 导入档案</button>
+            <button class="btn btn-soft" id="btn-share">🔗 分享进度</button>
+            <button class="btn btn-soft" id="btn-history">📜 日志</button>
             ${hasProgress ? `<button class="btn btn-ghost" id="btn-clear">🗑 清空存档</button>` : ''}
           </div>
         </div>
@@ -1812,6 +2100,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     $('#btn-start').onclick = () => { App.start(); };
     if ($('#btn-continue')) $('#btn-continue').onclick = () => { App.continueSaved(); };
     if ($('#btn-memories')) $('#btn-memories').onclick = () => { App.openMemory(); };
+    if ($('#btn-import')) $('#btn-import').onclick = () => { App.importJSON(); };
+    if ($('#btn-share')) $('#btn-share').onclick = () => { App.shareLink(); };
+    if ($('#btn-history')) $('#btn-history').onclick = () => { App.openHistory(); };
     if ($('#btn-clear')) $('#btn-clear').onclick = () => { App.clearAll(); };
   }
 
@@ -1825,6 +2116,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       <div class="card">
         <div class="card-title"><span class="icon">🎯</span> 元信息确认</div>
         <div class="card-sub">先确认五项元信息，决定后续所有题目的问法与体量分配。</div>
+
+        <div class="form-group">
+          <div class="form-label"><span class="step-num">0</span> 一键预设模板</div>
+          <div class="form-hint">懒得一样样选？套一个模板直接开始。</div>
+          <div class="preset-grid">
+            ${CONFIG.PRESETS.map(p => `<button class="preset-chip" data-preset="${p.id}"><span class="p-icon">${p.icon}</span><span class="p-name">${esc(p.name)}</span><span class="p-desc">${esc(p.desc)}</span></button>`).join('')}
+          </div>
+        </div>
 
         <div class="form-group">
           <div class="form-label"><span class="step-num">1</span> OC 性别</div>
@@ -1870,6 +2169,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
           </div>
         </div>
 
+        <div class="form-group">
+          <div class="form-label"><span class="step-num">🌿</span> 季节背景</div>
+          <div class="form-hint">选一个季节，会在提问与档案里带上一点她的心情。</div>
+          <div class="opt-grid">
+            <div class="opt-item"><input type="radio" name="season" id="s_n" value="" ${!State.season ? 'checked' : ''}><label class="opt-label" for="s_n">不选</label></div>
+            ${CONFIG.SEASONS.map(se => `<div class="opt-item"><input type="radio" name="season" id="s_${se}" value="${se}" ${State.season === se ? 'checked' : ''}><label class="opt-label" for="s_${se}">${se}</label></div>`).join('')}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label"><span class="step-num">💗</span> 亲密深度</div>
+          <div class="form-hint">影响祈宝说话的亲昵度（越深越害羞/温柔）。</div>
+          <input type="range" class="intimacy-range" id="intimacy" min="1" max="5" step="1" value="${m.intimacy || 3}">
+          <div class="range-labels"><span>清纯</span><span>温柔</span><span>亲昵</span><span>心动</span><span>溺爱</span></div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label"><span class="step-num">🔊</span> 音效</div>
+          <label class="toggle-row"><input type="checkbox" id="sound-toggle" ${State.sound ? 'checked' : ''}><span>答题/完成音效</span></label>
+        </div>
+
         <div class="btn-row">
           <button class="btn btn-primary" id="btn-confirm-meta">确认元信息，下一步 →</button>
         </div>
@@ -1905,6 +2225,12 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     };
     const btn = $('#btn-confirm-meta');
     if (btn) btn.onclick = () => App.confirmMeta();
+    $$('[data-preset]').forEach(b => b.onclick = () => App.applyPreset(b.getAttribute('data-preset')));
+    bindGroup('season', v => { State.season = v; });
+    const it = $('#intimacy');
+    if (it) it.oninput = e => { State.meta.intimacy = parseInt(e.target.value); };
+    const st = $('#sound-toggle');
+    if (st) st.onchange = e => { State.sound = e.target.checked; saveNow(); toast(State.sound ? '音效已开 🔊' : '音效已关 🔇', 'warn'); };
   }
 
   /* ===== 提问页 ===== */
@@ -1919,7 +2245,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     el.innerHTML = `
       <div class="card">
         <div class="card-title"><span class="icon">🗂️</span> 选择提问模式</div>
-        <div class="card-sub">元信息已确认，共需回答 <b class="fw-700" style="color:var(--primary)">${prog.total}</b> 题（含体系登记层与补完层必答题）。</div>
+        <div class="card-sub">元信息已确认，共需回答 <b class="fw-700" style="color:var(--primary)">${prog.total}</b> 题（含体系登记层与补完层必答题）。<br>⏱ 预计耗时约 <b>${Math.ceil(prog.total * CONFIG.SECONDS_PER_QUESTION / 60)}</b> 分钟（按每题 ${CONFIG.SECONDS_PER_QUESTION}s 估算）。</div>
+        <div class="form-group">
+          <div class="form-label">🔍 题库搜索</div>
+          <div class="form-hint">搜关键词直接跳到某题（如「身高」「性格」）。</div>
+          <div class="search-bar">
+            <input class="custom-input" id="q-search" placeholder="搜索题库关键词…" aria-label="搜索题库">
+            <button class="btn btn-soft" id="btn-search">搜</button>
+          </div>
+        </div>
         <div class="form-group">
           <div class="form-label">提问模式</div>
           <div class="opt-grid">
@@ -1957,6 +2291,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     renderPlanStats();
     $('#btn-back-meta').onclick = () => App.go('meta');
     $('#btn-start-ask').onclick = () => App.confirmAskMode();
+    const sq = $('#q-search');
+    const doSearch = () => App.searchQuestions(sq.value);
+    $('#btn-search').onclick = doSearch;
+    if (sq) sq.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); doSearch(); } };
   }
 
   function renderPlanStats() {
@@ -1971,6 +2309,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 
   /* 是否必答（required 或 档案核心题） */
   function isMandatory(p) {
+    if (State.customMandatory && State.customMandatory[p.qid]) return true;
     if (p.required) return true;
     const core = new Set(SCHEMA.getCoreIds(State.meta));
     return core.has(p.qid);
@@ -2061,7 +2400,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const prog = ENGINE.countProgress(State.plan, State.answers);
     el.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">💬</span> 提问进行中</div>
+        <div class="card-title"><span class="icon">💬</span> 提问进行中 <span class="q-avatar" id="q-avatar">${getEmotion() < 30 ? '🌸' : getEmotion() < 60 ? '💗' : getEmotion() < 85 ? '😊' : '💖'}</span></div>
+        <div class="emotion-meter" title="亲密度"><span class="em-label">亲密度</span><div class="bar-track"><div class="bar-fill" style="width:${getEmotion()}%"></div></div><span class="em-num">${getEmotion()}%</span></div>
+        <div class="q-quote">💭 ${esc(pick(CONFIG.QUOTES))}</div>
+        ${p.layer === 'NSFW' ? `<div class="q-privacy">🤫 这个问题，只有我们两个知道哦…</div>` : ''}
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round(idx / State.plan.length * 100)}%"></div></div>
         <div class="text-small text-soft mb-12">第 ${idx + 1} / ${State.plan.length} 题（已答 ${prog.done} · ${Math.round(prog.done / State.plan.length * 100)}%）</div>
         ${renderQuestionCard(p, State.answers[p.qid])}
@@ -2072,6 +2414,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         <div class="btn-row left mt-8">
           <button class="btn btn-soft" id="btn-savemem">💾 存进记忆</button>
           <button class="btn btn-soft" id="btn-progress">📊 进度</button>
+          <button class="btn btn-soft" id="btn-skip">⏭ 跳过这题</button>
+          <button class="btn btn-soft" id="btn-mand">${State.customMandatory[p.qid] ? '🔓 取消必答' : '🔒 标为必答'}</button>
           <button class="btn btn-soft" id="btn-reskip">⏩ 跳到未答</button>
           <button class="btn btn-soft" id="btn-reroll">🎲 重新抽取题库</button>
         </div>
@@ -2082,8 +2426,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     $('#btn-next').onclick = () => App.submitSingle();
     $('#btn-savemem').onclick = () => App.saveMemory();
     $('#btn-progress').onclick = () => App.openProgress();
+    $('#btn-skip').onclick = () => App.skipCurrent();
+    $('#btn-mand').onclick = () => App.toggleMandatory(p.qid);
     $('#btn-reskip').onclick = () => App.skipToEnd();
     $('#btn-reroll').onclick = () => App.reroll();
+    typewriter('.question-card .q-title');
+  }
+
+  /* 打字机：标题逐字出现 */
+  function typewriter(sel) {
+    if (!CONFIG.TYPE_SPEED) return;
+    const el = $(sel);
+    if (!el) return;
+    const full = el.textContent;
+    if (full.length > 60) return; // 过长不播
+    el.textContent = '';
+    let i = 0;
+    const timer = setInterval(() => {
+      i++;
+      el.textContent = full.slice(0, i);
+      if (i >= full.length) clearInterval(timer);
+    }, CONFIG.TYPE_SPEED);
   }
 
   /* 批次模式 */
@@ -2123,11 +2486,17 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* 提问完成页 */
   function renderAskComplete(el) {
     const prog = ENGINE.countProgress(State.plan, State.answers);
+    // 印章：全部答完得「完整」+ 收集层印章
+    earnStamp('完整');
+    Object.keys(CONFIG.STAMPS).forEach(k => { if (k !== '完整') earnStamp(k); });
+    const stampsHtml = Object.keys(State.stamps || {}).filter(k => !k.startsWith('layer_')).map(k => `<span class="stamp">${CONFIG.STAMPS[k] || '🏅'} ${k}</span>`).join('');
     el.innerHTML = `
       <div class="card text-center" style="padding:50px 28px">
         <div style="font-size:60px;margin-bottom:14px">🎉</div>
         <h2 style="font-size:26px;font-weight:900;margin-bottom:8px">全部提问完成！</h2>
         <p class="text-soft" style="margin-bottom:6px">共完成 <b style="color:var(--primary)">${prog.done}</b> 题，即将为你组装完整档案。</p>
+        ${stampsHtml ? `<div class="stamp-row">${stampsHtml}</div>` : ''}
+        ${State.season ? `<p class="q-quote">🌿 ${esc(State.season)}日 · 她在这个季节，把心事都告诉了你。</p>` : ''}
         <p class="text-small text-soft mb-16">下面进行：生成完整档案 → 输出确认 → 世界观检查 → 体系登记 → 测试模式</p>
         <button class="btn-big" id="btn-gen">生成完整档案 ✨</button>
       </div>
@@ -2143,6 +2512,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       <div class="card">
         <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.2 全字段版 · 精细度对标林晴祈）</div>
         <div class="card-sub">以下档案由你的回答自动组装，可逐块检查。${esc(hasAnswer(arch.core) ? '' : '（一句话内核待补）')}</div>
+        ${Object.keys(State.stamps || {}).filter(k => !k.startsWith('layer_')).length ? `<div class="stamp-row archive-stamps">${Object.keys(State.stamps).filter(k => !k.startsWith('layer_')).map(k => `<span class="stamp">${CONFIG.STAMPS[k] || '🏅'} ${k}</span>`).join('')}</div>` : ''}
         ${arch.sections.map(s => `
           <div class="archive-block">
             <div class="ab-title">${esc(s.title)}</div>
@@ -2375,14 +2745,22 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     /* 逐题提交（必答强制） */
     submitSingle() {
       const p = State.plan[State.currentIndex];
+      let answered = false;
       if (p) {
         const val = getQuestionAnswer(p.qid);
-        if (val) State.answers[p.qid] = val;
+        if (val) { State.answers[p.qid] = val; answered = true; }
         else if (isMandatory(p)) return toast(`第 ${p.qid} 题必答，请填写后再继续`, 'error');
       }
       State.currentIndex++;
       render();
       maybeAutoMemory();
+      // 沉浸感反馈
+      if (answered && p) {
+        playSound('ok');
+        State.emotion = Math.min(100, getEmotion() + 2);
+        showSnippet(p.layer || 'SFW');
+        setTimeout(() => toast(moodWord(p.layer || 'SFW'), 'success'), 250);
+      }
     },
     prevQuestion() { if (State.currentIndex > 0) State.currentIndex--; render(); },
     skipToEnd() {
@@ -2408,6 +2786,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       State.currentIndex = end;
       render();
       maybeAutoMemory();
+      // 沉浸感反馈（本批答了多少）
+      let batchAnswered = 0;
+      for (let i = start; i < end; i++) { if (hasAnswer(State.answers[State.plan[i].qid])) batchAnswered++; }
+      if (batchAnswered > 0) {
+        playSound('ok');
+        State.emotion = Math.min(100, getEmotion() + 2 * batchAnswered);
+        showSnippet(State.plan[start] ? State.plan[start].layer : 'SFW');
+        setTimeout(() => toast(moodWord(State.plan[start] ? State.plan[start].layer : 'SFW'), 'success'), 250);
+      }
     },
     prevBatch() { State.currentIndex = Math.max(0, State.currentIndex - State.batchSize); render(); },
 
@@ -2425,24 +2812,74 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 
     openProgress() {
       const prog = ENGINE.countProgress(State.plan, State.answers);
-      const layerHtml = Object.entries(prog.layerStats).map(([l, s]) =>
-        `<div class="text-small mb-8">${(CONFIG.LAYER_INFO[l] || {}).icon || ''} ${esc(l)}：<b>${s.done}/${s.total}</b>（${Math.round(s.done / s.total * 100)}%）</div>`).join('');
+      // 分层条形（雷达替代：分层进度条更清晰）
+      const layerBars = Object.entries(prog.layerStats).map(([l, s]) => {
+        const li = CONFIG.LAYER_INFO[l] || {};
+        const pct = Math.round(s.done / s.total * 100);
+        return `<div class="layer-bar">
+          <div class="lb-head"><span>${li.icon || ''} ${esc(l)}</span><button class="lb-jump" data-layer="${esc(l)}">跳到这层 ›</button><span class="lb-num">${s.done}/${s.total} · ${pct}%</span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+      // 已答列表（点击跳回修改）
+      const answeredIds = State.plan.filter(p => hasAnswer(State.answers[p.qid])).map(p => p.qid);
+      const answeredList = answeredIds.length
+        ? `<div class="form-label mt-12">已答列表（点题回去改）</div><div class="answered-list">${answeredIds.slice(0, 80).map(qid => `<button class="answer-chip" data-qid="${qid}">#${qid}</button>`).join('')}${answeredIds.length > 80 ? '<span class="text-small text-faint">…</span>' : ''}</div>`
+        : '';
+      // 统计：自定义比例 / 跳过率
+      const customCnt = Object.values(State.answers).filter(v => typeof v === 'string' && v.trim() && v.trim().length > 0 && !State.plan.some(p => p.options && p.options.includes(v))).length;
+      // 成长日记（每答一段，基于已答进度生成）
+      const diaryStages = [
+        [0.1, '她刚刚对你打开一点点心扉。'], [0.3, '她已经愿意把小心事说给你听了。'],
+        [0.5, '她开始习惯你的存在，回答变得自然。'], [0.7, '她看你的眼神里，多了些说不清的东西。'],
+        [0.9, '她已经把自己最柔软的部分，交给你了。'], [1, '她完完整整地，站在你面前了。'],
+      ];
+      const ratio = prog.total ? prog.done / prog.total : 0;
+      const diary = diaryStages.filter(d => ratio >= d[0]).pop();
+      const diaryHtml = `<div class="form-label mt-12">📔 她的成长日记</div><div class="diary">${diary ? '第 ' + prog.done + ' 题 · ' + diary[1] : '故事才刚刚开始…'}</div>`;
       UI.showModal('📊 当前进度',
         `<div class="stats-grid">
           <div class="stat-box"><div class="stat-num">${prog.done}</div><div class="stat-label">已答</div></div>
           <div class="stat-box"><div class="stat-num">${prog.remaining}</div><div class="stat-label">未答</div></div>
           <div class="stat-box"><div class="stat-num">${prog.total}</div><div class="stat-label">总题</div></div>
+          <div class="stat-box"><div class="stat-num">${prog.done ? Math.round(customCnt / prog.done * 100) : 0}%</div><div class="stat-label">自定义率</div></div>
         </div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round(prog.done / prog.total * 100)}%"></div></div>
-        <div class="mt-12">${layerHtml}</div>`,
+        <div class="mt-12">${layerBars}</div>
+        ${diaryHtml}
+        ${answeredList}
+        <div class="btn-row center mt-12">
+          <button class="btn btn-soft" id="btn-prog-rerollkeep">🎲 重抽未答（保留已答）</button>
+        </div>`,
         `<button class="btn btn-primary" onclick="UI.closeModal()">继续提问</button>`);
+      const rk = $('#btn-prog-rerollkeep');
+      if (rk) rk.onclick = () => { App.rerollKeep(); UI.closeModal(); };
+      $$('[data-qid]').forEach(b => b.onclick = () => App.jumpTo(parseInt(b.getAttribute('data-qid'))));
+      $$('[data-layer]').forEach(b => b.onclick = () => { App.jumpToLayer(b.getAttribute('data-layer')); UI.closeModal(); });
+    },
+
+    /* ===== 跳到某层第一个未答题 ===== */
+    jumpToLayer(layer) {
+      const p = State.plan.find(x => x.layer === layer && !hasAnswer(State.answers[x.qid]));
+      if (!p) return toast('这一层都答完啦，无需跳转', 'warn');
+      State.currentIndex = State.plan.indexOf(p);
+      render();
     },
 
     generateArchive() {
       State.generatedArchive = ENGINE.buildArchive(State.meta, State.answers, window.QUESTIONS);
       State.stage = 'archive';
       render();
+      playSound('done');
       toast('档案已生成 ✨', 'success');
+      // 仪式感加载：短暂卷轴展开效果
+      const app = $('#app');
+      if (app) { app.classList.add('archive-reveal'); setTimeout(() => app.classList.remove('archive-reveal'), 900); }
+      // 专属寄语（第一次生成）
+      if (!State.stamps.final) {
+        State.stamps.final = true; saveNow();
+        setTimeout(() => UI.showModal('💌 祈宝的寄语', CONFIG.FINAL_WORDS, `<button class="btn btn-primary" onclick="UI.closeModal()">收下啦</button>`), 1000);
+      }
     },
 
     /* 复制 markdown */
@@ -2647,7 +3084,144 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       const obj = ENGINE.archiveToJSON(State.generatedArchive, State);
       const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json;charset=utf-8' });
       downloadBlob(blob, (State.generatedArchive.name || '角色') + '_档案.json');
+      log('导出 JSON 档案');
       toast('已导出 JSON 档案 📦', 'success');
+    },
+
+    /* ===== 主题 / 暗色 / 语言 ===== */
+    toggleTheme() {
+      const names = Object.keys(CONFIG.THEMES);
+      UI.showModal('🎨 主题色',
+        `<div class="theme-picker">${names.map(n => `<button class="theme-chip ${State.theme === n ? 'on' : ''}" data-th="${n}"><span class="dot" style="background:${CONFIG.THEMES[n].primary}"></span>${esc(n)}</button>`).join('')}</div>`,
+        `<button class="btn btn-ghost" onclick="UI.closeModal()">关闭</button>`);
+      $$('[data-th]').forEach(b => b.onclick = () => { State.theme = b.getAttribute('data-th'); saveNow(); applyTheme(); UI.closeModal(); toast('主题色已切换 🎨', 'success'); });
+    },
+    toggleDark() {
+      State.darkMode = !State.darkMode;
+      saveNow(); applyTheme();
+      toast(State.darkMode ? '已开启暗色模式 🌙' : '已关闭暗色模式 ☀️', 'warn');
+    },
+    setLang() {
+      State.lang = State.lang === 'zh' ? 'en' : 'zh';
+      saveNow(); applyTheme(); render();
+      toast(State.lang === 'en' ? 'Language switched to English' : '已切换为中文', 'success');
+    },
+
+    /* ===== 预设模板 ===== */
+    applyPreset(id) {
+      const p = CONFIG.PRESETS.find(x => x.id === id);
+      if (!p) return;
+      State.meta = Object.assign(ENGINE.defaultMeta(), p.meta);
+      render();
+      toast('已套用预设「' + p.name + '」' + p.icon, 'success');
+    },
+
+    /* ===== 分享进度链接 ===== */
+    shareLink() {
+      const payload = { meta: State.meta, plan: State.plan, answers: State.answers, stage: State.stage, v: CONFIG.VERSION };
+      const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+      const url = location.origin + location.pathname + '#s=' + b64;
+      copyText(url, () => toast('已复制分享链接 🔗（同浏览器打开即可恢复）', 'success'));
+      log('生成分享链接');
+    },
+
+    /* ===== 导入 JSON 档案 ===== */
+    importJSON() {
+      const input = document.createElement('input');
+      input.type = 'file'; input.accept = '.json';
+      input.onchange = () => {
+        const f = input.files && input.files[0];
+        if (!f) return;
+        const rd = new FileReader();
+        rd.onload = () => {
+          try {
+            const obj = JSON.parse(rd.result);
+            if (obj && obj.format === 'aira-archive' && obj.answers) {
+              State.meta = Object.assign(ENGINE.defaultMeta(), obj.meta || {});
+              State.answers = Object.assign({}, obj.answers);
+              State.checks = Object.assign({}, obj.checks || {});
+              State.registers = Object.assign({}, obj.registers || {});
+              State.plan = State.plan && State.plan.length ? State.plan : ENGINE.buildPlan(State.meta, window.QUESTIONS);
+              State.currentIndex = 0;
+              State.stage = 'archive';
+              State.generatedArchive = null;
+              saveNow(); render();
+              toast('已导入档案，可继续编辑 📥', 'success');
+              log('导入 JSON 档案');
+            } else if (obj && obj.id && obj.answers) {
+              // 记忆快照导入
+              Object.assign(State, STORE.defaultState(), { meta: Object.assign(ENGINE.defaultMeta(), obj.meta || {}), answers: Object.assign({}, obj.answers), stage: 'ask' });
+              State.plan = ENGINE.buildPlan(State.meta, window.QUESTIONS);
+              render(); saveNow();
+              toast('已导入记忆快照，继续提问 📥', 'success');
+            } else toast('无法识别的文件格式', 'error');
+          } catch (e) { toast('解析失败：' + e.message, 'error'); }
+        };
+        rd.readAsText(f);
+      };
+      input.click();
+    },
+
+    /* ===== 跳过当前题（选答） ===== */
+    skipCurrent() {
+      const p = State.plan[State.currentIndex];
+      if (!p) return;
+      if (isMandatory(p) || State.customMandatory[p.qid]) return toast('必答题不能跳过', 'error');
+      State.currentIndex++;
+      render();
+      toast('已跳过（稍后可回题修改）', 'warn');
+      log('跳过第 ' + p.qid + ' 题');
+    },
+
+    /* ===== 跳到指定题 ===== */
+    jumpTo(qid) {
+      const idx = State.plan.findIndex(p => p.qid === qid);
+      if (idx < 0) return toast('题库里没有这题', 'error');
+      State.currentIndex = idx;
+      UI.closeModal();
+      render();
+    },
+
+    /* ===== 搜索题库 ===== */
+    searchQuestions(q) {
+      const kw = (q || '').trim();
+      if (!kw) return toast('输入关键词再搜', 'warn');
+      const hits = window.QUESTIONS.filter(x => (x.title || '').includes(kw) || (x.parse || '').includes(kw)).slice(0, 12);
+      if (!hits.length) return toast('没搜到，换个词试试', 'warn');
+      UI.showModal('🔍 搜索结果（' + hits.length + '）',
+        hits.map(h => `<div class="search-hit" data-qid="${h.qid}"><span class="sh-qid">#${h.qid}</span><span class="sh-title">${esc(h.title)}</span><span class="sh-layer">${esc(h.layer || '')}</span></div>`).join(''),
+        `<button class="btn btn-ghost" onclick="UI.closeModal()">关闭</button>`);
+      $$('[data-qid]').forEach(elx => elx.onclick = () => App.jumpTo(parseInt(elx.getAttribute('data-qid'))));
+    },
+
+    /* ===== 自定义必答切换 ===== */
+    toggleMandatory(qid) {
+      const p = State.plan.find(x => x.qid === qid);
+      if (!p) return;
+      if (State.customMandatory[qid]) { delete State.customMandatory[qid]; toast('已取消必答', 'warn'); }
+      else { State.customMandatory[qid] = true; toast('已标记为必答 🔒', 'success'); }
+      saveNow(); render();
+    },
+
+    /* ===== 重抽保留已答 ===== */
+    rerollKeep() {
+      const done = ENGINE.countProgress(State.plan, State.answers);
+      if (!done.done) return App.reroll();
+      // 保留已答，只重抽未答
+      const remaining = State.plan.filter(p => !hasAnswer(State.answers[p.qid]));
+      if (!remaining.length) return toast('都已答完，没有可重抽的', 'warn');
+      State.plan = State.plan.map(p => hasAnswer(State.answers[p.qid]) ? p : remaining.shift());
+      State.currentIndex = 0;
+      render();
+      toast('已保留已答，重抽未答部分 🎲', 'success');
+      log('重抽题库（保留已答）');
+    },
+
+    /* ===== 操作日志 ===== */
+    openHistory() {
+      UI.showModal('📜 操作日志',
+        State.log.length ? `<div class="history-list">${State.log.slice(-30).reverse().map(l => `<div class="history-item"><span class="h-time">${l.t}</span>${esc(l.msg)}</div>`).join('')}</div>` : '<p class="text-soft">还没有操作记录。</p>',
+        `<button class="btn btn-ghost" onclick="UI.closeModal()">关闭</button>`);
     },
   };
 
@@ -2677,6 +3251,68 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     document.body.appendChild(a);
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
+  }
+
+  /* 操作日志（保留最近 100 条） */
+  function log(msg) {
+    if (!Array.isArray(State.log)) State.log = [];
+    State.log.push({ t: new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }), msg });
+    if (State.log.length > 100) State.log = State.log.slice(-100);
+    scheduleSave();
+  }
+
+  /* 复制文本（clipboard 优先，降级 execCommand） */
+  function copyText(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+    } else fallbackCopy(text, done);
+  }
+
+  /* ===== 沉浸感辅助 ===== */
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+  function getEmotion() { return State.emotion || 0; }
+  function nsfwAnswered() {
+    let c = 0;
+    Object.values(State.answers).forEach(v => { const s = String(v); if (s.includes('NSFW') || s.includes('调教') || s.includes('SM')) c++; });
+    return c;
+  }
+  function moodWord(layer) {
+    // 动态语气：NSFW 已答多时语气更亲昵
+    const n = nsfwAnswered();
+    let pool = CONFIG.MOOD_WORDS[layer] || CONFIG.MOOD_WORDS.SFW;
+    if (n >= 5 && pool === CONFIG.MOOD_WORDS.SFW) pool = CONFIG.MOOD_WORDS.NSFW;
+    return pick(pool);
+  }
+  function showSnippet(layer) {
+    const pool = CONFIG.SNIPPETS[layer] || CONFIG.SNIPPETS.SFW;
+    const p = document.createElement('div');
+    p.className = 'snip';
+    p.textContent = '✦ ' + pick(pool);
+    const app = $('#app');
+    if (app) { app.appendChild(p); setTimeout(() => { p.style.opacity = '0'; setTimeout(() => p.remove(), 400); }, 4800); }
+  }
+  function playSound(kind) {
+    if (!State.sound) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return;
+      const ctx = window.__actx || (window.__actx = new AC());
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      const freq = { tap: 620, ok: 880, done: 990, stamp: 1100 }[kind] || 660;
+      o.frequency.value = freq; o.type = 'sine';
+      g.gain.setValueAtTime(0.07, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
+      o.start(); o.stop(ctx.currentTime + 0.16);
+    } catch (e) { /* 音频不可用忽略 */ }
+  }
+  function earnStamp(key) {
+    if (State.stamps && State.stamps[key]) return;
+    State.stamps = State.stamps || {};
+    State.stamps[key] = true;
+    setTimeout(() => toast('获得印章 ' + (CONFIG.STAMPS[key] || '🏅') + '（' + key + '）', 'success'), 400);
+    playSound('stamp');
+    saveNow();
   }
 
   /* 记忆摘要（用已答的少量关键题生成一句话） */
@@ -2735,6 +3371,29 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       State.meta = Object.assign(ENGINE.defaultMeta(), saved.meta || {});
       if (!State.testMsgs) State.testMsgs = [];
     }
+    // 分享链接恢复（#s=base64）
+    try {
+      if (location.hash && location.hash.indexOf('#s=') === 0) {
+        const payload = JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(3)))));
+        if (payload && payload.answers && payload.meta) {
+          Object.assign(State, STORE.defaultState(), {
+            meta: Object.assign(ENGINE.defaultMeta(), payload.meta),
+            plan: Array.isArray(payload.plan) && payload.plan.length ? payload.plan : ENGINE.buildPlan(payload.meta, window.QUESTIONS),
+            answers: Object.assign({}, payload.answers),
+            stage: payload.stage && payload.stage !== 'welcome' ? payload.stage : 'ask',
+          });
+          toast('已从分享链接恢复进度 🔗', 'success');
+        }
+      }
+    } catch (e) { /* 链接无效忽略 */ }
+    // 顶部工具按钮
+    const bt = $('#btn-theme'); if (bt) bt.onclick = () => App.toggleTheme();
+    const bd = $('#btn-dark'); if (bd) bd.onclick = () => App.toggleDark();
+    const bl = $('#btn-lang'); if (bl) bl.onclick = () => App.setLang();
+    // 离线/在线提示
+    const onlineToast = () => toast(navigator.onLine ? '网络已恢复，可正常使用 🌐' : '已离线，功能不受影响（存档在本地）', 'warn');
+    window.addEventListener('online', onlineToast);
+    window.addEventListener('offline', onlineToast);
     render();
     // 版本迁移提示（检测到旧 key 迁移，或版本不同）
     try {
