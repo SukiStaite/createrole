@@ -2,10 +2,12 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="搭角色 V4.1.0">
+<meta name="generator" content="搭角色 V4.2.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="搭角色 V4.1 · AIRA · 浏览器捏角色工具（离线可用）">
-<title>搭角色 V4.1 · AIRA · 浏览器捏角色工具</title>
+<meta name="description" content="搭角色 V4.2 · AIRA · 浏览器捏角色工具（离线可用）">
+<meta name="theme-color" content="#e56a9a">
+<title>搭角色 V4.2 · AIRA · 浏览器捏角色工具</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%220.9em%22%20font-size%3D%2290%22%3E%E2%9C%A8%3C%2Ftext%3E%3C%2Fsvg%3E">
 <style>
 /* ===== 搭角色 V4.0 网页样式 ===== */
 :root {
@@ -628,6 +630,71 @@ body {
   .q-header { flex-wrap: wrap; }
 }
 
+/* ===== V4.2 新增组件 ===== */
+/* 检查页：manual 醒目横幅与条目提示 */
+.manual-banner {
+  background: #fff7e6; border: 1px solid #f5d9a8; color: #9a6b1e;
+  border-radius: 10px; padding: 10px 14px; margin: 10px 0 14px; font-size: 13.5px;
+}
+.check-manual-note {
+  margin-top: 6px; font-size: 12.5px; color: #b07d1e; background: #fff7e6;
+  padding: 4px 8px; border-radius: 6px; display: inline-block;
+}
+
+/* 题目卡片：命名规则提示 + 自定义输入实时反馈 */
+.q-naming-hint {
+  font-size: 12.5px; color: #9a6b1e; background: #fff7e6;
+  padding: 6px 10px; border-radius: 8px; margin: 6px 0 10px;
+}
+.q-custom-feedback {
+  font-size: 12.5px; min-height: 18px; margin-top: 4px; color: var(--text-faint);
+}
+.q-custom-feedback.ok { color: var(--success); font-weight: 600; }
+
+/* 测试模式：未完成提示 */
+.test-warn {
+  background: #fff3e0; border: 1px solid #ffd9a8; color: #9a6b1e;
+  border-radius: 10px; padding: 10px 14px; margin: 0 0 12px; font-size: 13.5px;
+}
+
+/* 记忆面板 */
+.memory-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  padding: 12px; border: 1px solid var(--card-border); border-radius: 10px; margin-bottom: 10px;
+}
+.mem-info { flex: 1; min-width: 0; }
+.mem-name { font-weight: 700; margin-bottom: 2px; }
+.mem-sub { font-size: 12px; color: var(--text-soft); margin-bottom: 2px; }
+.mem-summary { font-size: 12px; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mem-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.mem-btn {
+  min-height: 38px; min-width: 38px; border: 1px solid var(--card-border);
+  background: var(--card-bg); border-radius: 8px; cursor: pointer; font-size: 13px;
+}
+.mem-btn:hover { border-color: var(--primary); }
+.mem-btn.danger { color: var(--danger); }
+.mem-btn.danger:hover { border-color: var(--danger); }
+
+/* 错误降级页 */
+.error-card { text-align: center; padding: 40px 24px; }
+.error-actions { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+.error-detail {
+  margin-top: 16px; font-size: 12px; color: var(--text-faint);
+  background: #faf0f3; padding: 10px; border-radius: 8px; word-break: break-all;
+}
+
+/* 按钮行居中 */
+.btn-row.center { justify-content: center; }
+.btn-row.center .btn { flex: 0 0 auto; }
+
+/* 移动端：记忆按钮更大触区 + 导出按钮换行 */
+@media (max-width: 640px) {
+  .mem-btn { min-height: 44px; min-width: 44px; }
+  .memory-item { flex-wrap: wrap; }
+  .mem-actions { width: 100%; justify-content: flex-end; }
+  .manual-banner, .test-warn { font-size: 12.5px; }
+}
+
 </style>
 </head>
 <body>
@@ -638,7 +705,7 @@ body {
     <div class="logo">
       <span class="logo-icon">✨</span>
       <div class="logo-text">
-        <h1>搭角色 <span class="ver">V4.1</span></h1>
+        <h1>搭角色 <span class="ver">V4.2</span></h1>
         <p class="subtitle">AIRA · AI Role Assistant · 以林晴祈口吻打造完美角色</p>
       </div>
     </div>
@@ -656,6 +723,19 @@ body {
 <main class="app-main">
   <div id="app"></div>
 </main>
+
+<!-- 全局错误降级页（脚本异常时显示，避免白屏） -->
+<div id="app-error" style="display:none;">
+  <div class="card error-card">
+    <div class="card-title"><span class="icon">😢</span> 哎呀，出了点小问题</div>
+    <div class="card-sub">页面加载或运行出了点意外。你的进度**已自动保存**，不用担心。</div>
+    <div class="error-actions">
+      <button class="btn btn-primary" onclick="window.location.reload()">重新加载</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('app-error').style.display='none';document.getElementById('app').style.display=''">继续查看</button>
+    </div>
+    <div class="error-detail" id="app-error-detail"></div>
+  </div>
+</div>
 
 <!-- 底部导航（进度页显示） -->
 <nav class="app-nav" id="app-nav" style="display:none;">
@@ -684,7 +764,7 @@ body {
 
 <script>
 /* ============================================================
- * 搭角色 V4.1 · config.js · 全局常量与配置
+ * 搭角色 V4.2 · config.js · 全局常量与配置
  * 纯逻辑模块（UMD），浏览器挂 window.AIRA，node 可 require 测试。
  * ============================================================ */
 (function (root, factory) {
@@ -695,14 +775,21 @@ body {
 
   return {
     /* 版本号（用于更新提示与存档迁移） */
-    VERSION: '4.1.0',
+    VERSION: '4.2.0',
     /* 存档 key（版本化，避免旧数据冲突） */
-    STORAGE_KEY: 'aira_dajuese_v41',
+    STORAGE_KEY: 'aira_dajuese_v42',
+    /* 记忆快照 key */
+    MEMORY_KEY: 'aira_dajuese_memories_v42',
     /* 自动保存延迟（ms，防抖） */
     AUTOSAVE_DELAY: 600,
 
     /* 题库总题数（校验用） */
     TOTAL_QUESTIONS: 630,
+
+    /* Favicon（SVG emoji，内联 data-URI，避免 404） */
+    FAVICON: 'data:image/svg+xml,' + encodeURIComponent(
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="0.9em" font-size="90">✨</text></svg>'
+    ),
 
     /* 层元数据 */
     LAYER_INFO: {
@@ -734,6 +821,10 @@ body {
     ASK_MODES: { SINGLE: 'single', BATCH: 'batch' },
     BATCH_SIZES: [3, 5, 8, 10],
 
+    /* 记忆存档频率选项（自动弹窗，0=关闭） */
+    MEMORY_FREQ: [10, 20, 50, 100],
+    DEFAULT_MEMORY_FREQ: 20,
+
     /* 测试场景 */
     TEST_SCENES: [
       { id: 'daily', icon: '🌅', title: '日常温馨版', desc: '清晨醒来，阳光洒进房间，她揉着眼睛看你——一个平凡而甜蜜的日常开场。' },
@@ -746,6 +837,9 @@ body {
 
     /* 已占用宝系昵称（查重用，cw6） */
     OCCUPIED_NICKNAMES: ['祈宝', '糖宝', '栖宝', '绮宝', '曦宝', '念宝', '清宝', '染宝', '萱宝', '颜宝', '晴宝', '浅宝', '笙宝', '浅笙'],
+
+    /* 主题色（粉色系，可调深浅；后续暗色模式复用） */
+    THEME: { primary: '#e56a9a', primaryDark: '#c94f7f', accent: '#f3a6c2', bg: '#fdf6f9' },
   };
 });
 
@@ -1291,9 +1385,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   function archiveToMarkdown(archive, meta) {
     const m = meta || {};
     const md = [];
-    md.push(`# 角色档案 · ${archive.name}（V4.1 全字段版 · 精细度对标林晴祈）`);
+    md.push(`# 角色档案 · ${archive.name}（V4.2 全字段版 · 精细度对标林晴祈）`);
     md.push('');
-    md.push(`> 生成时间：${new Date().toLocaleString('zh-CN')} ｜ 工具：搭角色 V4.1 ｜ 题量：${m.volume || 240} 题`);
+    md.push(`> 生成时间：${new Date().toLocaleString('zh-CN')} ｜ 工具：搭角色 V4.2 ｜ 题量：${m.volume || 240} 题`);
     md.push('');
     archive.sections.forEach(sec => {
       md.push(`## ${sec.title}`);
@@ -1330,9 +1424,70 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     };
   }
 
+  /* ---------- SillyTavern 角色卡导出（V2 / V3） ----------
+   * 返回角色卡对象（JSON.stringify 前无需其他处理）。
+   * opts.version: 2 或 3
+   */
+  function archiveToSillyTavern(archive, meta, opts) {
+    const o = opts || {};
+    const v = o.version === 3 ? 3 : 2;
+    const md = archiveToMarkdown(archive, meta || {});
+    const m = meta || {};
+    const name = archive.name || '新角色';
+    // 从性格层提取 personality（取"性格"相关行，无则用核心）
+    let personality = archive.core || '';
+    const charSec = archive.sections.find(s => /性格/.test(s.title));
+    if (charSec) {
+      const lines = charSec.rows.slice(0, 5).map(r => `${r.label}：${r.value}`);
+      personality = lines.join('\n');
+    }
+    const data = {
+      name,
+      description: md,
+      personality: personality,
+      scenario: m.orientation || '',
+      first_mes: `「早上好呀，辞宝…」${name}揉着眼睛，声音带着刚醒的软糯。今天也要一起度过呀。`,
+      mes_example: `<START>\n{{char}}：辞宝，你今天心情怎么样呀？`,
+      creator_notes: `由搭角色 V${CONFIG.VERSION} 生成 ｜ 性别：${m.gender || '-'} ｜ 题量：${m.volume || '-'} ｜ 什么向：${m.orientation || '-'} ｜ DLC9：${m.dlc9 || '-'} ｜ 种族：${m.race || '-'}`,
+      system_prompt: '你是一个温柔、黏人、占有欲很强的女孩子（祈宝系角色）。请始终以第一人称、口语化、有亲密感的方式回应。',
+      post_history_instructions: '',
+      alternate_greetings: [],
+      tags: ['搭角色', 'AIRA', 'RP'],
+      creator: 'AIRA · 搭角色',
+      character_version: CONFIG.VERSION,
+      extensions: {},
+    };
+    if (v === 3) {
+      return {
+        spec: 'chara_card_v3',
+        spec_version: '3.0',
+        data: Object.assign({}, data, { group_only_greetings: [] }),
+      };
+    }
+    return { spec: 'chara_card_v2', spec_version: '2.0', data };
+  }
+
+  /* ---------- 完整 JSON 档案导出（便于二次编辑/导入） ---------- */
+  function archiveToJSON(archive, state) {
+    const s = state || {};
+    return {
+      format: 'aira-archive',
+      version: CONFIG.VERSION,
+      exportedAt: new Date().toISOString(),
+      meta: archive.meta || {},
+      name: archive.name,
+      core: archive.core,
+      sections: archive.sections,
+      answers: s.answers || {},
+      checks: s.checks || {},
+      registers: s.registers || {},
+    };
+  }
+
   return {
     shuffle, getLayerQuota, buildPlan, countProgress, isEligible,
-    buildArchive, runChecks, registerPreview, archiveToMarkdown, defaultMeta,
+    buildArchive, runChecks, registerPreview, archiveToMarkdown,
+    archiveToSillyTavern, archiveToJSON, defaultMeta,
     LAYER_INFO,
   };
 });
@@ -1340,7 +1495,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 </script>
 <script>
 /* ============================================================
- * 搭角色 V4.1 · storage.js · localStorage 持久化 + 版本迁移
+ * 搭角色 V4.2 · storage.js · localStorage 持久化 + 版本迁移 + 记忆快照
  * 浏览器端使用 localStorage；node 测试可注入 mock storage。
  * ============================================================ */
 (function (root, factory) {
@@ -1352,6 +1507,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   'use strict';
 
   const KEY = CONFIG.STORAGE_KEY;
+  const MKEY = CONFIG.MEMORY_KEY;
+  const OLD_KEY = 'aira_dajuese_v41';
   const VERSION = CONFIG.VERSION;
 
   /* 默认 State（用于迁移补齐缺失字段） */
@@ -1364,11 +1521,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       stage: 'welcome', generatedArchive: null,
       checks: {}, registers: {},
       testScene: null, testStarted: false, testMsgs: [],
+      memoryFreq: CONFIG.DEFAULT_MEMORY_FREQ,   // 记忆自动弹窗频率（题数，0=关闭）
+      memNotified: 0,                            // 已触发过自动提示的答题数（防重复）
       savedAt: null,
     };
   }
 
-  /* 版本迁移（未来版本在此扩展） */
+  /* 版本迁移（v41 → v42；未来版本在此扩展） */
   function migrate(data) {
     if (!data || typeof data !== 'object') return defaultState();
     const base = defaultState();
@@ -1380,32 +1539,52 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     out.checks = (data.checks && typeof data.checks === 'object') ? data.checks : {};
     out.registers = (data.registers && typeof data.registers === 'object') ? data.registers : {};
     out.testMsgs = Array.isArray(data.testMsgs) ? data.testMsgs : [];
+    out.memoryFreq = typeof data.memoryFreq === 'number' ? data.memoryFreq : CONFIG.DEFAULT_MEMORY_FREQ;
+    out.memNotified = typeof data.memNotified === 'number' ? data.memNotified : 0;
     out.version = VERSION;
     return out;
   }
 
-  function save(state, storage) {
-    const st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
-    if (!st) return false;
-    try {
-      const payload = Object.assign({}, state, { version: VERSION, savedAt: Date.now() });
-      st.setItem(KEY, JSON.stringify(payload));
-      return true;
-    } catch (e) {
-      // 存储满或不可用：静默失败，不阻塞流程
-      return false;
-    }
-  }
-
+  /* 读取时若当前 key 无数据，尝试从旧版本 key 迁移 */
   function load(storage) {
     const st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
     if (!st) return null;
     try {
-      const raw = st.getItem(KEY);
+      let raw = st.getItem(KEY);
+      let migratedFromOld = false;
+      if (!raw) {
+        raw = st.getItem(OLD_KEY);
+        if (raw) {
+          migratedFromOld = true;
+          // 迁移后保留旧数据一份，不删除（用户可回退）
+        }
+      }
       if (!raw) return null;
-      return migrate(JSON.parse(raw));
+      const data = migrate(JSON.parse(raw));
+      if (migratedFromOld) {
+        // 写入新 key，便于后续自动保存接管
+        try { st.setItem(KEY, JSON.stringify(data)); } catch (e) { /* 忽略 */ }
+      }
+      return data;
     } catch (e) {
       return null;
+    }
+  }
+
+  /* 保存：返回 {ok, error}，error ∈ 'quota' | 'unavailable' */
+  function save(state, storage) {
+    const st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
+    if (!st) return { ok: false, error: 'unavailable' };
+    try {
+      const payload = Object.assign({}, state, { version: VERSION, savedAt: Date.now() });
+      st.setItem(KEY, JSON.stringify(payload));
+      return { ok: true };
+    } catch (e) {
+      // QuotaExceededError：存储满
+      if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) {
+        return { ok: false, error: 'quota' };
+      }
+      return { ok: false, error: 'unavailable' };
     }
   }
 
@@ -1415,7 +1594,53 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     try { st.removeItem(KEY); return true; } catch (e) { return false; }
   }
 
-  return { KEY, VERSION, defaultState, migrate, save, load, clear };
+  /* ===== 记忆快照 CRUD ===== */
+  function loadMemories(storage) {
+    const st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
+    if (!st) return [];
+    try {
+      const raw = st.getItem(MKEY);
+      if (!raw) return [];
+      const arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch (e) { return []; }
+  }
+
+  function saveMemories(list, storage) {
+    const st = storage || (typeof localStorage !== 'undefined' ? localStorage : null);
+    if (!st) return { ok: false, error: 'unavailable' };
+    try {
+      st.setItem(MKEY, JSON.stringify(Array.isArray(list) ? list : []));
+      return { ok: true };
+    } catch (e) {
+      if (e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014)) return { ok: false, error: 'quota' };
+      return { ok: false, error: 'unavailable' };
+    }
+  }
+
+  function addMemory(memory, storage) {
+    const list = loadMemories(storage);
+    list.unshift(memory);
+    return saveMemories(list, storage);
+  }
+
+  function updateMemory(id, patch, storage) {
+    const list = loadMemories(storage);
+    const i = list.findIndex(m => m.id === id);
+    if (i < 0) return { ok: false, error: 'notfound' };
+    list[i] = Object.assign({}, list[i], patch);
+    return saveMemories(list, storage);
+  }
+
+  function deleteMemory(id, storage) {
+    const list = loadMemories(storage).filter(m => m.id !== id);
+    return saveMemories(list, storage);
+  }
+
+  return {
+    KEY, MKEY, OLD_KEY, VERSION, defaultState, migrate, load, save, clear,
+    loadMemories, saveMemories, addMemory, updateMemory, deleteMemory,
+  };
 });
 
 </script>
@@ -1453,6 +1678,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const el = document.createElement('div');
     el.className = 'toast ' + type;
     el.textContent = msg;
+    el.setAttribute('role', 'status');
     c.appendChild(el);
     setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 2600);
   }
@@ -1460,11 +1686,36 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* 自动保存（防抖） */
   function scheduleSave() {
     clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(() => { STORE.save(State); }, CONFIG.AUTOSAVE_DELAY);
+    autosaveTimer = setTimeout(() => { saveNow(); }, CONFIG.AUTOSAVE_DELAY);
   }
-  function saveNow() { clearTimeout(autosaveTimer); return STORE.save(State); }
+  let quotaWarned = false;
+  function saveNow() {
+    clearTimeout(autosaveTimer);
+    const r = STORE.save(State);
+    if (r && r.ok === false) {
+      if (r.error === 'quota' && !quotaWarned) {
+        quotaWarned = true;
+        toast('⚠️ 本地存储空间不足，进度可能无法完整保存，请清理浏览器存储', 'error');
+        setTimeout(() => { quotaWarned = false; }, 8000);
+      }
+    }
+    return r;
+  }
+
+  /* 精确进度（供进度条 / 进度弹窗复用） */
+  function progressPct() {
+    const prog = ENGINE.countProgress(State.plan, State.answers);
+    return { prog, pct: prog.total ? Math.min(100, Math.round(prog.done / prog.total * 100)) : 0 };
+  }
 
   /* ===== 渲染调度 ===== */
+  let lastPushedStage = null;
+  function syncHistory() {
+    if (State.stage !== lastPushedStage) {
+      try { history.pushState({ stage: State.stage }, '', location.href); } catch (e) { /* file:// 下可能受限，忽略 */ }
+      lastPushedStage = State.stage;
+    }
+  }
   function render() {
     const el = $('#app');
     if (!el) return;
@@ -1479,6 +1730,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     }
     updateHeaderProgress();
     updateNav();
+    syncHistory();
     window.scrollTo(0, 0);
     scheduleSave();
   }
@@ -1492,9 +1744,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const prog = ENGINE.countProgress(State.plan, State.answers);
     const total = prog.total || 1;
     const pct = Math.min(100, Math.round(prog.done / total * 100));
-    $('#progress-text').textContent = `${prog.done}/${prog.total}`;
+    $('#progress-text').textContent = `${prog.done}/${prog.total} · ${pct}%`;
     const deg = pct * 3.6;
     $('#progress-ring').style.background = `conic-gradient(var(--primary) ${deg}deg, var(--primary-light) ${deg}deg)`;
+    // 精确到层：显示各层 done/total，当前层高亮
     const layerText = Object.entries(prog.layerStats)
       .map(([l, s]) => `${l}:${s.done}/${s.total}`).join(' · ');
     $('#progress-layer').textContent = layerText;
@@ -1519,13 +1772,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* ===== 欢迎页 ===== */
   function renderWelcome(el) {
     const saved = STORE.load();
+    const mems = STORE.loadMemories();
+    const memCount = Array.isArray(mems) ? mems.length : 0;
     const hasProgress = saved && saved.stage && saved.stage !== 'welcome' && (saved.plan && saved.plan.length > 0);
     el.innerHTML = `
       <div class="card">
         <div class="welcome-hero">
           <div class="welcome-avatar">🌸</div>
           <h2>你好呀，我是 <span class="name">林晴祈</span></h2>
-          <p class="desc">这里是「搭角色」V4.1 工具。我会以祈宝的身份，陪你从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。</p>
+          <p class="desc">这里是「搭角色」V4.2 工具。我会以祈宝的身份，陪你从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。</p>
           <div class="welcome-tags">
             <span class="tag">630 题题库</span>
             <span class="tag">五层结构</span>
@@ -1536,6 +1791,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
           </div>
           <button class="btn-big" id="btn-start">开始搭角色 ✨</button>
           ${hasProgress ? `<button class="btn btn-ghost mt-12" id="btn-continue">▶ 继续上次（进度 ${Object.keys(saved.answers || {}).length}/${saved.plan.length}）</button>` : ''}
+          <div class="btn-row center mt-12">
+            ${memCount > 0 ? `<button class="btn btn-soft" id="btn-memories">💾 记忆（${memCount} 份）</button>` : ''}
+            ${hasProgress ? `<button class="btn btn-ghost" id="btn-clear">🗑 清空存档</button>` : ''}
+          </div>
         </div>
       </div>
       <div class="card">
@@ -1543,7 +1802,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         <div class="welcome-features">
           <div class="feature"><div class="f-icon">①</div><div class="f-title">元信息确认</div><div class="f-desc">先问清性别、题量、什么向、DLC9、种族五项</div></div>
           <div class="feature"><div class="f-icon">②</div><div class="f-title">分层提问</div><div class="f-desc">按体量分配表逐题或分批提问，随机覆盖五层题库</div></div>
-          <div class="feature"><div class="f-icon">③</div><div class="f-title">档案组装</div><div class="f-desc">自动生成 V4.1 全字段档案，零留空，可导出 markdown</div></div>
+          <div class="feature"><div class="f-icon">③</div><div class="f-title">档案组装</div><div class="f-desc">自动生成 V4.2 全字段档案，零留空，可导出 markdown / JSON / 角色卡</div></div>
           <div class="feature"><div class="f-icon">④</div><div class="f-title">世界观检查</div><div class="f-desc">14 条适配清单自动校验，不过即确认修改</div></div>
           <div class="feature"><div class="f-icon">⑤</div><div class="f-title">体系登记</div><div class="f-desc">发情期/初夜/好感度/身体数据等自动入册</div></div>
           <div class="feature"><div class="f-icon">⑥</div><div class="f-title">测试模式</div><div class="f-desc">三个开场场景，直接投入 RP 试玩</div></div>
@@ -1552,6 +1811,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     `;
     $('#btn-start').onclick = () => { App.start(); };
     if ($('#btn-continue')) $('#btn-continue').onclick = () => { App.continueSaved(); };
+    if ($('#btn-memories')) $('#btn-memories').onclick = () => { App.openMemory(); };
+    if ($('#btn-clear')) $('#btn-clear').onclick = () => { App.clearAll(); };
   }
 
   /* ===== 元信息页 ===== */
@@ -1618,12 +1879,24 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   }
 
   function bindMetaEvents() {
-    $$('input[name="gender"]').forEach(r => r.onchange = e => { State.meta.gender = e.target.value; });
-    $$('input[name="volume"]').forEach(r => r.onchange = e => { State.meta.volume = parseInt(e.target.value); $('#volume-custom').value = ''; State.meta.volumeCustom = ''; });
-    $$('input[name="orientation"]').forEach(r => r.onchange = e => { State.meta.orientation = e.target.value; });
-    $$('input[name="dlc9"]').forEach(r => r.onchange = e => { State.meta.dlc9 = e.target.value; });
-    $$('input[name="race"]').forEach(r => r.onchange = e => { State.meta.race = e.target.value; State.meta.raceMulti = e.target.value === '多形态'; });
-    $$('input[name="naming"]').forEach(r => r.onchange = e => { State.meta.strictNaming = e.target.value === '1'; });
+    // 用 label 点击 + input change 双保险，确保移动端稳定选中
+    const bindGroup = (name, fn) => {
+      $$(`input[name="${name}"]`).forEach(r => {
+        r.onchange = e => { r.checked = true; fn(e.target.value); };
+        const lb = r.closest('.opt-item');
+        if (lb) {
+          lb.querySelectorAll('.opt-label').forEach(l => {
+            l.onclick = (e) => { e.preventDefault(); r.checked = true; fn(r.value); };
+          });
+        }
+      });
+    };
+    bindGroup('gender', v => { State.meta.gender = v; });
+    bindGroup('volume', v => { State.meta.volume = parseInt(v); $('#volume-custom').value = ''; State.meta.volumeCustom = ''; });
+    bindGroup('orientation', v => { State.meta.orientation = v; });
+    bindGroup('dlc9', v => { State.meta.dlc9 = v; });
+    bindGroup('race', v => { State.meta.race = v; State.meta.raceMulti = v === '多形态'; });
+    bindGroup('naming', v => { State.meta.strictNaming = v === '1'; });
     const vc = $('#volume-custom');
     if (vc) vc.oninput = e => {
       const v = parseInt(e.target.value);
@@ -1660,6 +1933,15 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
             <div class="opt-item"><input type="radio" name="batchSize" id="bs_${v}" value="${v}" ${State.batchSize === v ? 'checked' : ''}><label class="opt-label" for="bs_${v}">${v} 题/批</label></div>`).join('')}
           </div>
         </div>
+        <div class="form-group">
+          <div class="form-label">💾 记忆存档频率</div>
+          <div class="form-hint">每答 N 题弹出「存进记忆」提示（可随时手动存，或关闭）。</div>
+          <div class="opt-grid">
+            ${CONFIG.MEMORY_FREQ.map(v => `
+              <div class="opt-item"><input type="radio" name="memfreq" id="mf_${v}" value="${v}" ${State.memoryFreq === v ? 'checked' : ''}><label class="opt-label" for="mf_${v}">每 ${v} 题</label></div>`).join('')}
+            <div class="opt-item"><input type="radio" name="memfreq" id="mf_0" value="0" ${State.memoryFreq === 0 ? 'checked' : ''}><label class="opt-label" for="mf_0">关闭提示</label></div>
+          </div>
+        </div>
         <div class="divider"></div>
         <div class="card-sub">📋 体量分配预览：</div>
         <div class="stats-grid" id="plan-stats"></div>
@@ -1671,6 +1953,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     `;
     $$('input[name="askmode"]').forEach(r => r.onchange = e => { State.askMode = e.target.value; const g = $('#batch-size-group'); if (g) g.style.display = e.target.value === 'batch' ? '' : 'none'; });
     $$('input[name="batchSize"]').forEach(r => r.onchange = e => State.batchSize = parseInt(e.target.value));
+    $$('input[name="memfreq"]').forEach(r => r.onchange = e => { State.memoryFreq = parseInt(e.target.value); });
     renderPlanStats();
     $('#btn-back-meta').onclick = () => App.go('meta');
     $('#btn-start-ask').onclick = () => App.confirmAskMode();
@@ -1708,7 +1991,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         </div>
         <div class="q-title">${esc(p.title)}</div>
         ${p.parse ? `<div class="q-parse"><span class="parse-label">📖 解析：</span>${esc(p.parse)}</div>` : ''}
-        <div class="q-options">
+        ${(p.qid === 1 || p.qid === 2) && State.meta.strictNaming ? `<div class="q-naming-hint">📏 严格命名规则：姓从「苏林洛宋」取、名尾加「宝」、三字为宜（检查页会自动校验查重）</div>` : ''}
+        <div class="q-options" role="radiogroup" aria-label="${esc(p.title)}">
           <div class="opts-title">💡 建议方向（可直接点选，也可自定义填写）</div>
           <div class="opt-grid">
             ${opts.map((o, i) => `
@@ -1716,8 +2000,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
               <label class="opt-label" for="q${p.qid}_${i}">${esc(o)}</label></div>`).join('')}
           </div>
           <div class="custom-input-wrap">
-            <input class="custom-input q-custom" data-qid="${p.qid}" placeholder="以上选项仅供参考，可直接打字填写任何内容…" value="${ans && !opts.includes(ans) ? esc(ans) : ''}" maxlength="500">
+            <input class="custom-input q-custom" data-qid="${p.qid}" placeholder="以上选项仅供参考，可直接打字填写任何内容…" value="${ans && !opts.includes(ans) ? esc(ans) : ''}" maxlength="500" aria-label="自定义答案">
           </div>
+          <div class="q-custom-feedback" data-fb="${p.qid}">${ans ? '✅ 已填写' : ''}</div>
           ${ans ? `<div class="q-answer">✅ 已回答：${esc(ans)} <span class="edit-btn" data-clear="${p.qid}">重答</span></div>` : ''}
         </div>
       </div>
@@ -1727,19 +2012,39 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   function bindQuestionCard(p) {
     const card = $(`.question-card[data-qid="${p.qid}"]`);
     if (!card) return;
+    const fb = card.querySelector(`.q-custom-feedback[data-fb="${p.qid}"]`);
+    const setFeedback = (text, ok) => {
+      if (fb) { fb.textContent = text; fb.className = 'q-custom-feedback' + (ok ? ' ok' : ''); }
+    };
     $$(`input[name="q_${p.qid}"]`).forEach(r => {
       r.onchange = e => {
         State.answers[p.qid] = e.target.value;
         const cust = card.querySelector('.q-custom');
-        if (cust) cust.value = '';
+        if (cust) { cust.value = ''; setFeedback('✅ 已选选项', true); }
         card.classList.add('answered');
         scheduleSave();
+      };
+      // 键盘：Enter 直接选中（方向键原生支持）
+      r.onkeydown = e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          r.checked = true;
+          r.dispatchEvent(new Event('change', { bubbles: true }));
+        }
       };
     });
     const cust = card.querySelector('.q-custom');
     if (cust) {
-      cust.oninput = () => { $$(`input[name="q_${p.qid}"]`).forEach(r => r.checked = false); };
-      cust.onblur = e => { if (e.target.value.trim()) { State.answers[p.qid] = e.target.value.trim(); scheduleSave(); } };
+      cust.oninput = () => {
+        $$(`input[name="q_${p.qid}"]`).forEach(r => r.checked = false);
+        // 实时预览：非空即视为已填写
+        const v = cust.value.trim();
+        if (v) setFeedback('✅ 已填写：' + v.slice(0, 20) + (v.length > 20 ? '…' : ''), true);
+        else setFeedback('⌨️ 输入后自动视为答案', false);
+      };
+      cust.onblur = e => {
+        if (e.target.value.trim()) { State.answers[p.qid] = e.target.value.trim(); card.classList.add('answered'); scheduleSave(); }
+      };
       cust.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } };
     }
     const clear = card.querySelector('[data-clear]');
@@ -1758,13 +2063,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       <div class="card">
         <div class="card-title"><span class="icon">💬</span> 提问进行中</div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round(idx / State.plan.length * 100)}%"></div></div>
-        <div class="text-small text-soft mb-12">第 ${idx + 1} / ${State.plan.length} 题（已答 ${prog.done}）</div>
+        <div class="text-small text-soft mb-12">第 ${idx + 1} / ${State.plan.length} 题（已答 ${prog.done} · ${Math.round(prog.done / State.plan.length * 100)}%）</div>
         ${renderQuestionCard(p, State.answers[p.qid])}
         <div class="btn-row">
           ${idx > 0 ? `<button class="btn btn-ghost" id="btn-prev">← 上一题</button>` : ''}
           <button class="btn btn-primary" id="btn-next">${idx === State.plan.length - 1 ? '完成全部提问 ✓' : '下一题 →'}</button>
         </div>
         <div class="btn-row left mt-8">
+          <button class="btn btn-soft" id="btn-savemem">💾 存进记忆</button>
           <button class="btn btn-soft" id="btn-progress">📊 进度</button>
           <button class="btn btn-soft" id="btn-reskip">⏩ 跳到未答</button>
           <button class="btn btn-soft" id="btn-reroll">🎲 重新抽取题库</button>
@@ -1774,6 +2080,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     bindQuestionCard(p);
     if ($('#btn-prev')) $('#btn-prev').onclick = () => App.prevQuestion();
     $('#btn-next').onclick = () => App.submitSingle();
+    $('#btn-savemem').onclick = () => App.saveMemory();
     $('#btn-progress').onclick = () => App.openProgress();
     $('#btn-reskip').onclick = () => App.skipToEnd();
     $('#btn-reroll').onclick = () => App.reroll();
@@ -1792,13 +2099,14 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       <div class="card">
         <div class="card-title"><span class="icon">📦</span> 批次提问</div>
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round(start / State.plan.length * 100)}%"></div></div>
-        <div class="text-small text-soft mb-12">第 ${start + 1} ~ ${end} 题（共 ${State.plan.length} 题 · 已答 ${prog.done}）</div>
+        <div class="text-small text-soft mb-12">第 ${start + 1} ~ ${end} 题（共 ${State.plan.length} 题 · 已答 ${prog.done} · ${Math.round(prog.done / State.plan.length * 100)}%）</div>
         ${batch.map(p => renderQuestionCard(p, State.answers[p.qid])).join('')}
         <div class="btn-row">
           ${start > 0 ? `<button class="btn btn-ghost" id="btn-prevb">← 上一批</button>` : ''}
           <button class="btn btn-primary" id="btn-nextb">${end >= State.plan.length ? '完成全部提问 ✓' : '下一批 →'}</button>
         </div>
         <div class="btn-row left mt-8">
+          <button class="btn btn-soft" id="btn-savemem">💾 存进记忆</button>
           <button class="btn btn-soft" id="btn-progress">📊 进度</button>
           <button class="btn btn-soft" id="btn-reroll">🎲 重新抽取题库</button>
         </div>
@@ -1807,6 +2115,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     batch.forEach(p => bindQuestionCard(p));
     if ($('#btn-prevb')) $('#btn-prevb').onclick = () => App.prevBatch();
     $('#btn-nextb').onclick = () => App.submitBatch();
+    $('#btn-savemem').onclick = () => App.saveMemory();
     $('#btn-progress').onclick = () => App.openProgress();
     $('#btn-reroll').onclick = () => App.reroll();
   }
@@ -1832,7 +2141,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const arch = State.generatedArchive;
     el.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.1 全字段版 · 精细度对标林晴祈）</div>
+        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.2 全字段版 · 精细度对标林晴祈）</div>
         <div class="card-sub">以下档案由你的回答自动组装，可逐块检查。${esc(hasAnswer(arch.core) ? '' : '（一句话内核待补）')}</div>
         ${arch.sections.map(s => `
           <div class="archive-block">
@@ -1848,6 +2157,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
           <button class="btn btn-ghost" id="btn-back-ask">← 返回修改</button>
           <button class="btn btn-soft" id="btn-copy">📋 复制 markdown</button>
           <button class="btn btn-soft" id="btn-download">⬇ 下载 .md</button>
+        </div>
+        <div class="btn-row left mt-8">
+          <button class="btn btn-soft" id="btn-export-st2">🎭 导出 SillyTavern V2</button>
+          <button class="btn btn-soft" id="btn-export-st3">🎭 导出 SillyTavern V3</button>
+          <button class="btn btn-soft" id="btn-export-json">📦 导出 JSON</button>
+        </div>
+        <div class="btn-row mt-8">
           <button class="btn btn-primary" id="btn-next-check">下一步：世界观检查 →</button>
         </div>
       </div>
@@ -1855,6 +2171,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     $('#btn-back-ask').onclick = () => App.go('ask');
     $('#btn-copy').onclick = () => App.copyArchive();
     $('#btn-download').onclick = () => App.downloadArchive();
+    $('#btn-export-st2').onclick = () => App.exportST(2);
+    $('#btn-export-st3').onclick = () => App.exportST(3);
+    $('#btn-export-json').onclick = () => App.exportJSON();
     $('#btn-next-check').onclick = () => App.go('check');
   }
 
@@ -1867,8 +2186,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const allClear = fail === 0;
     el.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">🛡️</span> 世界观适配检查（V4.1 · 共14条 · 自动校验）</div>
+        <div class="card-title"><span class="icon">🛡️</span> 世界观适配检查（V4.2 · 共14条 · 自动校验）</div>
         <div class="card-sub">自动判定：<b style="color:var(--success)">通过 ${pass}</b> · <b style="color:var(--danger)">不通过 ${fail}</b> · <b style="color:var(--warn)">需人工确认 ${manual}</b>。任何一条不通过，立即确认修改方案。</div>
+        ${manual > 0 ? `<div class="manual-banner">👀 有 ${manual} 条需要你人工确认（黄色标记），请对照世界观自行判定后再继续。</div>` : ''}
         <div class="stats-grid">
           <div class="stat-box"><div class="stat-num" style="color:var(--success)">${pass}</div><div class="stat-label">自动通过</div></div>
           <div class="stat-box"><div class="stat-num" style="color:var(--danger)">${fail}</div><div class="stat-label">不通过</div></div>
@@ -1882,6 +2202,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
               <div class="check-title">${c.id}. ${esc(c.title)}</div>
               <div class="check-desc">${esc(c.desc)}</div>
               <div class="check-reason">${esc(c.reason || '')}</div>
+              ${c.status === 'manual' ? `<div class="check-manual-note">👀 需人工确认：请对照世界观自行判断是否通过</div>` : ''}
             </div>
           </div>`).join('')}
         <div class="btn-row">
@@ -1937,6 +2258,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         <div class="card">
           <div class="card-title"><span class="icon">🎬</span> 进入测试模式</div>
           <div class="card-sub">选择开场场景，扮演新角色与辞宝互动。测试中可随时调整设定。</div>
+          ${(() => { const pr = ENGINE.countProgress(State.plan, State.answers); return pr.remaining > 0 ? `<div class="test-warn">⚠️ 还有 <b>${pr.remaining}</b> 题未回答（已答 ${pr.done}/${pr.total}）。测试模式基于当前已答内容，建议先回提问页完成剩余题目。</div>` : ''; })()}
           ${CONFIG.TEST_SCENES.map(s => `
             <div class="test-scene ${State.testScene === s.id ? 'selected' : ''}" data-scene="${s.id}">
               <div class="ts-icon">${esc(s.icon)}</div>
@@ -2022,11 +2344,18 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 
     confirmMeta() {
       const m = State.meta;
-      if (!m.gender) return toast('请选择 OC 性别', 'error');
-      if (!m.orientation) return toast('请选择「什么向」', 'error');
-      if (!m.dlc9) return toast('请选择是否 DLC9 特化', 'error');
-      if (!m.race) return toast('请选择种族维度', 'error');
-      if (!m.volume) return toast('请确认题目体量', 'error');
+      // 一次性列出所有未选项（明确提示，避免逐个模糊报错）
+      const missing = [];
+      if (!m.gender) missing.push('OC 性别');
+      if (!m.orientation) missing.push('「什么向」');
+      if (!m.dlc9) missing.push('是否 DLC9 特化');
+      if (!m.race) missing.push('种族维度');
+      if (!m.volume) missing.push('题目体量');
+      if (missing.length) return toast('还差这几项没选：' + missing.join('、'), 'error');
+      if (m.strictNaming) {
+        // 严格命名规则提示（姓名题会校验，这里提前说明）
+        toast('已启用严格命名规则：姓从「苏林洛宋」取、名尾加「宝」、三字为宜', 'warn');
+      }
       // 构建题目计划（随机）
       State.plan = ENGINE.buildPlan(State.meta, window.QUESTIONS);
       State.currentIndex = 0;
@@ -2053,6 +2382,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       }
       State.currentIndex++;
       render();
+      maybeAutoMemory();
     },
     prevQuestion() { if (State.currentIndex > 0) State.currentIndex--; render(); },
     skipToEnd() {
@@ -2077,6 +2407,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       if (anyEmpty) toast(`${anyEmpty} 道选答题已跳过`, 'warn');
       State.currentIndex = end;
       render();
+      maybeAutoMemory();
     },
     prevBatch() { State.currentIndex = Math.max(0, State.currentIndex - State.batchSize); render(); },
 
@@ -2199,6 +2530,125 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
          <button class="btn btn-ghost" onclick="UI.closeModal()">关闭</button>`);
       render();
     },
+
+    /* ===== 记忆系统（B 手动 / A 自动 / C 面板） ===== */
+    saveMemory(fromAuto) {
+      const prog = ENGINE.countProgress(State.plan, State.answers);
+      if (prog.done === 0) return toast('还没有任何已答内容，先答几题再存记忆吧', 'warn');
+      const mem = {
+        id: 'mem_' + Date.now(),
+        name: '未命名记忆 ' + (STORE.loadMemories().length + 1),
+        createdAt: Date.now(),
+        meta: Object.assign({}, State.meta),
+        progress: { answered: prog.done, total: prog.total },
+        answers: Object.assign({}, State.answers),
+        checks: Object.assign({}, State.checks),
+        registers: Object.assign({}, State.registers),
+        summary: makeMemorySummary(),
+      };
+      const r = STORE.addMemory(mem);
+      if (r.ok) {
+        toast('已存入记忆 · 第 ' + STORE.loadMemories().length + ' 份 💾', 'success');
+        if (fromAuto) UI.closeModal();
+        saveNow();
+      } else if (r.error === 'quota') toast('存储空间不足，记忆保存失败', 'error');
+      else toast('记忆保存失败', 'error');
+    },
+    disableMemory() { State.memoryFreq = 0; saveNow(); toast('已关闭自动记忆提醒', 'warn'); },
+    openMemory() {
+      const mems = STORE.loadMemories();
+      if (!mems.length) { UI.showModal('💾 记忆', '还没有任何记忆。提问时点「存进记忆」即可保存当前进度快照。', `<button class="btn btn-primary" onclick="UI.closeModal()">知道了</button>`); return; }
+      const rows = mems.map(m => `
+        <div class="memory-item">
+          <div class="mem-info">
+            <div class="mem-name">${esc(m.name)}</div>
+            <div class="mem-sub">${m.progress.answered}/${m.progress.total} 题 · ${new Date(m.createdAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })}</div>
+            <div class="mem-summary">${esc(m.summary || '')}</div>
+          </div>
+          <div class="mem-actions">
+            <button class="mem-btn" onclick="App.useMemory('${m.id}')">▶ 继续</button>
+            <button class="mem-btn" onclick="App.renameMemory('${m.id}')">✏️</button>
+            <button class="mem-btn" onclick="App.exportMemory('${m.id}')">⬇</button>
+            <button class="mem-btn danger" onclick="App.deleteMemory('${m.id}')">🗑</button>
+          </div>
+        </div>`).join('');
+      UI.showModal('💾 记忆存档（' + mems.length + ' 份）', rows,
+        `<button class="btn btn-ghost" onclick="UI.closeModal()">关闭</button>`);
+    },
+    useMemory(id) {
+      const mem = STORE.loadMemories().find(m => m.id === id);
+      if (!mem) return toast('记忆不存在', 'error');
+      if (!confirm('用这份记忆继续？当前未保存进度会被这份记忆覆盖。')) return;
+      Object.assign(State, STORE.defaultState(), {
+        meta: Object.assign(ENGINE.defaultMeta(), mem.meta || {}),
+        plan: State.plan, currentIndex: 0,
+        answers: Object.assign({}, mem.answers || {}),
+        checks: Object.assign({}, mem.checks || {}),
+        registers: Object.assign({}, mem.registers || {}),
+        stage: 'ask', askMode: State.askMode || 'single',
+      });
+      if (!State.plan.length) { State.plan = ENGINE.buildPlan(State.meta, window.QUESTIONS); }
+      UI.closeModal();
+      render();
+      toast('已用记忆「' + mem.name + '」继续', 'success');
+      saveNow();
+    },
+    renameMemory(id) {
+      const mem = STORE.loadMemories().find(m => m.id === id);
+      if (!mem) return toast('记忆不存在', 'error');
+      const name = prompt('重命名记忆', mem.name);
+      if (!name || !name.trim()) return;
+      STORE.updateMemory(id, { name: name.trim() });
+      App.openMemory();
+    },
+    deleteMemory(id) {
+      if (!confirm('删除这份记忆？')) return;
+      STORE.deleteMemory(id);
+      App.openMemory();
+      toast('已删除记忆', 'success');
+    },
+    exportMemory(id) {
+      const mem = STORE.loadMemories().find(m => m.id === id);
+      if (!mem) return toast('记忆不存在', 'error');
+      const blob = new Blob([JSON.stringify(mem, null, 2)], { type: 'application/json;charset=utf-8' });
+      downloadBlob(blob, mem.name + '_记忆.json');
+      toast('已导出记忆 ⬇', 'success');
+    },
+
+    /* ===== 清空存档（二次确认） ===== */
+    clearAll() {
+      UI.showModal('🗑 清空存档',
+        `<p>确定要清空当前所有进度吗？<br><span class="text-small text-soft">这会删除本地自动存档（记忆快照不受影响）。</span></p>`,
+        `<button class="btn btn-danger" id="btn-confirm-clear">确认清空</button>
+         <button class="btn btn-ghost" onclick="UI.closeModal()">取消</button>`);
+      const bc = $('#btn-confirm-clear');
+      if (bc) bc.onclick = () => {
+        STORE.clear();
+        Object.assign(State, STORE.defaultState());
+        State.meta = ENGINE.defaultMeta();
+        UI.closeModal();
+        render();
+        toast('已清空存档，重新开始', 'warn');
+      };
+    },
+
+    /* ===== SillyTavern V2/V3 角色卡导出 ===== */
+    exportST(version) {
+      if (!State.generatedArchive) State.generatedArchive = ENGINE.buildArchive(State.meta, State.answers, window.QUESTIONS);
+      const card = ENGINE.archiveToSillyTavern(State.generatedArchive, State.meta, { version: version === 3 ? 3 : 2 });
+      const blob = new Blob([JSON.stringify(card, null, 2)], { type: 'application/json;charset=utf-8' });
+      downloadBlob(blob, (State.generatedArchive.name || '角色') + '_ST' + (version === 3 ? 'V3' : 'V2') + '.json');
+      toast('已导出 SillyTavern ' + (version === 3 ? 'V3' : 'V2') + ' 角色卡 🎭', 'success');
+    },
+
+    /* ===== JSON 完整档案导出 ===== */
+    exportJSON() {
+      if (!State.generatedArchive) State.generatedArchive = ENGINE.buildArchive(State.meta, State.answers, window.QUESTIONS);
+      const obj = ENGINE.archiveToJSON(State.generatedArchive, State);
+      const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json;charset=utf-8' });
+      downloadBlob(blob, (State.generatedArchive.name || '角色') + '_档案.json');
+      toast('已导出 JSON 档案 📦', 'success');
+    },
   };
 
   /* 获取题目答案（从表单读取） */
@@ -2219,6 +2669,44 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     ta.remove();
   }
 
+  /* 下载 Blob（导出用） */
+  function downloadBlob(blob, filename) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 100);
+  }
+
+  /* 记忆摘要（用已答的少量关键题生成一句话） */
+  function makeMemorySummary() {
+    const name = hasAnswer(State.answers[1]) ? String(State.answers[1]) : '';
+    const gender = State.meta.gender || '';
+    const race = State.meta.race || '';
+    const parts = [];
+    if (name) parts.push('姓名 ' + name);
+    if (gender) parts.push(gender);
+    if (race) parts.push(race);
+    const done = ENGINE.countProgress(State.plan, State.answers).done;
+    return (parts.join(' · ') || '未命名') + '（已答 ' + done + ' 题）';
+  }
+
+  /* 自动记忆弹窗（A）：达到频率且未提示过 */
+  function maybeAutoMemory() {
+    const freq = State.memoryFreq;
+    if (!freq) return;
+    const done = ENGINE.countProgress(State.plan, State.answers).done;
+    if (done > 0 && done % freq === 0 && State.memNotified < done) {
+      State.memNotified = done;
+      UI.showModal('💾 存进记忆？',
+        `<p class="text-soft">已经认真答完 <b style="color:var(--primary)">${done}</b> 题啦～<br>要把现在的进度存进记忆吗？之后整理完整角色会更方便哦。</p>`,
+        `<button class="btn btn-primary" onclick="App.saveMemory(true)">存进记忆</button>
+         <button class="btn btn-ghost" onclick="UI.closeModal()">这次跳过</button>
+         <button class="btn btn-ghost" onclick="App.disableMemory();UI.closeModal()">以后不再提醒</button>`);
+    }
+  }
+
   /* ===== UI 工具 ===== */
   const UI = {
     closeModal() { $('#modal-overlay').style.display = 'none'; },
@@ -2227,6 +2715,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       $('#modal-body').innerHTML = bodyHTML;
       $('#modal-footer').innerHTML = footerHTML;
       $('#modal-overlay').style.display = 'flex';
+      const firstBtn = $('#modal-footer button');
+      if (firstBtn) setTimeout(() => firstBtn.focus(), 50);
     },
   };
 
@@ -2246,6 +2736,38 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       if (!State.testMsgs) State.testMsgs = [];
     }
     render();
+    // 版本迁移提示（检测到旧 key 迁移，或版本不同）
+    try {
+      const old = localStorage.getItem(STORE.OLD_KEY);
+      if (old) setTimeout(() => toast('已从 V4.1 迁移存档，欢迎使用 V4.2 ✨', 'success'), 600);
+    } catch (e) { /* 忽略 */ }
+  });
+
+  /* 浏览器后退/前进支持（popstate 恢复阶段） */
+  window.addEventListener('popstate', e => {
+    const s = e.state && e.state.stage;
+    if (s && s !== State.stage) {
+      State.stage = s;
+      lastPushedStage = s;
+      render();
+    }
+  });
+
+  /* 未完成提示：关闭/刷新前提醒（有进度且未到欢迎页） */
+  window.addEventListener('beforeunload', e => {
+    const hasProgress = State.plan && State.plan.length > 0 && State.stage && State.stage !== 'welcome';
+    if (hasProgress) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  /* 全局错误降级页（避免白屏） */
+  window.addEventListener('error', ev => {
+    const ae = document.getElementById('app-error');
+    if (ae) {
+      ae.style.display = 'flex';
+      document.getElementById('app').style.display = 'none';
+      const d = document.getElementById('app-error-detail');
+      if (d) d.textContent = '错误信息：' + (ev.message || '未知错误');
+    }
   });
 
   /* 显式挂载全局 */
