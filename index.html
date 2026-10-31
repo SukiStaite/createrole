@@ -1134,6 +1134,31 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
 }
 .wbadge-sub { font-size: 11px; font-weight: 500; opacity: 0.9; border-left: 1px solid rgba(255,255,255,0.4); padding-left: 8px; }
 
+/* ===== 背景音乐播放器（悬浮胶囊） ===== */
+#music-player {
+  position: fixed; bottom: 64px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px; z-index: 180;
+  background: var(--card-bg); border: 1px solid var(--card-border);
+  border-radius: 999px; padding: 6px 10px; box-shadow: 0 6px 20px rgba(0,0,0,0.14);
+  animation: toast-in .3s ease;
+}
+.mp-btn {
+  width: 34px; height: 34px; border-radius: 50%; border: none; cursor: pointer;
+  background: var(--primary); color: #fff; font-size: 14px; display: inline-flex;
+  align-items: center; justify-content: center; transition: transform .12s;
+}
+.mp-btn:hover { transform: scale(1.08); }
+.mp-btn:active { transform: scale(0.94); }
+#mp-close { background: transparent; color: var(--text-faint); font-size: 13px; }
+.mp-info { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.mp-title { font-size: 12.5px; font-weight: 700; color: var(--text); max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mp-artist { font-size: 10.5px; color: var(--text-faint); }
+.qq-link { text-decoration: none; color: var(--primary); }
+[data-style="ios27"] #music-player { background: rgba(255,255,255,0.8); backdrop-filter: blur(12px); }
+[data-style="material3"] #music-player { border-radius: 18px; }
+/* 移动端播放器避让底部导航 */
+@media (max-width: 640px) { #music-player { bottom: 78px; max-width: 92vw; } }
+
 </style>
 </head>
 <body>
@@ -1260,6 +1285,16 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
     FLOW_MODES: ['标准', '流畅'],
     /* 字号缩放 */
     FONT_SCALES: [0.9, 1, 1.1, 1.2],
+
+    /* 背景音乐曲库（在线直链，CORS 开放，可替换为 Pixabay / GitHub raw） */
+    MUSIC_PLAYLIST: [
+      { title: '星空漫步', artist: 'SoundHelix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3' },
+      { title: '月下祈愿', artist: 'SoundHelix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3' },
+      { title: '花间絮语', artist: 'SoundHelix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3' },
+      { title: '祈宝晚安', artist: 'SoundHelix', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3' },
+    ],
+    /* QQ 音乐歌单入口（版权原因跳转完整版，不内嵌） */
+    QQ_MUSIC: { name: '祈宝的歌单', url: 'https://y.qq.com/n/ryqq/songDetail/0009fXyT0Wj9zL' },
 
     /* 题库总题数（校验用） */
     TOTAL_QUESTIONS: 630,
@@ -2102,6 +2137,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       useVirtualList: true,                      // 题库概览虚拟化
       autoSave: true,                            // 自动保存
       speak: false,                              // 朗读题目（语音）
+      musicOn: false,                            // 背景音乐开关
+      musicIndex: 0,                             // 当前曲目
       savedAt: null,
     };
   }
@@ -3597,6 +3634,11 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
             ${chk('vib', '触觉反馈', '提交时震动')}
             ${slider('vibPower', '震动强度', 0, 100, 5, '%')}
             ${chk('speak', '朗读题目', '语音读出当前题')}
+            ${chk('musicOn', '背景音乐', '在线曲库播放器')}
+            <div class="set-item">
+              <label class="set-label">🎧 QQ 音乐歌单（版权原因跳转完整版）</label>
+              <div class="set-opts"><a class="set-opt qq-link" href="${esc(CONFIG.QQ_MUSIC.url)}" target="_blank" rel="noopener">${esc(CONFIG.QQ_MUSIC.name)} → QQ 音乐 ↗</a></div>
+            </div>
           </div>
           <div class="set-group"><div class="set-group-title">💗 沉浸感</div>
             ${chk('showSnippet', '提交小片段')}
@@ -3960,6 +4002,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       const key = inp.getAttribute('data-set').slice(4);
       State[key] = inp.checked;
       applyTheme(); applyStyle(); scheduleSave();
+      if (key === 'musicOn') { if (State.musicOn) playMusic(); else { const a = getAudio(); if (a) a.pause(); } renderMusicPlayer(); }
     });
     // 滑块
     $$('[data-set^="rng:"]').forEach(inp => inp.oninput = () => {
@@ -4021,6 +4064,49 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       applyTheme(); applyStyle(); scheduleSave();
       toast('省电模式开启 🔋（暗色 + 少动画）', 'success');
     };
+  }
+
+  /* ===== 背景音乐播放器 ===== */
+  function getAudio() { return document.getElementById('music-audio'); }
+  function currentTrack() { return CONFIG.MUSIC_PLAYLIST[State.musicIndex] || CONFIG.MUSIC_PLAYLIST[0]; }
+  function renderMusicPlayer() {
+    const mp = $('#music-player');
+    if (!mp) return;
+    const a = getAudio();
+    if (!State.musicOn) { mp.style.display = 'none'; if (a) a.pause(); return; }
+    mp.style.display = 'flex';
+    const t = currentTrack();
+    const mt = $('#mp-title'); if (mt) mt.textContent = t.title;
+    const ma = $('#mp-artist'); if (ma) ma.textContent = t.artist;
+    const mb = $('#mp-toggle'); if (mb) mb.textContent = (a && !a.paused) ? '⏸' : '▶';
+  }
+  function playMusic() {
+    const a = getAudio(); if (!a) return;
+    const t = currentTrack();
+    if (a.getAttribute('src') !== t.url) a.src = t.url;
+    a.volume = Math.max(0.1, (State.volume != null ? State.volume : 80) / 100);
+    const pr = a.play();
+    if (pr && pr.then) pr.then(() => renderMusicPlayer()).catch(() => toast('播放失败，检查网络或曲库链接', 'error'));
+    else renderMusicPlayer();
+  }
+  function toggleMusic() {
+    const a = getAudio(); if (!a) return;
+    if (!State.musicOn) { State.musicOn = true; saveNow(); renderMusicPlayer(); playMusic(); toast('🎵 背景音乐开', 'success'); }
+    else { State.musicOn = false; saveNow(); a.pause(); renderMusicPlayer(); toast('🔇 背景音乐关', 'warn'); }
+  }
+  function nextMusic() {
+    State.musicIndex = (State.musicIndex + 1) % CONFIG.MUSIC_PLAYLIST.length;
+    saveNow(); playMusic();
+  }
+  function initMusic() {
+    const a = getAudio(); if (!a) return;
+    a.addEventListener('ended', () => nextMusic());
+    a.addEventListener('play', () => renderMusicPlayer());
+    a.addEventListener('pause', () => renderMusicPlayer());
+    const t = $('#mp-toggle'); if (t) t.onclick = () => toggleMusic();
+    const n = $('#mp-next'); if (n) n.onclick = () => nextMusic();
+    const c = $('#mp-close'); if (c) c.onclick = () => { State.musicOn = false; saveNow(); renderMusicPlayer(); toast('🔇 背景音乐关', 'warn'); };
+    renderMusicPlayer();
   }
 
   /* ===== UI 工具 ===== */
@@ -4111,6 +4197,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       }
       requestAnimationFrame(fpsLoop);
     })();
+    // 背景音乐播放器
+    initMusic();
     // 初始应用风格
     applyStyle();
     // 深色跟随系统（仅首次无存档时）
@@ -4164,5 +4252,12 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 
 </script>
 <div id="fps-panel">60 FPS</div>
+<div id="music-player" style="display:none">
+  <button class="mp-btn" id="mp-toggle" aria-label="播放/暂停">▶</button>
+  <div class="mp-info"><span class="mp-title" id="mp-title">背景音乐</span><span class="mp-artist" id="mp-artist"></span></div>
+  <button class="mp-btn" id="mp-next" aria-label="下一首">⏭</button>
+  <button class="mp-btn" id="mp-close" aria-label="关闭播放器">✕</button>
+</div>
+<audio id="music-audio" preload="none"></audio>
 </body>
 </html>
