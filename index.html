@@ -933,6 +933,55 @@ button, .btn, .btn-big, .opt-label, .hbtn, .mem-btn, .preset-chip, .theme-chip, 
   .bottom-nav { padding-bottom: 6px; }
 }
 
+/* ===== 电脑端适配（≥1100px） ===== */
+@media (min-width: 1100px) {
+  /* 内容限宽居中，阅读舒适 */
+  .container { max-width: 1080px; }
+  .card { max-width: 860px; margin-left: auto; margin-right: auto; }
+  .welcome-hero h2 { font-size: 30px; }
+  .card-title { font-size: 20px; }
+
+  /* 提问双栏：左概览 / 右当前题 */
+  .ask-split {
+    display: grid; grid-template-columns: 300px 1fr; gap: 20px;
+    max-width: 1100px; margin: 0 auto; align-items: start;
+  }
+  .ask-split .ask-main { grid-column: 2; }
+  .ask-split .ask-rail {
+    grid-column: 1; position: sticky; top: 16px;
+  }
+  .ask-rail .rail-title { font-size: 13px; color: var(--text-soft); margin-bottom: 8px; font-weight: 700; }
+  .ask-rail .rail-list { display: flex; flex-direction: column; gap: 2px; max-height: 62vh; overflow: auto; }
+  .rail-item {
+    display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px;
+    font-size: 12.5px; color: var(--text-soft); border: none; background: transparent; text-align: left; cursor: pointer;
+  }
+  .rail-item:hover { background: var(--primary-light-soft); }
+  .rail-item.on { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+  .rail-item.done::after { content: '✓'; margin-left: auto; color: var(--success); }
+  .rail-item .ri-qid { color: var(--text-faint); font-size: 11px; }
+
+  /* 悬停微交互 */
+  .card { transition: box-shadow .2s; }
+  .card:hover { box-shadow: 0 6px 24px rgba(229,106,154,0.08); }
+  .btn { transition: transform .12s, box-shadow .12s; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .opt-label { transition: border-color .15s, background .15s; cursor: pointer; }
+}
+
+/* 快捷键提示条（电脑端） */
+.kbd-hint {
+  font-size: 12px; color: var(--text-faint); text-align: center; margin-top: 10px;
+}
+.kbd-hint kbd {
+  background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 4px;
+  padding: 1px 6px; font-size: 11px; font-family: inherit;
+}
+
+/* 快捷键激活视觉 */
+kbd.flash { background: var(--primary); color: #fff; border-color: var(--primary); }
+
 </style>
 </head>
 <body>
@@ -2534,6 +2583,13 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const p = State.plan[idx];
     const prog = ENGINE.countProgress(State.plan, State.answers);
     el.innerHTML = `
+      <div class="ask-split">
+      <div class="ask-rail">
+        <div class="rail-title">📋 题库概览（点击跳转）</div>
+        <div class="rail-list">${State.plan.map((q, i) =>
+          `<button class="rail-item ${i === idx ? 'on' : ''} ${hasAnswer(State.answers[q.qid]) ? 'done' : ''}" data-ri="${i}"><span class="ri-qid">${i + 1}</span>${esc(q.title.slice(0, 10))}</button>`).join('')}</div>
+      </div>
+      <div class="ask-main">
       <div class="card">
         <div class="card-title"><span class="icon">💬</span> 提问进行中 <span class="q-avatar" id="q-avatar">${getEmotion() < 30 ? '🌸' : getEmotion() < 60 ? '💗' : getEmotion() < 85 ? '😊' : '💖'}</span></div>
         <div class="emotion-meter" title="亲密度"><span class="em-label">亲密度</span><div class="bar-track"><div class="bar-fill" style="width:${getEmotion()}%"></div></div><span class="em-num">${getEmotion()}%</span></div>
@@ -2554,6 +2610,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
           <button class="btn btn-soft" id="btn-reskip">⏩ 跳到未答</button>
           <button class="btn btn-soft" id="btn-reroll">🎲 重新抽取题库</button>
         </div>
+        <div class="kbd-hint">快捷键：<kbd>←</kbd> 上题 · <kbd>→</kbd> 下题 · <kbd>Ctrl+Enter</kbd> 提交 · <kbd>/</kbd> 搜索</div>
+      </div>
+      </div>
       </div>
     `;
     bindQuestionCard(p);
@@ -2565,6 +2624,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     $('#btn-mand').onclick = () => App.toggleMandatory(p.qid);
     $('#btn-reskip').onclick = () => App.skipToEnd();
     $('#btn-reroll').onclick = () => App.reroll();
+    $$('[data-ri]').forEach(b => b.onclick = () => { const i = parseInt(b.getAttribute('data-ri')); State.currentIndex = i; State.viewingAnswered = hasAnswer(State.answers[State.plan[i].qid]); render(); });
     typewriter('.question-card .q-title');
   }
 
@@ -3519,7 +3579,20 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const mc = $('#modal-close');
     if (mc) mc.onclick = () => UI.closeModal();
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && $('#modal-overlay').style.display === 'flex') UI.closeModal();
+      if (e.key === 'Escape' && $('#modal-overlay').style.display === 'flex') { UI.closeModal(); return; }
+      const tag = (e.target.tagName || '').toLowerCase();
+      const inField = tag === 'input' || tag === 'textarea' || tag === 'select';
+      // Ctrl+Enter / Cmd+Enter 提交当前题（任何聚焦）
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey) && State.stage === 'ask' && State.askMode === 'single') {
+        e.preventDefault(); App.submitSingle(); return;
+      }
+      if (inField) return;
+      // 电脑端快捷键：← 上题 / → 下题 / / 搜索
+      if (State.stage === 'ask' && State.askMode === 'single') {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); App.prevQuestion(); }
+        else if (e.key === 'ArrowRight') { e.preventDefault(); App.submitSingle(); }
+        else if (e.key === '/') { e.preventDefault(); const q = $('#q-search'); if (q) q.focus(); }
+      }
     });
     // 尝试恢复进度
     const saved = STORE.load();
