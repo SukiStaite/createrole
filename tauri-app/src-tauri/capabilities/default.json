@@ -1,0 +1,15 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "搭角色应用默认权限",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "notification:default",
+    "opener:default",
+    "fs:default",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "dialog:default"
+  ]
+}
