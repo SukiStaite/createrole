@@ -4,11 +4,11 @@
 
 **以林晴祈（祈宝）的口吻，从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。**
 
-`V4.2-fix` · 离线单文件 · 零依赖 · 纯前端
+`V1.0 · 双子` · 离线单文件 · 零依赖 · 纯前端
 
-**V4.2-fix**：修复"无法回到上一题"核心 bug · 新增侧边栏（桌面固定/移动抽屉）· 移动/平板全面适配 · 三批次全量 + 记忆存档系统 · 131 项自动化测试全绿
+**V1.0 双子**：三界面风格（粉嫩/iOS 27/Material 3）· 流畅度全面增强（低端机优化/虚拟列表/FPS 面板）· 大量动画（加载屏/切换/按钮按下）· 设置中心 20+ 条目/400+ 组合 · 自定义主题（CSS 注入）· 关于界面 · 30+ 项自选 · 167 项自动化测试全绿
 
-[在线使用](https://sukistaite.github.io/createrole/) · [离线版下载](https://github.com/SukiStaite/createrole/raw/main/搭角色V4.2-fix.html)
+[在线使用](https://sukistaite.github.io/createrole/) · [离线版下载](https://github.com/SukiStaite/createrole/raw/main/搭角色V1.0.html)
 
 </div>
 
