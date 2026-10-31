@@ -2,14 +2,14 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="搭角色 V4.2-fix">
+<meta name="generator" content="搭角色 V1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="搭角色 V4.2-fix · AIRA · 浏览器捏角色工具（离线可用）">
+<meta name="description" content="搭角色 V1.0 双子 · AIRA · 浏览器捏角色工具（离线可用）">
 <meta name="theme-color" content="#e56a9a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="搭角色">
-<title>搭角色 V4.2-fix · AIRA · 浏览器捏角色工具</title>
+<title>搭角色 V1.0 双子 · AIRA · 浏览器捏角色工具</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%220.9em%22%20font-size%3D%2290%22%3E%E2%9C%A8%3C%2Ftext%3E%3C%2Fsvg%3E">
 <link rel="manifest" href='data:application/manifest+json,{"name":"搭角色 AIRA","short_name":"搭角色","start_url":".","display":"standalone","background_color":"%23fdf6f9","theme_color":"%23e56a9a"}'>
 <style>
@@ -999,9 +999,147 @@ kbd.flash { background: var(--primary); color: #fff; border-color: var(--primary
 .rail-list.collapsed { display: none; }
 .rail-list { margin-top: 10px; border-top: 1px solid var(--card-border); padding-top: 8px; }
 
+/* ===== V1.0 双子：三风格 ===== */
+:root { --style-radius: 14px; }
+.btn, .btn-big, .btn-primary, .btn-soft, .btn-ghost, .btn-danger, .hbtn, .opt-label, .preset-chip, .theme-chip, .answer-chip, .mem-btn, .side-item, .set-opt, .rail-head, .rail-item {
+  border-radius: var(--style-radius);
+}
+/* 粉嫩（默认） */
+[data-style="sakura"] {
+  --style-radius: 14px;
+  --btn-grad: linear-gradient(135deg, #f9a8c9, #e56a9a);
+  --btn-shadow: 0 4px 14px rgba(229, 106, 154, 0.28);
+}
+[data-style="sakura"] .btn-primary { box-shadow: var(--btn-shadow); }
+/* iOS 27（玻璃拟态） */
+[data-style="ios27"] {
+  --style-radius: 16px;
+  --btn-grad: linear-gradient(180deg, #ffffff, #eef0f6);
+  --btn-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+}
+[data-style="ios27"] .btn-primary {
+  background: var(--btn-grad); color: #111; border: 1px solid rgba(0,0,0,0.06); box-shadow: var(--btn-shadow); font-weight: 600;
+}
+[data-style="ios27"] .btn-soft, [data-style="ios27"] .btn-ghost { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(0,0,0,0.08); }
+[data-style="ios27"] .card { background: var(--glass-bg); backdrop-filter: blur(14px); }
+[data-style="ios27"] .app-header { backdrop-filter: blur(14px); }
+/* Material 3（大圆角胶囊 + 紫） */
+[data-style="material3"] {
+  --style-radius: 22px;
+  --btn-grad: linear-gradient(135deg, #7c5ce0, #a78bfa);
+  --btn-shadow: 0 6px 16px rgba(124, 92, 224, 0.35);
+}
+[data-style="material3"] .btn-primary { background: var(--btn-grad); box-shadow: var(--btn-shadow); font-weight: 700; }
+[data-style="material3"] .btn { font-weight: 600; }
+[data-style="material3"] .btn-soft { background: rgba(124, 92, 224, 0.08); border-color: rgba(124, 92, 224, 0.2); }
+
+/* ===== 设置面板 ===== */
+.settings { display: flex; flex-direction: column; gap: 14px; max-height: 62vh; overflow: auto; }
+.set-group { border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; background: var(--card-bg); }
+.set-group-title { font-size: 13px; font-weight: 800; margin-bottom: 10px; color: var(--primary); }
+.set-item { margin-bottom: 10px; }
+.set-label { display: block; font-size: 12.5px; color: var(--text-soft); margin-bottom: 6px; }
+.set-opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.set-opt { padding: 8px 12px; border: 1.5px solid var(--card-border); background: var(--card-bg); color: var(--text); font-size: 13px; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
+.set-opt:hover { border-color: var(--primary); }
+.set-opt.on { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
+.set-opt .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.set-toggle { display: flex; align-items: center; justify-content: space-between; padding: 7px 2px; font-size: 13.5px; cursor: pointer; gap: 10px; }
+.set-toggle em { color: var(--text-faint); font-size: 11.5px; font-style: normal; margin-left: 4px; }
+.set-toggle input { display: none; }
+.set-toggle .tgl { width: 40px; height: 22px; border-radius: 999px; background: var(--card-border); position: relative; transition: background .2s; flex-shrink: 0; }
+.set-toggle .tgl::after { content: ''; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.set-toggle input:checked + .tgl { background: var(--primary); }
+.set-toggle input:checked + .tgl::after { left: 21px; }
+.set-row { display: flex; align-items: center; gap: 10px; font-size: 13px; padding: 6px 2px; }
+.set-row input[type=range] { flex: 1; accent-color: var(--primary); }
+.set-row b { min-width: 42px; text-align: right; color: var(--primary); }
+.set-css { width: 100%; min-height: 90px; border: 1px solid var(--card-border); border-radius: 10px; padding: 10px; font-family: monospace; font-size: 12px; background: var(--bg); color: var(--text); resize: vertical; }
+.set-row-btn { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.set-tip { font-size: 11.5px; color: var(--text-faint); margin-top: 6px; }
+
+/* ===== 关于 ===== */
+.about { text-align: center; }
+.about-hero { font-size: 46px; margin-bottom: 6px; animation: pop .4s ease; }
+.about-name { font-size: 20px; font-weight: 900; margin-bottom: 8px; }
+.about-desc { color: var(--text-soft); font-size: 13.5px; max-width: 460px; margin: 0 auto 14px; }
+.about-block { text-align: left; border: 1px solid var(--card-border); border-radius: 12px; padding: 12px; margin-bottom: 10px; font-size: 13px; }
+.about-label { font-size: 12px; font-weight: 800; color: var(--primary); margin-bottom: 3px; }
+.about-link { color: var(--primary); text-decoration: underline; }
+.about-feats { margin: 4px 0 0; padding-left: 18px; color: var(--text-soft); font-size: 12.5px; }
+.about-feats li { margin-bottom: 3px; }
+.about-ver { color: var(--text-soft); font-size: 12.5px; }
+
+/* ===== 动画 ===== */
+/* 进入网站 */
+@keyframes site-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+.app-header, main, .bottom-nav { animation: site-in .4s ease; }
+/* 页面/卡片切换 */
+@keyframes page-in { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
+.card { animation: page-in .28s ease; }
+/* 按钮按下 */
+.btn:active, .btn-big:active, .hbtn:active, .set-opt:active, .side-item:active, .opt-label:active { transform: scale(0.95); }
+/* 弹窗进入 */
+#modal-overlay { animation: fade-in .2s ease; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+/* 提示进入 */
+.toast { animation: toast-in .25s ease; }
+@keyframes toast-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+/* 进度环 */
+.progress-ring { transition: stroke-dashoffset .4s ease; }
+/* 动画等级 0/1：只留按下反馈 */
+[data-anim="0"] .card, [data-anim="0"] .app-header, [data-anim="0"] main, [data-anim="0"] .bottom-nav { animation: none !important; }
+[data-anim="0"] .card, [data-anim="0"] .btn { transition: none !important; }
+[data-anim="1"] .card { animation: none; }
+/* 流畅模式：GPU 加速 + 少过渡 */
+body.flow-mode * { will-change: auto; }
+body.flow-mode .card, body.flow-mode .btn { transition: none !important; }
+body.flow-mode .card { animation: none !important; }
+
+/* ===== 滚动条美化 ===== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ===== 焦点环 ===== */
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
+
+/* ===== FPS 面板 ===== */
+#fps-panel { position: fixed; bottom: 8px; right: 8px; z-index: 300; background: rgba(0,0,0,0.7); color: #7fff7f; font: 12px monospace; padding: 4px 8px; border-radius: 6px; display: none; }
+
+/* 题库虚拟化（原生跳过离屏渲染） */
+.rail-list .rail-item { content-visibility: auto; contain-intrinsic-size: auto 34px; }
+body.no-vlist .rail-list .rail-item { content-visibility: visible; }
+
+/* ===== 加载屏 ===== */
+#splash {
+  position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center;
+  background: var(--bg); transition: opacity .45s ease;
+}
+#splash.hide { opacity: 0; pointer-events: none; }
+.splash-inner { text-align: center; animation: splash-in .6s ease; }
+@keyframes splash-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.splash-emoji { font-size: 54px; display: block; animation: blink 1.2s ease infinite; }
+.splash-title { font-size: 24px; font-weight: 900; margin-top: 8px; }
+.splash-sub { font-size: 12px; color: var(--text-faint); margin-top: 4px; letter-spacing: 2px; }
+
+/* 欢迎页版本徽章 */
+.welcome-badge {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 auto 14px;
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  color: #fff; padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 700;
+  box-shadow: 0 4px 14px rgba(229,106,154,0.3);
+}
+.wbadge-sub { font-size: 11px; font-weight: 500; opacity: 0.9; border-left: 1px solid rgba(255,255,255,0.4); padding-left: 8px; }
+
 </style>
 </head>
 <body>
+
+<!-- 进入网站加载屏 -->
+<div id="splash"><div class="splash-inner"><span class="splash-emoji">✨</span><div class="splash-title">搭角色</div><div class="splash-sub">V1.0 · 双子</div></div></div>
 
 <!-- 侧边栏遮罩 -->
 <div id="sidebar-overlay" onclick="App.closeSidebar()"></div>
@@ -1023,7 +1161,7 @@ kbd.flash { background: var(--primary); color: #fff; border-color: var(--primary
     <div class="logo">
       <span class="logo-icon">✨</span>
       <div class="logo-text">
-        <h1>搭角色 <span class="ver">V4.2-fix</span></h1>
+        <h1>搭角色 <span class="ver">V1.0 · 双子</span></h1>
         <p class="subtitle">AIRA · AI Role Assistant · 以林晴祈口吻打造完美角色</p>
       </div>
     </div>
@@ -1038,6 +1176,8 @@ kbd.flash { background: var(--primary); color: #fff; border-color: var(--primary
       <button class="hbtn" id="btn-theme" title="主题色">🎨</button>
       <button class="hbtn" id="btn-dark" title="暗色模式">🌙</button>
       <button class="hbtn" id="btn-lang" title="中/英">中</button>
+      <button class="hbtn" id="btn-about" title="关于">ℹ️</button>
+      <button class="hbtn" id="btn-settings" title="设置">⚙️</button>
     </div>
   </div>
 </header>
@@ -1098,13 +1238,28 @@ kbd.flash { background: var(--primary); color: #fff; border-color: var(--primary
 
   return {
     /* 版本号（用于更新提示与存档迁移） */
-    VERSION: '4.2-fix',
-    /* 存档 key（版本化，避免旧数据冲突） */
+    VERSION: '1.0',
+    /* 版本代号 */
+    CODE_NAME: '双子',
+    /* 存档 key（版本化，避免旧数据冲突；1.0 沿用 v42 兼容旧进度） */
     STORAGE_KEY: 'aira_dajuese_v42',
     /* 记忆快照 key */
     MEMORY_KEY: 'aira_dajuese_memories_v42',
     /* 自动保存延迟（ms，防抖） */
     AUTOSAVE_DELAY: 600,
+
+    /* 三种界面风格（按钮样式各异） */
+    STYLES: {
+      sakura:    { name: '粉嫩',    desc: '现在 · 温柔治愈',       radius: 14, pill: false },
+      ios27:     { name: 'iOS 27',  desc: '苹果风 · 玻璃拟态',     radius: 16, pill: true },
+      material3: { name: 'Material 3', desc: '谷歌风 · 大圆角胶囊', radius: 22, pill: true },
+    },
+    /* 动画等级 0=关 1=少 2=全 */
+    ANIM_LEVELS: ['关', '少', '全'],
+    /* 流畅模式（低端机优化） */
+    FLOW_MODES: ['标准', '流畅'],
+    /* 字号缩放 */
+    FONT_SCALES: [0.9, 1, 1.1, 1.2],
 
     /* 题库总题数（校验用） */
     TOTAL_QUESTIONS: 630,
@@ -1922,6 +2077,31 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       season: '',                                // 季节（沉浸感）
       sound: CONFIG.DEFAULT_SOUND,               // 音效开关
       stamps: {},                                // 印章收集 {key:true}
+      /* V1.0 双子：外观/流畅/自定义 */
+      style: 'sakura',                           // 界面风格：sakura | ios27 | material3
+      animLevel: 2,                              // 动画等级：0关 1少 2全
+      flowMode: '标准',                          // 流畅模式：标准 | 流畅
+      fontScale: 1,                              // 字号缩放
+      btnRadius: null,                           // 自定义按钮圆角（null=跟随风格）
+      customCSS: '',                             // 自定义主题 CSS
+      vib: false,                                // 触觉反馈
+      fpsShow: false,                            // 性能面板（FPS）
+      reduceMotion: false,                       // 强制减少动画
+      /* 沉浸/声音细节开关 */
+      showSnippet: true,                         // 提交后小片段
+      quote: true,                               // 祈宝语录
+      showTheater: true,                         // 小剧场
+      showAvatar: true,                          // 微表情头像
+      showStamps: true,                          // 印章收集
+      showScroll: true,                          // 档案卷轴
+      showPrivacy: true,                         // NSFW 私密感
+      showBg: true,                              // 背景氛围
+      typeSpeed: '中',                           // 打字速度 快/中/慢
+      volume: 80,                                // 音效音量 0-100
+      vibPower: 40,                              // 震动强度 0-100
+      useVirtualList: true,                      // 题库概览虚拟化
+      autoSave: true,                            // 自动保存
+      speak: false,                              // 朗读题目（语音）
       savedAt: null,
     };
   }
@@ -2087,6 +2267,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     el.className = 'toast ' + type;
     el.textContent = msg;
     el.setAttribute('role', 'status');
+    el.setAttribute('aria-live', 'polite');
     c.appendChild(el);
     setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity .3s'; setTimeout(() => el.remove(), 300); }, 2600);
   }
@@ -2139,6 +2320,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     updateHeaderProgress();
     renderSidebar();
     updateNav();
+    applyStyle();
     syncHistory();
     applyTheme();
     applyMood();
@@ -2183,11 +2365,12 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 
   function applyMood() {
     const cur = State.plan[State.currentIndex];
-    document.body.setAttribute('data-layer', cur ? (cur.layer || '') : '');
+    document.body.setAttribute('data-layer', State.showBg ? (cur ? (cur.layer || '') : '') : '');
     checkLayerDone();
   }
   function checkLayerDone() {
     if (!State.plan || !State.plan.length || !State.answers) return;
+    if (!State.showTheater) return;
     State.stamps = State.stamps || {};
     let layerDone = null;
     Object.entries(ENGINE.countProgress(State.plan, State.answers).layerStats).forEach(([l, s]) => {
@@ -2216,6 +2399,44 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     document.documentElement.setAttribute('data-lang', State.lang);
     const bt = $('#btn-dark'); if (bt) bt.textContent = State.darkMode ? '☀️' : '🌙';
     const bl = $('#btn-lang'); if (bl) bl.textContent = State.lang === 'en' ? 'EN' : '中';
+  }
+
+  /* 低端机检测（流畅模式自动降级） */
+  function isLowEnd() {
+    try {
+      const c = (navigator.hardwareConcurrency || 4);
+      const m = (navigator.deviceMemory || 4);
+      return c <= 2 || m <= 2;
+    } catch (e) { return false; }
+  }
+
+  /* 自定义主题 CSS 注入 */
+  function applyCustomCSS() {
+    let st = document.getElementById('custom-theme-style');
+    if (State.customCSS && State.customCSS.trim()) {
+      if (!st) { st = document.createElement('style'); st.id = 'custom-theme-style'; document.head.appendChild(st); }
+      st.textContent = State.customCSS;
+    } else if (st) { st.remove(); }
+  }
+
+  /* 应用界面风格 / 动画等级 / 流畅模式 / 字号 / 圆角 */
+  function applyStyle() {
+    const root = document.documentElement;
+    root.setAttribute('data-style', State.style || 'sakura');
+    let anim = State.reduceMotion || (State.flowMode === '流畅' && isLowEnd()) ? '0' : String(State.animLevel);
+    root.setAttribute('data-anim', anim);
+    document.body.classList.toggle('flow-mode', State.flowMode === '流畅');
+    document.body.classList.toggle('reduce-motion', !!State.reduceMotion);
+    document.body.classList.toggle('no-vlist', !State.useVirtualList);
+    document.body.style.fontSize = (State.fontScale * 100) + '%';
+    if (State.btnRadius != null) root.style.setProperty('--btn-radius', State.btnRadius + 'px');
+    else root.style.removeProperty('--btn-radius');
+    // 风格半径默认
+    const st = CONFIG.STYLES[State.style] || CONFIG.STYLES.sakura;
+    root.style.setProperty('--style-radius', (State.btnRadius != null ? State.btnRadius : st.radius) + 'px');
+    applyCustomCSS();
+    const fp = $('#fps-panel');
+    if (fp) fp.style.display = State.fpsShow ? 'block' : 'none';
   }
 
   /* ===== 顶部进度 ===== */
@@ -2263,7 +2484,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         <div class="welcome-hero">
           <div class="welcome-avatar">🌸</div>
           <h2>你好呀，我是 <span class="name">林晴祈</span></h2>
-          <p class="desc">这里是「搭角色」V4.2 工具。我会以祈宝的身份，陪你从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。</p>
+          <p class="desc">这里是「搭角色」V1.0 双子工具。我会以祈宝的身份，陪你从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。</p>
+          <div class="welcome-badge"><span>✨ V1.0 · 双子</span><span class="wbadge-sub">三风格 · 流畅 · 动画 · 设置中心</span></div>
           <div class="welcome-tags">
             <span class="tag">630 题题库</span>
             <span class="tag">五层结构</span>
@@ -2614,10 +2836,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       </div>
       <div class="ask-main">
       <div class="card">
-        <div class="card-title"><span class="icon">💬</span> 提问进行中 <span class="q-avatar" id="q-avatar">${getEmotion() < 30 ? '🌸' : getEmotion() < 60 ? '💗' : getEmotion() < 85 ? '😊' : '💖'}</span></div>
+        <div class="card-title"><span class="icon">💬</span> 提问进行中 ${State.showAvatar ? `<span class="q-avatar" id="q-avatar">${getEmotion() < 30 ? '🌸' : getEmotion() < 60 ? '💗' : getEmotion() < 85 ? '😊' : '💖'}</span>` : ''}</div>
         <div class="emotion-meter" title="亲密度"><span class="em-label">亲密度</span><div class="bar-track"><div class="bar-fill" style="width:${getEmotion()}%"></div></div><span class="em-num">${getEmotion()}%</span></div>
-        <div class="q-quote">💭 ${esc(pick(CONFIG.QUOTES))}</div>
-        ${p.layer === 'NSFW' ? `<div class="q-privacy">🤫 这个问题，只有我们两个知道哦…</div>` : ''}
+        ${State.quote ? `<div class="q-quote">💭 ${esc(pick(CONFIG.QUOTES))}</div>` : ''}
+        ${p.layer === 'NSFW' && State.showPrivacy ? `<div class="q-privacy">🤫 这个问题，只有我们两个知道哦…</div>` : ''}
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round(idx / State.plan.length * 100)}%"></div></div>
         <div class="text-small text-soft mb-12">第 ${idx + 1} / ${State.plan.length} 题（已答 ${prog.done} · ${Math.round(prog.done / State.plan.length * 100)}%）</div>
         ${renderQuestionCard(p, State.answers[p.qid])}
@@ -2657,6 +2879,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       rt.classList.toggle('open', !open);
     };
     typewriter('.question-card .q-title');
+    speak(p.title);
   }
 
   /* 打字机：标题逐字出现 */
@@ -2664,6 +2887,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     if (!CONFIG.TYPE_SPEED) return;
     const el = $(sel);
     if (!el) return;
+    if (State.reduceMotion || State.animLevel === 0 || State.flowMode === '流畅') return; // 流畅/关动画不打字
+    const speedMap = { '快': 6, '中': 18, '慢': 34 };
+    const speed = speedMap[State.typeSpeed] || 18;
     const full = el.textContent;
     if (full.length > 60) return; // 过长不播
     el.textContent = '';
@@ -2672,7 +2898,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       i++;
       el.textContent = full.slice(0, i);
       if (i >= full.length) clearInterval(timer);
-    }, CONFIG.TYPE_SPEED);
+    }, speed);
   }
 
   /* 批次模式 */
@@ -2723,7 +2949,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         <div style="font-size:60px;margin-bottom:14px">🎉</div>
         <h2 style="font-size:26px;font-weight:900;margin-bottom:8px">全部提问完成！</h2>
         <p class="text-soft" style="margin-bottom:6px">共完成 <b style="color:var(--primary)">${prog.done}</b> 题，即将为你组装完整档案。</p>
-        ${stampsHtml ? `<div class="stamp-row">${stampsHtml}</div>` : ''}
+        ${State.showStamps && stampsHtml ? `<div class="stamp-row">${stampsHtml}</div>` : ''}
         ${State.season ? `<p class="q-quote">🌿 ${esc(State.season)}日 · 她在这个季节，把心事都告诉了你。</p>` : ''}
         <p class="text-small text-soft mb-16">下面进行：生成完整档案 → 输出确认 → 世界观检查 → 体系登记 → 测试模式</p>
         <button class="btn-big" id="btn-gen">生成完整档案 ✨</button>
@@ -2738,9 +2964,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const arch = State.generatedArchive;
     el.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.2-fix 全字段版 · 精细度对标林晴祈）</div>
+        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V1.0 双子全字段版 · 精细度对标林晴祈）</div>
         <div class="card-sub">以下档案由你的回答自动组装，可逐块检查。${esc(hasAnswer(arch.core) ? '' : '（一句话内核待补）')}</div>
-        ${Object.keys(State.stamps || {}).filter(k => !k.startsWith('layer_')).length ? `<div class="stamp-row archive-stamps">${Object.keys(State.stamps).filter(k => !k.startsWith('layer_')).map(k => `<span class="stamp">${CONFIG.STAMPS[k] || '🏅'} ${k}</span>`).join('')}</div>` : ''}
+        ${State.showStamps && Object.keys(State.stamps || {}).filter(k => !k.startsWith('layer_')).length ? `<div class="stamp-row archive-stamps">${Object.keys(State.stamps).filter(k => !k.startsWith('layer_')).map(k => `<span class="stamp">${CONFIG.STAMPS[k] || '🏅'} ${k}</span>`).join('')}</div>` : ''}
         ${arch.sections.map(s => `
           <div class="archive-block">
             <div class="ab-title">${esc(s.title)}</div>
@@ -2981,6 +3207,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       }
       State.currentIndex++;
       State.viewingAnswered = false;   // 前进恢复正常跳转
+      vibrate(20);
       render();
       maybeAutoMemory();
       // 沉浸感反馈
@@ -3110,7 +3337,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       toast('档案已生成 ✨', 'success');
       // 仪式感加载：短暂卷轴展开效果
       const app = $('#app');
-      if (app) { app.classList.add('archive-reveal'); setTimeout(() => app.classList.remove('archive-reveal'), 900); }
+      if (app && State.showScroll && !State.reduceMotion) { app.classList.add('archive-reveal'); setTimeout(() => app.classList.remove('archive-reveal'), 900); }
       // 专属寄语（第一次生成）
       if (!State.stamps.final) {
         State.stamps.final = true; saveNow();
@@ -3301,6 +3528,98 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       if (ov) ov.classList.remove('show');
     },
 
+    /* ===== 关于界面 ===== */
+    openAbout() {
+      UI.showModal('ℹ️ 关于 · 搭角色',
+        `<div class="about">
+          <div class="about-hero">✨</div>
+          <h3 class="about-name">搭角色 <span class="ver">V1.0 · 双子</span></h3>
+          <p class="about-desc">以林晴祈（祈宝）的口吻，从零问出一个角色的血肉、骨骼、欲望与灵魂，最后组装成一份可直接投入 RP 的完整档案。</p>
+          <div class="about-block">
+            <div class="about-label">👤 作者</div><div>SukiStaite</div>
+            <div class="about-label">🐙 GitHub</div>
+            <div><a href="https://github.com/SukiStaite/createrole" target="_blank" rel="noopener" class="about-link">github.com/SukiStaite/createrole</a></div>
+            <div class="about-label">🌐 在线使用</div>
+            <div><a href="https://sukistaite.github.io/createrole/" target="_blank" rel="noopener" class="about-link">sukistaite.github.io/createrole</a></div>
+          </div>
+          <div class="about-block">
+            <div class="about-label">🧩 功能介绍</div>
+            <ul class="about-feats">
+              <li>从 630 题（SFW/NSFW/DLC/体系登记/补完）分层抽取，量可调（20–1000 题）</li>
+              <li>自动组装 60+ 字段档案，逐块检查，10+ 世界观检查，体系登记</li>
+              <li>测试模式：生成祈宝口吻角色卡，可对话/导出 SillyTavern（V2/V3）+ JSON</li>
+              <li>记忆存档：任意时刻快照，多角色并存，导入/导出/分享链接</li>
+              <li>三界面风格（粉嫩 / iOS 27 / Material 3）+ 主题色 + 暗色模式</li>
+              <li>沉浸感：亲密度、语气、小剧场、印章、语录、成长日记、季节、寄语</li>
+              <li>设置：20+ 条目 / 400+ 组合，可注入自定义 CSS 主题</li>
+              <li>离线单文件，零依赖，双击即用；PWA 可安装</li>
+            </ul>
+          </div>
+          <div class="about-block">
+            <div class="about-label">📋 版本</div>
+            <div class="about-ver">V1.0 · 双子（三风格 · 流畅度 · 动画 · 设置中心 · 自定义主题 · 关于）</div>
+          </div>
+        </div>`,
+        `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+    },
+
+    /* ===== 设置面板（20+ 条目 / 400+ 组合） ===== */
+    openSettings() {
+      const s = State;
+      const chk = (key, label, tip = '') => `<label class="set-toggle"><span>${label}${tip ? `<em>${tip}</em>` : ''}</span><input type="checkbox" data-set="chk:${key}" ${s[key] ? 'checked' : ''}><i class="tgl"></i></label>`;
+      const radio = (key, name, options, fmt) => `<div class="set-opts" data-set="grp:${key}">${options.map(o => `<button class="set-opt ${s[key] === o ? 'on' : ''}" data-val="${o}">${fmt ? fmt(o) : o}</button>`).join('')}</div>`;
+      const slider = (key, label, min, max, step, unit) => `<label class="set-row"><span>${label}</span><input type="range" min="${min}" max="${max}" step="${step}" value="${s[key]}" data-set="rng:${key}"><b>${s[key]}${unit}</b></label>`;
+      UI.showModal('⚙️ 设置',
+        `<div class="settings">
+          <div class="set-group"><div class="set-group-title">🎨 外观</div>
+            <div class="set-item"><label class="set-label">界面风格</label><div class="set-opts" data-set="grp:style">${Object.entries(CONFIG.STYLES).map(([k, v]) => `<button class="set-opt style-opt ${s.style === k ? 'on' : ''}" data-val="${k}"><span>${k === 'sakura' ? '🌸' : k === 'ios27' ? '📱' : '🎨'}</span>${v.name}</button>`).join('')}</div></div>
+            <div class="set-item"><label class="set-label">主题色</label><div class="set-opts theme-row" data-set="grp:theme">${Object.keys(CONFIG.THEMES).map(t => `<button class="set-opt ${s.theme === t ? 'on' : ''}" data-val="${t}"><i class="dot" style="background:${CONFIG.THEMES[t].primary}"></i>${t}</button>`).join('')}</div></div>
+            ${chk('darkMode', '暗色模式', '夜间护眼')}
+            <div class="set-item"><label class="set-label">字号</label>${radio('fontScale', 'font', CONFIG.FONT_SCALES, v => v === 1 ? '标准' : (v < 1 ? '小' : '大' + Math.round((v - 1) * 100) + '%'))}</div>
+            <div class="set-item"><label class="set-label">按钮圆角</label><div class="set-opts" data-set="grp:btnRadius">${[null, 8, 12, 16, 22, 28].map(r => `<button class="set-opt ${s.btnRadius === r ? 'on' : ''}" data-val="${r === null ? '' : r}">${r === null ? '跟随风格' : r + 'px'}</button>`).join('')}</div></div>
+            ${chk('showBg', '背景氛围', '提问页随层渐变')}
+          </div>
+          <div class="set-group"><div class="set-group-title">🎬 动画</div>
+            <div class="set-item"><label class="set-label">动画等级</label>${radio('animLevel', 'anim', [0, 1, 2], v => CONFIG.ANIM_LEVELS[v])}</div>
+            <div class="set-item"><label class="set-label">打字速度</label>${radio('typeSpeed', 'ts', ['快', '中', '慢'])}</div>
+            ${chk('reduceMotion', '减少动画', '强制关闭切换/打字动画')}
+          </div>
+          <div class="set-group"><div class="set-group-title">⚡ 流畅</div>
+            <div class="set-item"><label class="set-label">流畅模式</label>${radio('flowMode', 'flow', CONFIG.FLOW_MODES)}</div>
+            ${chk('fpsShow', '性能面板', '显示实时 FPS')}
+            ${chk('useVirtualList', '题库虚拟化', '低端机更快')}
+            <div class="set-tip">低端机（≤2 核 / ≤2GB）在流畅模式下自动降级动画与打字。</div>
+            <div class="set-row-btn"><button class="btn btn-soft" id="btn-eco">🔋 一键省电（暗色 + 少动画）</button></div>
+          </div>
+          <div class="set-group"><div class="set-group-title">🔊 声音 & 反馈</div>
+            ${chk('sound', '音效', '答题/完成音')}
+            ${slider('volume', '音量', 0, 100, 5, '%')}
+            ${chk('vib', '触觉反馈', '提交时震动')}
+            ${slider('vibPower', '震动强度', 0, 100, 5, '%')}
+            ${chk('speak', '朗读题目', '语音读出当前题')}
+          </div>
+          <div class="set-group"><div class="set-group-title">💗 沉浸感</div>
+            ${chk('showSnippet', '提交小片段')}
+            ${chk('quote', '祈宝语录')}
+            ${chk('showTheater', '小剧场', '每层完成庆祝')}
+            ${chk('showAvatar', '微表情头像')}
+            ${chk('showStamps', '印章收集')}
+            ${chk('showScroll', '档案卷轴')}
+            ${chk('showPrivacy', 'NSFW 私密感')}
+          </div>
+          <div class="set-group"><div class="set-group-title">💾 数据</div>
+            <div class="set-item"><label class="set-label">记忆自动提示</label>${radio('memoryFreq', 'mem', [0].concat(CONFIG.MEMORY_FREQ), v => v === 0 ? '关闭' : '每 ' + v + ' 题')}</div>
+            ${chk('autoSave', '自动保存', '答题实时存本地')}
+          </div>
+          <div class="set-group"><div class="set-group-title">🎨 自定义主题（CSS）</div>
+            <textarea class="set-css" data-set="css:customCSS" placeholder="/* 用 CSS 变量定制你的角色制作器 */\n:root{ --primary:#ff6b9d; --radius:18px; }\nbody{ background:#fff0f5; }">${esc(s.customCSS || '')}</textarea>
+            <div class="set-row-btn"><button class="btn btn-soft" id="btn-export-set">📤 导出设置</button><button class="btn btn-soft" id="btn-import-set">📥 导入设置</button><button class="btn btn-soft" id="btn-reset-style">↺ 重置外观</button></div>
+          </div>
+        </div>`,
+        `<button class="btn btn-primary" id="btn-set-done">完成</button>`);
+      bindSettings();
+    },
+
     clearAll() {
       UI.showModal('🗑 清空存档',
         `<p>确定要清空当前所有进度吗？<br><span class="text-small text-soft">这会删除本地自动存档（记忆快照不受影响）。</span></p>`,
@@ -3416,6 +3735,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       if (!p) return;
       if (isMandatory(p) || State.customMandatory[p.qid]) return toast('必答题不能跳过', 'error');
       State.currentIndex++;
+      vibrate(15);
       render();
       toast('已跳过（稍后可回题修改）', 'warn');
       log('跳过第 ' + p.qid + ' 题');
@@ -3519,6 +3839,28 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* ===== 沉浸感辅助 ===== */
   function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
   function getEmotion() { return State.emotion || 0; }
+  /* 触觉反馈（设置可关/调强度） */
+  function vibrate(ms) {
+    if (!State.vib) return;
+    try {
+      if (navigator.vibrate) {
+        const power = Math.max(0.1, (State.vibPower != null ? State.vibPower : 40) / 100);
+        navigator.vibrate(Math.round(Math.max(10, Math.min(200, ms * power))));
+      }
+    } catch (e) { /* 忽略 */ }
+  }
+  /* 朗读题目（语音，设置可关） */
+  function speak(text) {
+    if (!State.speak) return;
+    try {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(String(text || '').slice(0, 80));
+      u.lang = State.lang === 'en' ? 'en-US' : 'zh-CN';
+      u.rate = 1.0;
+      window.speechSynthesis.speak(u);
+    } catch (e) { /* 忽略 */ }
+  }
   function nsfwAnswered() {
     let c = 0;
     Object.values(State.answers).forEach(v => { const s = String(v); if (s.includes('NSFW') || s.includes('调教') || s.includes('SM')) c++; });
@@ -3532,6 +3874,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     return pick(pool);
   }
   function showSnippet(layer) {
+    if (!State.showSnippet) return;
     const pool = CONFIG.SNIPPETS[layer] || CONFIG.SNIPPETS.SFW;
     const p = document.createElement('div');
     p.className = 'snip';
@@ -3549,7 +3892,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       o.connect(g); g.connect(ctx.destination);
       const freq = { tap: 620, ok: 880, done: 990, stamp: 1100 }[kind] || 660;
       o.frequency.value = freq; o.type = 'sine';
-      g.gain.setValueAtTime(0.07, ctx.currentTime);
+      const vol = (State.volume != null ? State.volume : 80) / 100 * 0.07;
+      g.gain.setValueAtTime(vol, ctx.currentTime);
       g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.16);
       o.start(); o.stop(ctx.currentTime + 0.16);
     } catch (e) { /* 音频不可用忽略 */ }
@@ -3589,6 +3933,94 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
          <button class="btn btn-ghost" onclick="UI.closeModal()">这次跳过</button>
          <button class="btn btn-ghost" onclick="App.disableMemory();UI.closeModal()">以后不再提醒</button>`);
     }
+  }
+
+  /* ===== 设置面板绑定 ===== */
+  function setVal(key, rawVal) {
+    // 按 key 类型解析
+    if (key === 'animLevel' || key === 'memoryFreq' || key === 'fontScale') State[key] = parseInt(rawVal, 10);
+    else if (key === 'btnRadius') State[key] = rawVal === '' ? null : parseInt(rawVal, 10);
+    else State[key] = rawVal;
+  }
+  function bindSettings() {
+    const modal = $('#modal-overlay');
+    // 分组按钮
+    $$('[data-set^="grp:"]').forEach(grp => {
+      const key = grp.getAttribute('data-set').slice(4);
+      const btns = grp.querySelectorAll('.set-opt');
+      btns.forEach(btn => btn.onclick = () => {
+        setVal(key, btn.getAttribute('data-val'));
+        btns.forEach(b => b.classList.toggle('on', b === btn));
+        applyTheme(); applyStyle(); scheduleSave();
+        if (key === 'flowMode' || key === 'reduceMotion' || key === 'animLevel') toast('已更新，渲染即时生效', 'warn');
+      });
+    });
+    // 开关
+    $$('[data-set^="chk:"]').forEach(inp => inp.onchange = () => {
+      const key = inp.getAttribute('data-set').slice(4);
+      State[key] = inp.checked;
+      applyTheme(); applyStyle(); scheduleSave();
+    });
+    // 滑块
+    $$('[data-set^="rng:"]').forEach(inp => inp.oninput = () => {
+      const key = inp.getAttribute('data-set').slice(4);
+      State[key] = parseInt(inp.value, 10);
+      const b = inp.parentElement.querySelector('b');
+      if (b) b.textContent = inp.value + (inp.getAttribute('data-set').includes('volume') || inp.getAttribute('data-set').includes('vibPower') ? '%' : '');
+      scheduleSave();
+    });
+    // CSS
+    const css = $('#modal-body [data-set="css:customCSS"]');
+    if (css) css.oninput = () => { State.customCSS = css.value; applyCustomCSS(); scheduleSave(); };
+    // 完成
+    const done = $('#btn-set-done');
+    if (done) done.onclick = () => { saveNow(); UI.closeModal(); toast('设置已保存 ⚙️', 'success'); };
+    // 导出设置
+    const ex = $('#btn-export-set');
+    if (ex) ex.onclick = () => {
+      const keys = ['style', 'theme', 'darkMode', 'fontScale', 'btnRadius', 'animLevel', 'typeSpeed', 'reduceMotion', 'flowMode', 'fpsShow', 'useVirtualList', 'sound', 'volume', 'vib', 'vibPower', 'showSnippet', 'quote', 'showTheater', 'showAvatar', 'showStamps', 'showScroll', 'showPrivacy', 'showBg', 'memoryFreq', 'autoSave', 'customCSS', 'lang', 'season', 'vibPower'];
+      const payload = { format: 'aira-settings-v1', version: CONFIG.VERSION, data: {} };
+      keys.forEach(k => payload.data[k] = State[k]);
+      downloadBlob(JSON.stringify(payload, null, 2), '搭角色设置.json', 'application/json');
+      log('导出设置'); saveNow();
+    };
+    // 导入设置
+    const im = $('#btn-import-set');
+    if (im) im.onclick = () => {
+      const fi = document.createElement('input');
+      fi.type = 'file'; fi.accept = '.json,application/json';
+      fi.onchange = () => {
+        const f = fi.files[0]; if (!f) return;
+        const rd = new FileReader();
+        rd.onload = () => {
+          try {
+            const j = JSON.parse(rd.result);
+            const data = j.data || j;
+            Object.keys(data).forEach(k => { if (k in State) State[k] = data[k]; });
+            applyTheme(); applyStyle(); saveNow(); render();
+            toast('设置已导入 ✅', 'success');
+          } catch (e) { toast('设置文件无效', 'error'); }
+        };
+        rd.readAsText(f);
+      };
+      fi.click();
+    };
+    // 重置外观
+    const rs = $('#btn-reset-style');
+    if (rs) rs.onclick = () => {
+      State.style = 'sakura'; State.theme = '祈宝粉'; State.darkMode = false; State.fontScale = 1;
+      State.btnRadius = null; State.animLevel = 2; State.typeSpeed = '中'; State.reduceMotion = false;
+      State.flowMode = '标准'; State.customCSS = '';
+      applyTheme(); applyStyle(); scheduleSave(); App.openSettings();
+      toast('外观已重置 🌸', 'success');
+    };
+    // 一键省电
+    const eco = $('#btn-eco');
+    if (eco) eco.onclick = () => {
+      State.darkMode = true; State.reduceMotion = true; State.animLevel = 0; State.flowMode = '流畅';
+      applyTheme(); applyStyle(); scheduleSave();
+      toast('省电模式开启 🔋（暗色 + 少动画）', 'success');
+    };
   }
 
   /* ===== UI 工具 ===== */
@@ -3651,6 +4083,8 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const bt = $('#btn-theme'); if (bt) bt.onclick = () => App.toggleTheme();
     const bd = $('#btn-dark'); if (bd) bd.onclick = () => App.toggleDark();
     const bl = $('#btn-lang'); if (bl) bl.onclick = () => App.setLang();
+    const ba = $('#btn-about'); if (ba) ba.onclick = () => App.openAbout();
+    const bs = $('#btn-settings'); if (bs) bs.onclick = () => App.openSettings();
     // 侧边栏开关
     const bm = $('#btn-menu'); if (bm) bm.onclick = () => App.openSidebar();
     const sc = $('#side-close'); if (sc) sc.onclick = () => App.closeSidebar();
@@ -3664,6 +4098,33 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       const old = localStorage.getItem(STORE.OLD_KEY);
       if (old) setTimeout(() => toast('已从 V4.1 迁移存档，欢迎使用 V4.2 ✨', 'success'), 600);
     } catch (e) { /* 忽略 */ }
+    // FPS 性能面板
+    let fpsCount = 0, fpsLast = performance.now();
+    (function fpsLoop() {
+      fpsCount++;
+      const now = performance.now();
+      if (now - fpsLast >= 1000) {
+        const fps = Math.round(fpsCount * 1000 / (now - fpsLast));
+        fpsCount = 0; fpsLast = now;
+        const fp = $('#fps-panel');
+        if (fp) fp.textContent = fps + ' FPS';
+      }
+      requestAnimationFrame(fpsLoop);
+    })();
+    // 初始应用风格
+    applyStyle();
+    // 深色跟随系统（仅首次无存档时）
+    try {
+      if (!localStorage.getItem(STORE.STORAGE_KEY)) {
+        const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (sysDark) { State.darkMode = true; applyTheme(); }
+      }
+    } catch (e) { /* 忽略 */ }
+    // 加载屏淡出
+    const splash = document.getElementById('splash');
+    if (splash) setTimeout(() => { splash.classList.add('hide'); setTimeout(() => splash.remove(), 500); }, 500);
+    // 崩溃恢复：出错时先保存进度
+    window.addEventListener('error', () => { try { saveNow(); } catch (e) { /* 忽略 */ } });
   });
 
   /* 浏览器后退/前进支持（popstate 恢复阶段） */
@@ -3702,5 +4163,6 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
 })();
 
 </script>
+<div id="fps-panel">60 FPS</div>
 </body>
 </html>
