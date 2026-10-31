@@ -2,14 +2,14 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="generator" content="搭角色 V4.2.0">
+<meta name="generator" content="搭角色 V4.2-fix">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="description" content="搭角色 V4.2 · AIRA · 浏览器捏角色工具（离线可用）">
+<meta name="description" content="搭角色 V4.2-fix · AIRA · 浏览器捏角色工具（离线可用）">
 <meta name="theme-color" content="#e56a9a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="搭角色">
-<title>搭角色 V4.2 · AIRA · 浏览器捏角色工具</title>
+<title>搭角色 V4.2-fix · AIRA · 浏览器捏角色工具</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ctext%20y%3D%220.9em%22%20font-size%3D%2290%22%3E%E2%9C%A8%3C%2Ftext%3E%3C%2Fsvg%3E">
 <link rel="manifest" href='data:application/manifest+json,{"name":"搭角色 AIRA","short_name":"搭角色","start_url":".","display":"standalone","background_color":"%23fdf6f9","theme_color":"%23e56a9a"}'>
 <style>
@@ -851,17 +851,113 @@ body[data-layer="COMPLETE"]::before { background: linear-gradient(160deg, rgba(2
   .q-title::after, .snip, .archive-reveal .card, .chat-msg { animation: none !important; transition: none !important; }
 }
 
+/* ===== V4.2-fix：侧边栏 ===== */
+#sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 248px; z-index: 200;
+  background: var(--card-bg); border-right: 1px solid var(--card-border);
+  display: flex; flex-direction: column; padding: 14px 12px; gap: 4px;
+  transform: translateX(-100%); transition: transform .25s ease;
+}
+#sidebar.open { transform: translateX(0); box-shadow: 0 0 30px rgba(0,0,0,0.18); }
+#sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 190;
+  opacity: 0; pointer-events: none; transition: opacity .25s;
+}
+#sidebar-overlay.show { opacity: 1; pointer-events: auto; }
+.side-header { display: flex; align-items: center; gap: 8px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+.side-logo { font-size: 22px; }
+.side-title { font-weight: 800; font-size: 15px; }
+.side-sub { font-size: 11px; color: var(--text-faint); }
+#side-close { margin-left: auto; }
+.side-group-title { font-size: 11px; color: var(--text-faint); text-transform: uppercase; margin: 10px 4px 4px; letter-spacing: 1px; }
+.side-nav, .side-tools { display: flex; flex-direction: column; gap: 2px; }
+.side-nav { margin-top: 8px; }
+.side-item {
+  display: flex; align-items: center; gap: 10px; padding: 11px 12px;
+  border: none; background: transparent; border-radius: 10px; cursor: pointer;
+  font-size: 14px; color: var(--text); text-align: left; min-height: 44px;
+}
+.side-item:hover { background: var(--primary-light-soft); }
+.side-item.on { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+.side-item.danger { color: var(--danger); }
+.si-icon { font-size: 16px; }
+
+/* 侧边栏展开时桌面主内容右移（≥900px） */
+@media (min-width: 900px) {
+  body { padding-left: 0; }
+  #sidebar { transform: translateX(0); box-shadow: none; }
+  #sidebar-overlay { display: none; }
+  .app-header, main, .bottom-nav, #toast-container { margin-left: 248px; }
+  #btn-menu { display: none; }
+}
+/* 移动端：主内容不右移（侧栏为抽屉） */
+@media (max-width: 899px) {
+  #btn-menu { display: inline-flex; }
+}
+
+/* ===== V4.2-fix：移动 / 平板适配 ===== */
+/* 按钮触区与换行 */
+.btn-row { flex-wrap: wrap; gap: 10px; }
+.btn-row .btn { min-height: 44px; padding: 10px 16px; }
+.btn-big { min-height: 50px; }
+button, .btn, .btn-big, .opt-label, .hbtn, .mem-btn, .preset-chip, .theme-chip, .answer-chip, .side-item { -webkit-tap-highlight-color: transparent; }
+.opt-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+.opt-label { min-height: 40px; display: flex; align-items: center; justify-content: center; }
+
+/* 平板（768–1024）两列布局 */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .card { max-width: 720px; margin-left: auto; margin-right: auto; }
+  .opt-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .preset-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 窄屏（≤480）：单列紧凑，按钮全宽次要行 */
+@media (max-width: 480px) {
+  .header-inner { padding: 8px 10px; }
+  .subtitle { font-size: 10px; }
+  .logo-text h1 { font-size: 18px; }
+  .header-tools { gap: 4px; }
+  .hbtn { min-width: 40px; min-height: 40px; }
+  .btn-row.left .btn { flex: 1 1 44%; min-width: 0; font-size: 12.5px; padding: 10px 8px; }
+  .btn-row .btn { font-size: 13px; }
+  .q-title { font-size: 17px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .modal { max-width: 94vw; }
+  .memory-item { flex-direction: column; align-items: stretch; }
+  .mem-actions { justify-content: space-between; }
+}
+
+/* 横屏小屏：控制高度 */
+@media (max-height: 500px) and (orientation: landscape) {
+  .welcome-hero h2 { font-size: 20px; }
+  .bottom-nav { padding-bottom: 6px; }
+}
+
 </style>
 </head>
 <body>
 
+<!-- 侧边栏遮罩 -->
+<div id="sidebar-overlay" onclick="App.closeSidebar()"></div>
+<!-- 侧边栏 -->
+<aside id="sidebar" aria-label="侧边栏导航">
+  <div class="side-header">
+    <span class="side-logo">✨</span>
+    <div><div class="side-title">搭角色</div><div class="side-sub">AIRA · V4.2-fix</div></div>
+    <button class="hbtn" id="side-close" aria-label="关闭侧边栏">✕</button>
+  </div>
+  <nav class="side-nav" id="side-nav"></nav>
+  <div class="side-tools" id="side-tools"></div>
+</aside>
+
 <!-- 顶部标题栏 -->
 <header class="app-header">
   <div class="header-inner">
+    <button class="hbtn" id="btn-menu" aria-label="菜单">☰</button>
     <div class="logo">
       <span class="logo-icon">✨</span>
       <div class="logo-text">
-        <h1>搭角色 <span class="ver">V4.2</span></h1>
+        <h1>搭角色 <span class="ver">V4.2-fix</span></h1>
         <p class="subtitle">AIRA · AI Role Assistant · 以林晴祈口吻打造完美角色</p>
       </div>
     </div>
@@ -936,7 +1032,7 @@ body[data-layer="COMPLETE"]::before { background: linear-gradient(160deg, rgba(2
 
   return {
     /* 版本号（用于更新提示与存档迁移） */
-    VERSION: '4.2.0',
+    VERSION: '4.2-fix',
     /* 存档 key（版本化，避免旧数据冲突） */
     STORAGE_KEY: 'aira_dajuese_v42',
     /* 记忆快照 key */
@@ -1913,6 +2009,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   const State = {
     ...STORE.defaultState(),
     meta: ENGINE.defaultMeta(),
+    viewingAnswered: false,   // 是否正在回看已答题（prev 用）
   };
 
   let autosaveTimer = null;
@@ -1974,6 +2071,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       case 'test': renderTest(el); break;
     }
     updateHeaderProgress();
+    renderSidebar();
     updateNav();
     syncHistory();
     applyTheme();
@@ -1983,6 +2081,40 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   }
 
   /* ===== 沉浸感：背景氛围 + 小剧场层完成 ===== */
+  /* ===== 侧边栏 ===== */
+  const SIDE_NAV = [['welcome', '🏠', '欢迎'], ['meta', '🎯', '元信息'], ['ask', '💬', '提问'], ['archive', '📄', '档案'], ['check', '🛡️', '检查'], ['register', '📝', '登记'], ['test', '🎬', '测试']];
+  function renderSidebar() {
+    const nav = $('#side-nav'), tools = $('#side-tools');
+    if (!nav || !tools) return;
+    nav.innerHTML = SIDE_NAV.map(([s, ic, t]) =>
+      `<button class="side-item ${State.stage === s ? 'on' : ''}" data-side-stage="${s}"><span class="si-icon">${ic}</span><span>${t}</span></button>`).join('');
+    tools.innerHTML = `
+      <div class="side-group-title">工具</div>
+      <button class="side-item" data-side-act="memory"><span class="si-icon">💾</span><span>记忆存档</span></button>
+      <button class="side-item" data-side-act="import"><span class="si-icon">📥</span><span>导入档案</span></button>
+      <button class="side-item" data-side-act="share"><span class="si-icon">🔗</span><span>分享进度</span></button>
+      <button class="side-item" data-side-act="history"><span class="si-icon">📜</span><span>操作日志</span></button>
+      <button class="side-item" data-side-act="theme"><span class="si-icon">🎨</span><span>主题色</span></button>
+      <button class="side-item" data-side-act="dark"><span class="si-icon">🌙</span><span>暗色模式</span></button>
+      <button class="side-item" data-side-act="lang"><span class="si-icon">🌐</span><span>中 / 英</span></button>
+      <button class="side-item" data-side-act="sound"><span class="si-icon">🔊</span><span>音效</span></button>
+      <button class="side-item danger" data-side-act="clear"><span class="si-icon">🗑</span><span>清空存档</span></button>`;
+    $$('[data-side-stage]').forEach(b => b.onclick = () => { App.go(b.getAttribute('data-side-stage')); App.closeSidebar(); });
+    $$('[data-side-act]').forEach(b => b.onclick = () => {
+      const a = b.getAttribute('data-side-act');
+      if (a === 'memory') App.openMemory();
+      else if (a === 'import') App.importJSON();
+      else if (a === 'share') App.shareLink();
+      else if (a === 'history') App.openHistory();
+      else if (a === 'theme') App.toggleTheme();
+      else if (a === 'dark') App.toggleDark();
+      else if (a === 'lang') App.setLang();
+      else if (a === 'sound') { State.sound = !State.sound; saveNow(); toast(State.sound ? '音效已开 🔊' : '音效已关 🔇', 'warn'); }
+      else if (a === 'clear') App.clearAll();
+      App.closeSidebar();
+    });
+  }
+
   function applyMood() {
     const cur = State.plan[State.currentIndex];
     document.body.setAttribute('data-layer', cur ? (cur.layer || '') : '');
@@ -2393,7 +2525,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* 逐题模式 */
   function renderAskSingle(el) {
     let idx = State.currentIndex;
-    while (idx < State.plan.length && hasAnswer(State.answers[State.plan[idx].qid])) idx++;
+    // 前进时跳过已答；回看（viewingAnswered）时允许显示当前题（含已答）
+    if (!State.viewingAnswered) {
+      while (idx < State.plan.length && hasAnswer(State.answers[State.plan[idx].qid])) idx++;
+    }
     if (idx >= State.plan.length) { renderAskComplete(el); return; }
     State.currentIndex = idx;
     const p = State.plan[idx];
@@ -2452,7 +2587,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
   /* 批次模式 */
   function renderAskBatch(el) {
     let start = State.currentIndex;
-    while (start < State.plan.length && hasAnswer(State.answers[State.plan[start].qid])) start++;
+    if (!State.viewingAnswered) {
+      while (start < State.plan.length && hasAnswer(State.answers[State.plan[start].qid])) start++;
+    }
     if (start >= State.plan.length) { renderAskComplete(el); return; }
     State.currentIndex = start;
     const end = Math.min(start + State.batchSize, State.plan.length);
@@ -2510,7 +2647,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const arch = State.generatedArchive;
     el.innerHTML = `
       <div class="card">
-        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.2 全字段版 · 精细度对标林晴祈）</div>
+        <div class="card-title"><span class="icon">📄</span> 角色档案 · ${esc(arch.name)}（V4.2-fix 全字段版 · 精细度对标林晴祈）</div>
         <div class="card-sub">以下档案由你的回答自动组装，可逐块检查。${esc(hasAnswer(arch.core) ? '' : '（一句话内核待补）')}</div>
         ${Object.keys(State.stamps || {}).filter(k => !k.startsWith('layer_')).length ? `<div class="stamp-row archive-stamps">${Object.keys(State.stamps).filter(k => !k.startsWith('layer_')).map(k => `<span class="stamp">${CONFIG.STAMPS[k] || '🏅'} ${k}</span>`).join('')}</div>` : ''}
         ${arch.sections.map(s => `
@@ -2752,6 +2889,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         else if (isMandatory(p)) return toast(`第 ${p.qid} 题必答，请填写后再继续`, 'error');
       }
       State.currentIndex++;
+      State.viewingAnswered = false;   // 前进恢复正常跳转
       render();
       maybeAutoMemory();
       // 沉浸感反馈
@@ -2762,7 +2900,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         setTimeout(() => toast(moodWord(p.layer || 'SFW'), 'success'), 250);
       }
     },
-    prevQuestion() { if (State.currentIndex > 0) State.currentIndex--; render(); },
+    prevQuestion() {
+      if (State.currentIndex > 0) { State.currentIndex--; State.viewingAnswered = true; render(); }
+      else toast('已经是第一题了', 'warn');
+    },
     skipToEnd() {
       let idx = State.currentIndex;
       while (idx < State.plan.length && hasAnswer(State.answers[State.plan[idx].qid])) idx++;
@@ -2784,6 +2925,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
       if (missingMandatory.length) return toast(`必答题 #${missingMandatory.join('、#')} 未填写`, 'error');
       if (anyEmpty) toast(`${anyEmpty} 道选答题已跳过`, 'warn');
       State.currentIndex = end;
+      State.viewingAnswered = false;
       render();
       maybeAutoMemory();
       // 沉浸感反馈（本批答了多少）
@@ -2796,7 +2938,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
         setTimeout(() => toast(moodWord(State.plan[start] ? State.plan[start].layer : 'SFW'), 'success'), 250);
       }
     },
-    prevBatch() { State.currentIndex = Math.max(0, State.currentIndex - State.batchSize); render(); },
+    prevBatch() {
+      if (State.currentIndex > 0) { State.currentIndex = Math.max(0, State.currentIndex - State.batchSize); State.viewingAnswered = true; render(); }
+      else toast('已经是第一批了', 'warn');
+    },
 
     clearAnswer(qid) { delete State.answers[qid]; render(); },
 
@@ -3053,6 +3198,18 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     },
 
     /* ===== 清空存档（二次确认） ===== */
+    /* ===== 侧边栏开关 ===== */
+    openSidebar() {
+      const sb = $('#sidebar'), ov = $('#sidebar-overlay');
+      if (sb) sb.classList.add('open');
+      if (ov) ov.classList.add('show');
+    },
+    closeSidebar() {
+      const sb = $('#sidebar'), ov = $('#sidebar-overlay');
+      if (sb) sb.classList.remove('open');
+      if (ov) ov.classList.remove('show');
+    },
+
     clearAll() {
       UI.showModal('🗑 清空存档',
         `<p>确定要清空当前所有进度吗？<br><span class="text-small text-soft">这会删除本地自动存档（记忆快照不受影响）。</span></p>`,
@@ -3390,6 +3547,9 @@ if (typeof module !== 'undefined' && module.exports) module.exports = QUESTIONS;
     const bt = $('#btn-theme'); if (bt) bt.onclick = () => App.toggleTheme();
     const bd = $('#btn-dark'); if (bd) bd.onclick = () => App.toggleDark();
     const bl = $('#btn-lang'); if (bl) bl.onclick = () => App.setLang();
+    // 侧边栏开关
+    const bm = $('#btn-menu'); if (bm) bm.onclick = () => App.openSidebar();
+    const sc = $('#side-close'); if (sc) sc.onclick = () => App.closeSidebar();
     // 离线/在线提示
     const onlineToast = () => toast(navigator.onLine ? '网络已恢复，可正常使用 🌐' : '已离线，功能不受影响（存档在本地）', 'warn');
     window.addEventListener('online', onlineToast);
