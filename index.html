@@ -1221,6 +1221,33 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
 .rail-item.rail-jump { font-size: 12px; color: var(--text-soft); }
 .rail-gap { text-align: center; color: var(--text-faint); font-size: 12px; padding: 2px 0; }
 
+/* 沉浸反馈：答题卡片弹跳 */
+.question-card.q-pop { animation: qPop .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes qPop { 0%{transform:scale(1)} 35%{transform:scale(1.015)} 100%{transform:scale(1)} }
+
+/* 解析深度增强：选项描述更清晰 */
+.opt-desc { line-height:1.45; }
+.q-options .opt-item .opt-desc { white-space:normal; }
+
+/* 图标垂直对齐修正（emoji 基线错位根治） */
+.side-item, .nav-item, .btn, .card-title, .q-title, .ab-title, .stamp {
+  display: flex; align-items: center;
+}
+.card-title { display: flex; align-items: center; gap: 6px; }
+.card-title .icon, .si-icon, .f-icon, .step-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  line-height: 1; flex: none;
+}
+.side-item span { line-height: 1.2; }
+.q-title, .q-parse, .card-sub, .text-small { text-rendering: optimizeLegibility; }
+/* 字体平滑 + 数字对齐 */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-variant-numeric: tabular-nums; }
+/* 图标 emoji 基线统一 */
+[class*="icon"], [class*="si-icon"], [class*="f-icon"], [class*="emoji"], .welcome-avatar, .q-avatar {
+  font-family: "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
 </style>
 </head>
 <body>
@@ -8576,6 +8603,7 @@ window.QUESTION_EXT = {
         const cust = card.querySelector('.q-custom');
         if (cust) { cust.value = ''; setFeedback('✅ 已选选项', true); }
         card.classList.add('answered');
+        immersiveFeedback(p.qid);
         scheduleSave();
       };
       // 键盘：Enter 直接选中（方向键原生支持）
@@ -8597,12 +8625,21 @@ window.QUESTION_EXT = {
         else setFeedback('⌨️ 输入后自动视为答案', false);
       };
       cust.onblur = e => {
-        if (e.target.value.trim()) { State.answers[p.qid] = e.target.value.trim(); card.classList.add('answered'); scheduleSave(); }
+        if (e.target.value.trim()) { State.answers[p.qid] = e.target.value.trim(); card.classList.add('answered'); immersiveFeedback(p.qid); scheduleSave(); }
       };
       cust.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); e.target.blur(); } };
     }
     const clear = card.querySelector('[data-clear]');
     if (clear) clear.onclick = () => { App.clearAnswer(p.qid); };
+  }
+
+  /* 沉浸反馈：答题后她回一句 + 卡片弹跳（增强体验感） */
+  function immersiveFeedback(qid) {
+    if (State.showAvatar) {
+      const card = $(`.question-card[data-qid="${qid}"]`);
+      if (card) { card.classList.remove('q-pop'); void card.offsetWidth; card.classList.add('q-pop'); }
+    }
+    if (State.quote) toast('💬 ' + pick(CONFIG.QUOTES), '');
   }
 
   /* 逐题模式 */
@@ -10002,11 +10039,14 @@ window.QUESTION_EXT = {
     }
   });
 
-  /* 未完成提示：关闭/刷新前提醒（有进度且未到欢迎页） */
+  /* 未完成提示：关闭/刷新前**强制保存** + 提醒（修复 debounce 未触发丢进度） */
   window.addEventListener('beforeunload', e => {
+    try { saveNow(); } catch (err) { /* 忽略 */ }
     const hasProgress = State.plan && State.plan.length > 0 && State.stage && State.stage !== 'welcome';
     if (hasProgress) { e.preventDefault(); e.returnValue = ''; }
   });
+  /* pagehide：后台切走/关闭也强制保存（移动端可靠性） */
+  window.addEventListener('pagehide', () => { try { saveNow(); } catch (err) { /* 忽略 */ } });
 
   /* 全局错误降级页（避免白屏） */
   window.addEventListener('error', ev => {
