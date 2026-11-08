@@ -1248,6 +1248,94 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   -webkit-font-smoothing: antialiased;
 }
 
+/* ============================================================
+ * 整体 UI 精修层（V1.0.1 · 统一视觉系统升级）
+ * 覆盖所有风格（sakura/ios27/material3）：更精致的卡片/排版/按钮/选项/输入/布局
+ * ============================================================ */
+
+/* 1) 设计 token：圆角/阴影/间距统一 */
+:root {
+  --radius: 18px; --radius-sm: 12px;
+  --shadow-soft: 0 2px 12px rgba(90,60,90,.06);
+  --shadow-card: 0 6px 24px rgba(90,60,90,.09), 0 1px 3px rgba(90,60,90,.05);
+  --shadow-hover: 0 10px 34px rgba(90,60,90,.14), 0 2px 6px rgba(90,60,90,.06);
+  --space-xs: 6px; --space-sm: 10px; --space-md: 16px; --space-lg: 24px;
+  --font: "PingFang SC","HarmonyOS Sans SC","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+}
+
+/* 2) 全局排版：字重层次 + 行高 + 平滑 */
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.card, .card-title, .card-sub, .q-title, .q-parse { letter-spacing: .01em; }
+.card { border-radius: var(--radius); box-shadow: var(--shadow-card); border: 1px solid var(--card-border); }
+.card:hover { box-shadow: var(--shadow-hover); transition: box-shadow .25s ease; }
+.card-title { font-weight: 800; letter-spacing: .01em; }
+.card-sub { line-height: 1.6; }
+
+/* 3) 主区内容宽度居中 + 间距统一 */
+#app, .app-main { max-width: 1080px; margin-left: auto; margin-right: auto; width: 100%; }
+#app > .card, .app-main > .card { margin-bottom: var(--space-md); }
+
+/* 4) 按钮层级：主按钮渐变 + 阴影 */
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); box-shadow: 0 4px 14px rgba(120,60,90,.25); border: none; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(120,60,90,.3); }
+.btn-big { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); box-shadow: 0 6px 20px rgba(120,60,90,.28); border-radius: var(--radius); }
+.btn-big:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(120,60,90,.35); }
+.btn, .btn-soft, .btn-ghost { border-radius: var(--radius-sm); }
+.btn:active, .btn-big:active { transform: translateY(0) scale(.98); }
+
+/* 5) 选项卡片：更大 + hover 上浮 + 选中明显 */
+.opt-item label, .opt-label { border-radius: var(--radius-sm); transition: all .18s ease; }
+.opt-item label:hover, .opt-label:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(90,60,90,.1); }
+.opt-item input:checked + label, .opt-item input:checked + .opt-label { box-shadow: 0 3px 12px rgba(120,60,90,.18); transform: translateY(-1px); }
+.opt-desc { line-height: 1.5; }
+
+/* 6) 输入框：圆角 + 焦点环 */
+input[type="text"], .custom-input, textarea, select, .q-custom {
+  border-radius: var(--radius-sm);
+  transition: border-color .2s, box-shadow .2s;
+}
+input[type="text"]:focus, .custom-input:focus, textarea:focus, select:focus, .q-custom:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+/* 7) 侧栏/导航：更精致 */
+.side-item, .nav-item { border-radius: var(--radius-sm); transition: all .18s; }
+.side-item:hover, .nav-item:hover { transform: translateX(2px); }
+.side-item.on, .nav-item.on { box-shadow: 0 2px 10px rgba(120,60,90,.12); }
+
+/* 8) 档案表格：更透气 */
+.archive-table td { padding: 9px 12px; line-height: 1.5; }
+.archive-block { border-radius: var(--radius); }
+
+/* 9) 进度环/统计：更精致 */
+.progress-ring { box-shadow: var(--shadow-soft); }
+.stat-box { border-radius: var(--radius-sm); }
+
+/* 10) 背景氛围：柔和渐变 */
+body { background-image: linear-gradient(160deg, color-mix(in srgb, var(--bg) 92%, var(--primary-light) 8%), var(--bg) 55%, color-mix(in srgb, var(--bg) 92%, var(--accent-light) 8%)); background-attachment: fixed; }
+
+/* 11) 自定义细滚动条 */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--text-soft) 30%, transparent); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--text-soft) 50%, transparent); }
+
+/* 12) 移动端优化：卡片间距/字体/底导航 */
+@media (max-width: 768px) {
+  .card { padding: 14px; border-radius: 16px; }
+  #app, .app-main { padding-left: 10px; padding-right: 10px; }
+  .card-title { font-size: 15px; }
+  .q-title { font-size: 15px; }
+  .opt-item label, .opt-label { font-size: 12.5px; padding: 10px; }
+  .bottom-nav { border-radius: 18px 18px 0 0; box-shadow: 0 -4px 20px rgba(90,60,90,.1); }
+  .btn-big { font-size: 14px; padding: 13px; }
+}
+
+/* 13) 深色模式适配 */
+:root[data-dark="1"] .card { border-color: color-mix(in srgb, var(--card-border) 70%, transparent); }
+:root[data-dark="1"] .opt-item label, :root[data-dark="1"] .opt-label { background: rgba(255,255,255,.04); }
+
 </style>
 </head>
 <body>
