@@ -1466,6 +1466,22 @@ input[type="text"]:focus, .custom-input:focus, textarea:focus, select:focus, .q-
     linear-gradient(160deg, #1c1622 0%, #181320 100%);
 }
 
+/* ===== 自定义答案输入弹窗 ===== */
+.custom-modal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; }
+.custom-modal-backdrop { position: absolute; inset: 0; background: rgba(20,15,25,.55); backdrop-filter: blur(4px); }
+.custom-modal-box { position: relative; width: min(480px, 92vw); background: #fff; border-radius: 18px; box-shadow: 0 18px 60px rgba(0,0,0,.35); padding: 18px 18px 16px; animation: cm-pop .18s ease; }
+:root[data-dark="1"] .custom-modal-box { background: #262032; color: #f0ecf6; }
+.custom-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.custom-modal-title { font-weight: 700; font-size: 15px; }
+.custom-modal-close { background: none; border: none; font-size: 18px; cursor: pointer; color: inherit; opacity: .6; }
+.custom-modal-close:hover { opacity: 1; }
+.custom-modal-qid { font-size: 12px; color: #8b8398; margin-bottom: 10px; }
+.custom-modal-textarea { width: 100%; box-sizing: border-box; min-height: 96px; resize: vertical; border-radius: 12px; border: 1px solid #e4dff0; background: #faf9fd; color: inherit; padding: 10px 12px; font-size: 14px; font-family: inherit; outline: none; }
+.custom-modal-textarea:focus { border-color: #d99ad4; box-shadow: 0 0 0 3px rgba(217,154,212,.18); }
+:root[data-dark="1"] .custom-modal-textarea { background: #1e1928; border-color: #3a3148; }
+.custom-modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+@keyframes cm-pop { from { transform: scale(.92); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
 </style>
 </head>
 <body>
@@ -2598,6 +2614,7 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
   const $$ = (sel) => document.querySelectorAll(sel);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const hasAnswer = (v) => v != null && String(v).trim() !== '' && String(v).trim() !== '—';
+  const isCustomOpt = (o) => /自定义|自定/.test(String(o ?? ''));
 
   /* 合并题库扩展（题目扩充 + 选项详细介绍）到 QUESTIONS */
   function applyQuestionExt() {
@@ -3116,7 +3133,7 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
           <div class="opts-title">💡 建议方向（可直接点选，也可自定义填写）</div>
           <div class="opt-grid">
             ${opts.map((o, i) => `
-              <div class="opt-item"><input type="radio" name="q_${p.qid}" id="q${p.qid}_${i}" value="${esc(o)}" ${ans === o ? 'checked' : ''}>
+              <div class="opt-item"><input type="radio" name="q_${p.qid}" id="q${p.qid}_${i}" value="${esc(o)}" ${(ans === o || (isCustomOpt(o) && ans && !opts.includes(ans))) ? 'checked' : ''}>
               <label class="opt-label" for="q${p.qid}_${i}">
                 <span class="opt-text">${esc(o)}</span>
                 ${p.optionDescs && p.optionDescs[o] ? `<span class="opt-desc">${esc(p.optionDescs[o])}</span>` : ''}
@@ -3132,6 +3149,87 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
     `;
   }
 
+  /* ===== 自定义答案输入弹窗 ===== */
+  let cmState = { open: false, qid: null, el: null };
+
+  function restoreRadio(qid) {
+    const ans = hasAnswer(State.answers[qid]) ? String(State.answers[qid]) : null;
+    const radios = [...$$(`input[name="q_${qid}"]`)];
+    const inOpts = ans != null && radios.some(r => r.value === ans);
+    radios.forEach(r => {
+      if (ans == null) r.checked = false;
+      else if (r.value === ans) r.checked = true;
+      else if (isCustomOpt(r.value)) r.checked = !inOpts;
+      else r.checked = false;
+    });
+  }
+
+  function openCustomModal(qid, prefill) {
+    const el = cmState.el;
+    if (!el) return;
+    cmState.qid = qid;
+    cmState.open = true;
+    const qidEl = el.querySelector('#cm-qid');
+    const input = el.querySelector('#cm-input');
+    const q = (window.QUESTIONS || []).find(x => x.id === qid);
+    if (qidEl) qidEl.textContent = '第 ' + qid + ' 题' + (q && q.title ? ' · ' + q.title : '');
+    if (input) { input.value = prefill || ''; setTimeout(() => { input.focus(); input.select(); }, 40); }
+    el.style.display = 'flex';
+  }
+
+  function closeCustomModal(restore) {
+    const el = cmState.el;
+    if (el) el.style.display = 'none';
+    const qid = cmState.qid;
+    cmState.open = false;
+    cmState.qid = null;
+    if (restore && qid != null) restoreRadio(qid);
+  }
+
+  function cmSubmit() {
+    const el = cmState.el;
+    if (!el) return;
+    const input = el.querySelector('#cm-input');
+    if (!input) return;
+    const v = input.value.trim();
+    if (!v) { input.focus(); return; }
+    const qid = cmState.qid;
+    if (qid == null) return;
+    State.answers[qid] = v;
+    const card = $(`.question-card[data-qid="${qid}"]`);
+    if (card) {
+      $$(`input[name="q_${qid}"]`).forEach(r => r.checked = false);
+      const cust = card.querySelector('.q-custom');
+      if (cust) cust.value = v;
+      const customRadio = [...$$(`input[name="q_${qid}"]`)].find(r => isCustomOpt(r.value));
+      if (customRadio) customRadio.checked = true;
+      const fb = card.querySelector(`.q-custom-feedback[data-fb="${qid}"]`);
+      if (fb) { fb.textContent = '✅ 已自定义：' + v.slice(0, 20) + (v.length > 20 ? '…' : ''); fb.className = 'q-custom-feedback ok'; }
+      card.classList.add('answered');
+      immersiveFeedback(qid);
+      scheduleSave();
+    }
+    closeCustomModal(false);
+  }
+
+  function initCustomModal() {
+    const el = $('#custom-modal');
+    if (!el) return;
+    cmState.el = el;
+    const input = el.querySelector('#cm-input');
+    const submit = el.querySelector('#cm-submit');
+    el.querySelectorAll('[data-cm-close]').forEach(b => b.onclick = () => closeCustomModal(true));
+    if (submit) submit.onclick = () => cmSubmit();
+    if (input) {
+      input.onkeydown = e => {
+        if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); cmSubmit(); }
+      };
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && cmState.open) closeCustomModal(true);
+    });
+  }
+
   function bindQuestionCard(p) {
     const card = $(`.question-card[data-qid="${p.qid}"]`);
     if (!card) return;
@@ -3141,7 +3239,15 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
     };
     $$(`input[name="q_${p.qid}"]`).forEach(r => {
       r.onchange = e => {
-        State.answers[p.qid] = e.target.value;
+        const val = e.target.value;
+        // 选「自定义」→ 弹出输入框，不立即保存
+        if (isCustomOpt(val)) {
+          const cust = card.querySelector('.q-custom');
+          const prefill = (cust && cust.value.trim()) || (hasAnswer(State.answers[p.qid]) ? String(State.answers[p.qid]) : '');
+          openCustomModal(p.qid, prefill);
+          return;
+        }
+        State.answers[p.qid] = val;
         const cust = card.querySelector('.q-custom');
         if (cust) { cust.value = ''; setFeedback('✅ 已选选项', true); }
         card.classList.add('answered');
@@ -4480,6 +4586,8 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
   document.addEventListener('DOMContentLoaded', () => {
     // 合并题库扩展（题目扩充 + 选项介绍）
     applyQuestionExt();
+    // 自定义答案弹窗
+    initCustomModal();
     // 弹窗关闭按钮 + ESC
     const mc = $('#modal-close');
     if (mc) mc.onclick = () => UI.closeModal();
@@ -4618,5 +4726,22 @@ window.QUESTION_EXT = {"1":{"title":"她的全名是什么？名字是她的第�
   <button class="mp-btn" id="mp-close" aria-label="关闭播放器">✕</button>
 </div>
 <audio id="music-audio" preload="none"></audio>
+
+<!-- 自定义答案输入弹窗 -->
+<div id="custom-modal" class="custom-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="cm-title">
+  <div class="custom-modal-backdrop" data-cm-close="1"></div>
+  <div class="custom-modal-box">
+    <div class="custom-modal-head">
+      <span class="custom-modal-title" id="cm-title">✍️ 自定义填写</span>
+      <button class="custom-modal-close" data-cm-close="1" aria-label="关闭">✕</button>
+    </div>
+    <div class="custom-modal-qid" id="cm-qid"></div>
+    <textarea class="custom-modal-textarea" id="cm-input" maxlength="500" rows="4" placeholder="请输入你的自定义内容…"></textarea>
+    <div class="custom-modal-actions">
+      <button class="btn btn-soft" data-cm-close="1">取消</button>
+      <button class="btn btn-primary" id="cm-submit">确定</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
