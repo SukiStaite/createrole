@@ -1337,102 +1337,122 @@ body { background-image: linear-gradient(160deg, color-mix(in srgb, var(--bg) 92
 :root[data-dark="1"] .opt-item label, :root[data-dark="1"] .opt-label { background: rgba(255,255,255,.04); }
 
 /* ============================================================
- * 液态玻璃版（V1.1 · 仿 AndroidLiquidGlass / Material 3 Liquid Glass）
- * 半透明毛玻璃 + 高光描边 + 顶部内反射高光 + 彩色折射背景 + 大圆角
+/* ============================================================
+ * 液态玻璃版（V1.2 · 按 AndroidLiquidGlass 真实参数重做）
+ * 核心参数（源自源码）：vibrancy 饱和度 ×1.5 · blur 轻 · lens(12,24dp) 内折射 · 交互高光 · 胶囊圆角
  * ============================================================ */
 
-/* 彩色折射背景：柔和光斑（玻璃需要背景有色彩变化才显折射） */
+/* 彩色折射背景（玻璃需背景有色彩才显折射/振动） */
 body {
   background:
-    radial-gradient(520px 380px at 12% 18%, rgba(232,120,143,.20), transparent 65%),
-    radial-gradient(460px 340px at 88% 12%, rgba(123,111,192,.18), transparent 60%),
-    radial-gradient(520px 420px at 78% 88%, rgba(63,158,158,.16), transparent 62%),
-    radial-gradient(380px 300px at 30% 92%, rgba(240,180,90,.12), transparent 60%),
+    radial-gradient(520px 380px at 12% 18%, rgba(232,120,143,.22), transparent 65%),
+    radial-gradient(460px 340px at 88% 12%, rgba(123,111,192,.20), transparent 60%),
+    radial-gradient(520px 420px at 78% 88%, rgba(63,158,158,.18), transparent 62%),
+    radial-gradient(380px 300px at 30% 92%, rgba(240,180,90,.14), transparent 60%),
     linear-gradient(160deg, #faf4f6 0%, #f2eef8 55%, #eef5f6 100%);
   background-attachment: fixed;
 }
 
-/* 液态玻璃基元：半透明 + 高光描边 + 顶部内高光 */
-.card, .modal, .stat-box, .welcome-hero {
-  background: rgba(255,255,255,.52) !important;
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
+/* —— 液态玻璃基元：半透明 + blur 轻 + 饱和 1.5(vibrancy) + lens 内折射高光 —— */
+.card, .modal, .stat-box, .welcome-hero, .preset-item, .archive-block {
+  background: rgba(255,255,255,.48) !important;
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
   border: 1px solid rgba(255,255,255,.55) !important;
+  border-radius: 20px !important;
+  /* lens 内折射：顶部高光 + 内侧边缘微亮 + 底部微暗（玻璃厚度感） */
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.75),
-    inset 0 -1px 0 rgba(255,255,255,.18),
+    inset 1px 0 0 rgba(255,255,255,.25),
+    inset -1px 0 0 rgba(255,255,255,.25),
+    inset 0 -1px 0 rgba(255,255,255,.12),
     0 10px 40px rgba(110,70,110,.12),
     0 2px 8px rgba(110,70,110,.06) !important;
 }
-.card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(255,255,255,.22), 0 16px 48px rgba(110,70,110,.18), 0 3px 10px rgba(110,70,110,.08) !important; }
+.card:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 1px 0 0 rgba(255,255,255,.3), inset -1px 0 0 rgba(255,255,255,.3), inset 0 -1px 0 rgba(255,255,255,.16), 0 16px 48px rgba(110,70,110,.18), 0 3px 10px rgba(110,70,110,.08) !important; }
 
-/* 顶栏 + 侧栏 + 底导航：玻璃 */
+/* 顶栏/侧栏/底导航：轻玻璃 */
 .app-header, .app-nav, .side-nav, .side-tools, .bottom-nav, .side-header {
-  background: rgba(255,255,255,.42) !important;
-  backdrop-filter: blur(20px) saturate(170%);
-  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  background: rgba(255,255,255,.38) !important;
+  backdrop-filter: blur(10px) saturate(150%);
+  -webkit-backdrop-filter: blur(10px) saturate(150%);
   border-color: rgba(255,255,255,.45) !important;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 4px 24px rgba(110,70,110,.08) !important;
 }
 
-/* 按钮：玻璃胶囊 */
-.btn, .btn-soft, .btn-ghost, .hbtn {
-  background: rgba(255,255,255,.5) !important;
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
-  border: 1px solid rgba(255,255,255,.6) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 2px 10px rgba(110,70,110,.08) !important;
+/* 按钮：玻璃胶囊 + 交互高光 */
+.btn, .btn-soft, .btn-ghost, .hbtn, .rail-item, .side-item, .nav-item, .stage-chip {
+  background: rgba(255,255,255,.45) !important;
+  backdrop-filter: blur(6px) saturate(150%);
+  -webkit-backdrop-filter: blur(6px) saturate(150%);
+  border: 1px solid rgba(255,255,255,.55) !important;
+  border-radius: 999px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 2px 10px rgba(110,70,110,.07) !important;
+  transition: all .18s ease !important;
 }
+.btn:hover, .btn-soft:hover, .btn-ghost:hover, .hbtn:hover, .side-item:hover, .nav-item:hover, .stage-chip:hover {
+  background: rgba(255,255,255,.6) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85), inset 0 0 12px rgba(255,255,255,.35), 0 4px 16px rgba(110,70,110,.12) !important;
+}
+.btn:active, .btn-soft:active, .btn-ghost:active { transform: scale(.97); box-shadow: inset 0 2px 6px rgba(110,70,110,.15), 0 1px 4px rgba(110,70,110,.08) !important; }
 .btn-primary, .btn-big {
-  background: linear-gradient(135deg, rgba(232,120,143,.85), rgba(192,90,126,.9)) !important;
-  backdrop-filter: blur(14px) saturate(160%);
-  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  background: linear-gradient(135deg, rgba(232,120,143,.85), rgba(192,90,126,.92)) !important;
+  backdrop-filter: blur(6px) saturate(150%);
+  -webkit-backdrop-filter: blur(6px) saturate(150%);
   border: 1px solid rgba(255,255,255,.4) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 6px 20px rgba(192,90,126,.3) !important;
+  border-radius: 999px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55), 0 6px 20px rgba(192,90,126,.28) !important;
   color: #fff !important;
 }
+.btn-primary:hover, .btn-big:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 8px 26px rgba(192,90,126,.38) !important; }
 
-/* 选项卡片：玻璃小块 */
-.opt-item label, .opt-label, .preset-item, .stage-chip {
-  background: rgba(255,255,255,.5) !important;
-  backdrop-filter: blur(12px) saturate(160%);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
+/* 选项卡片：玻璃小块 + lens 折射 */
+.opt-item label, .opt-label {
+  background: rgba(255,255,255,.45) !important;
+  backdrop-filter: blur(6px) saturate(150%);
+  -webkit-backdrop-filter: blur(6px) saturate(150%);
   border: 1px solid rgba(255,255,255,.55) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 2px 8px rgba(110,70,110,.06) !important;
+  border-radius: 16px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 2px 8px rgba(110,70,110,.06) !important;
+}
+.opt-item label:hover, .opt-label:hover {
+  background: rgba(255,255,255,.58) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 4px 16px rgba(110,70,110,.12) !important;
 }
 .opt-item input:checked + label, .opt-item input:checked + .opt-label {
   background: linear-gradient(135deg, rgba(232,120,143,.22), rgba(123,111,192,.18)) !important;
   border-color: rgba(232,120,143,.55) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), 0 4px 16px rgba(192,90,126,.18) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.7), inset 0 0 14px rgba(232,120,143,.12), 0 4px 16px rgba(192,90,126,.18) !important;
 }
 
-/* 输入框：玻璃 + 高光 */
+/* 输入框：玻璃 + 高光 + 焦点光环 */
 input[type="text"], .custom-input, textarea, select, .q-custom, .set-css {
-  background: rgba(255,255,255,.5) !important;
-  backdrop-filter: blur(10px) saturate(150%);
-  -webkit-backdrop-filter: blur(10px) saturate(150%);
+  background: rgba(255,255,255,.45) !important;
+  backdrop-filter: blur(6px) saturate(150%);
+  -webkit-backdrop-filter: blur(6px) saturate(150%);
   border: 1px solid rgba(255,255,255,.6) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.5) !important;
+  border-radius: 14px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.55) !important;
 }
 input[type="text"]:focus, .custom-input:focus, textarea:focus, select:focus, .q-custom:focus {
   border-color: rgba(232,120,143,.6) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 3px rgba(232,120,143,.15) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.65), 0 0 0 3px rgba(232,120,143,.15) !important;
 }
 
-/* 进度/徽章/印章：玻璃 */
-.progress-ring, .stat-box, .stamp, .welcome-badge, .q-layer-tag {
-  backdrop-filter: blur(10px) saturate(150%);
-  -webkit-backdrop-filter: blur(10px) saturate(150%);
+/* 进度/统计/印章：玻璃 */
+.progress-ring, .stat-box, .stamp, .welcome-badge {
+  backdrop-filter: blur(8px) saturate(150%);
+  -webkit-backdrop-filter: blur(8px) saturate(150%);
 }
 
 /* 深色液态玻璃 */
 :root[data-dark="1"] .card, :root[data-dark="1"] .modal {
-  background: rgba(36,28,42,.55) !important;
+  background: rgba(36,28,42,.5) !important;
   border-color: rgba(255,255,255,.12) !important;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), 0 10px 40px rgba(0,0,0,.35) !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), inset 0 -1px 0 rgba(255,255,255,.05), 0 10px 40px rgba(0,0,0,.35) !important;
 }
 :root[data-dark="1"] .app-header, :root[data-dark="1"] .app-nav, :root[data-dark="1"] .bottom-nav {
-  background: rgba(30,24,36,.5) !important;
+  background: rgba(30,24,36,.45) !important;
   border-color: rgba(255,255,255,.1) !important;
 }
 :root[data-dark="1"] .opt-item label, :root[data-dark="1"] .opt-label, :root[data-dark="1"] .btn, :root[data-dark="1"] .btn-soft, :root[data-dark="1"] .btn-ghost {
@@ -1441,8 +1461,8 @@ input[type="text"]:focus, .custom-input:focus, textarea:focus, select:focus, .q-
 }
 :root[data-dark="1"] body {
   background:
-    radial-gradient(520px 380px at 12% 18%, rgba(232,120,143,.10), transparent 65%),
-    radial-gradient(460px 340px at 88% 12%, rgba(123,111,192,.10), transparent 60%),
+    radial-gradient(520px 380px at 12% 18%, rgba(232,120,143,.12), transparent 65%),
+    radial-gradient(460px 340px at 88% 12%, rgba(123,111,192,.12), transparent 60%),
     linear-gradient(160deg, #1c1622 0%, #181320 100%);
 }
 
