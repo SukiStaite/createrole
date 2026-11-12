@@ -3939,27 +3939,54 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return d.getFullYear() + '-Q' + q;
   }
 
-  const taskDefs = {
-    daily: [
-      { id: 'd_ans', title: '今日完成 20 题', type: 'ans', target: 20, reward: '🪙 20 金币' },
-      { id: 'd_char', title: '今日生成 1 个角色', type: 'char', target: 1, reward: '🪙 50 金币' },
-      { id: 'd_ai', title: '今日用 1 次 AI', type: 'ai', target: 1, reward: '🪙 30 金币' },
-      { id: 'd_note', title: '今日写 1 次记事本', type: 'note', target: 1, reward: '🪙 10 金币' },
-    ],
-    weekly: [
-      { id: 'w_ans', title: '本周答 100 题', type: 'ans', target: 100, reward: '🪙 200 金币' },
-      { id: 'w_min', title: '本周游玩 60 分钟', type: 'min', target: 60, reward: '🪙 150 金币' },
-      { id: 'w_char', title: '本周生成 3 个角色', type: 'char', target: 3, reward: '🪙 300 金币' },
-    ],
-    season: [
-      { id: 's_ans', title: '本季答 500 题', type: 'ans', target: 500, reward: '🏅 赛季徽章' },
-      { id: 's_char', title: '本季生成 10 个角色', type: 'char', target: 10, reward: '🏅 赛季徽章' },
-      { id: 's_achv', title: '本季解锁 30 成就', type: 'achv', target: 30, reward: '🏅 赛季徽章' },
-    ],
-  };
+  /* 每日 10 个 */
+  function buildDaily() {
+    const d = [];
+    const push = (id, title, type, target, reward) => d.push({ id, title, type, target, reward });
+    push('d_ans5', '今日答 5 题', 'ans', 5, '🪙 5 金币');
+    push('d_ans20', '今日答 20 题', 'ans', 20, '🪙 20 金币');
+    push('d_ans50', '今日答 50 题', 'ans', 50, '🪙 50 金币');
+    push('d_ans100', '今日答 100 题', 'ans', 100, '🪙 100 金币');
+    push('d_char1', '今日生成 1 个角色', 'char', 1, '🪙 50 金币');
+    push('d_char3', '今日生成 3 个角色', 'char', 3, '🪙 150 金币');
+    push('d_ai1', '今日用 1 次 AI', 'ai', 1, '🪙 30 金币');
+    push('d_ai3', '今日用 3 次 AI', 'ai', 3, '🪙 90 金币');
+    push('d_note1', '今日写 1 次记事本', 'note', 1, '🪙 10 金币');
+    push('d_note3', '今日写 3 次记事本', 'note', 3, '🪙 30 金币');
+    return d;
+  }
+
+  /* 每周 45 个 */
+  function buildWeekly() {
+    const w = [];
+    const push = (id, title, type, target, reward) => w.push({ id, title, type, target, reward });
+    [50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000, 5000].forEach(n =>
+      push('w_ans' + n, '本周答 ' + n + ' 题', 'ans', n, '🪙 ' + (n / 10) + ' 金币'));
+    [30, 60, 90, 120, 180, 300, 600, 900, 1200, 1800, 2400, 3000, 3600].forEach(n =>
+      push('w_min' + n, '本周游玩 ' + n + ' 分钟', 'min', n, '🪙 ' + (n / 2) + ' 金币'));
+    [1, 2, 3, 5, 8, 10, 15, 20, 30, 50, 80, 100].forEach(n =>
+      push('w_char' + n, '本周生成 ' + n + ' 个角色', 'char', n, '🪙 ' + (n * 50) + ' 金币'));
+    [5, 10, 20, 30, 50, 70].forEach(n =>
+      push('w_achv' + n, '本周解锁 ' + n + ' 成就', 'achv', n, '🏅 成就勋章'));
+    [3, 5, 10].forEach(n =>
+      push('w_ai' + n, '本周用 ' + n + ' 次 AI', 'ai', n, '🪙 ' + (n * 10) + ' 金币'));
+    return w;
+  }
+
+  /* 赛季 600 个（里程碑阶梯） */
+  function buildSeason() {
+    const s = [];
+    const push = (id, title, type, target, reward) => s.push({ id, title, type, target, reward });
+    for (let i = 1; i <= 250; i++) { const n = i * 100; push('s_ans' + n, '本季答 ' + n + ' 题', 'ans', n, '🪙 ' + (n / 10) + ' 金币'); }
+    for (let i = 1; i <= 159; i++) { const n = i; push('s_char' + n, '本季生成 ' + n + ' 个角色', 'char', n, '🪙 ' + (n * 30) + ' 金币'); }
+    for (let i = 1; i <= 191; i++) { const n = i; push('s_achv' + n, '本季解锁 ' + n + ' 成就', 'achv', n, '🏅 成就勋章'); }
+    return s;
+  }
+
+  const taskDefs = { daily: buildDaily(), weekly: buildWeekly(), season: buildSeason() };
 
   const DAYS = { 'ans': 'd', 'char': 'd', 'ai': 'd', 'note': 'd' };
-  const WEEKS = { 'ans': 'w', 'char': 'w' };
+  const WEEKS = { 'ans': 'w', 'char': 'w', 'achv': 'w', 'ai': 'w' };
   const SEASONS = { 'ans': 's', 'char': 's', 'achv': 's' };
 
   /* 跨周期滚动：返回是否发生了滚动（调用方保存） */
@@ -3968,7 +3995,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     const t = state.tasks = state.tasks || {};
     const today = dayStr(), week = weekStr(), season = seasonStr();
     if (t.day !== today) { t.day = today; t.d = { ans: 0, char: 0, ai: 0, note: 0 }; changed = true; }
-    if (t.week !== week) { t.week = week; t.w = { ans: 0, min: 0, char: 0 }; changed = true; }
+    if (t.week !== week) { t.week = week; t.w = { ans: 0, min: 0, char: 0, achv: 0, ai: 0 }; changed = true; }
     if (t.season !== season) { t.season = season; t.s = { ans: 0, char: 0, achv: 0 }; changed = true; }
     if (!t.claimed) t.claimed = {};
     return changed;
