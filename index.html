@@ -1352,6 +1352,15 @@ body[data-eq-bg="aurora"] { background: linear-gradient(135deg, #eef9f2, #e2f0fb
 .codex-tick { color: #2fa96b; font-weight: 700; font-size: .8rem; }
 @media (max-width: 560px) { .user-stats { grid-template-columns: repeat(3, 1fr); } }
 
+/* 用户头像（图片 / GIF 可更换） */
+.user-avatar { position: relative; flex: 0 0 60px; overflow: visible; cursor: pointer; }
+.user-avatar.has-img { background: transparent; }
+.user-avatar-img { width: 60px; height: 60px; border-radius: 16px; object-fit: cover; display: block; box-shadow: 0 4px 12px rgba(229,106,154,.3); border: 1px solid rgba(255,255,255,.7); }
+.user-avatar-edit, .user-avatar-clear { position: absolute; right: -5px; bottom: -5px; width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(229,106,154,.35); background: #fff; color: #c9437e; font-size: .68rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,.12); transition: transform .2s; padding: 0; }
+.user-avatar-edit:active, .user-avatar-clear:active { transform: scale(.88); }
+.user-avatar-clear { background: #ff5d8f; color: #fff; border-color: #ff5d8f; }
+.user-avatar:hover .user-avatar-edit, .user-avatar:hover .user-avatar-clear { transform: scale(1.12); }
+
 </style>
 </head>
 <body>
@@ -3388,6 +3397,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       equip: {},                               // 已装备外观 {slot:itemId}
       buff: {},                                // 道具 buff {coin2x,exp2x,skip,reset,lucky,aiAccel,aura}
       level: { exp: 0, lv: 1 },                // 等级 / 经验
+      avatar: '',                               // 用户头像：'' = 默认 emoji；否则 {id,name}（IndexedDB）
       marks: {},                                // 题目标记（收藏/易错）
       profile: {},                              // 多角色档案 {profileId: card}
       curProfile: '',                           // 当前档案 id
@@ -6676,6 +6686,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       let codexPct = 0, codexDone = 0, codexTotal = 0;
       try { const c = COD.build(State, { QUESTIONS: window.QUESTIONS || [], playTime: play }); codexPct = c.pct; codexDone = c.done; codexTotal = c.total; } catch (e) { /* 忽略 */ }
       const arc = State.generatedArchive || null;
+      const av = (State.avatar && State.avatar.id) ? State.avatar : null;
       const avatar = arc && (arc.emoji || arc.avatar) ? (arc.emoji || arc.avatar) : '👧';
       const name = (arc && (arc.name || arc.nickName)) || (State.meta && State.meta.gender) || '祈宝';
       const ownedOf = slot => (ITEMS.byCat ? ITEMS.byCat(slot) : []).filter(i => SHOP.owned(State, i.id, ITEMS));
@@ -6687,13 +6698,14 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       };
 
       let html = `
+      <input type="file" id="avatar-file" accept="image/*" hidden>
       <div class="user-hero">
-        <div class="user-avatar">${avatar}</div>
+        <div class="user-avatar${av ? ' has-img' : ''}">${av ? '<img class="user-avatar-img" id="user-avatar-img" alt="头像">' : avatar}${av ? '<button class="user-avatar-clear" data-user-clear title="恢复默认">✕</button>' : '<button class="user-avatar-edit" data-user-avatar title="更换头像">📷</button>'}</div>
         <div class="user-idtx">
           <b>${esc(name)}</b>
           <small>⭐ Lv.${lv} · 经验 ${exp}/${need}</small>
           <i class="user-expbar"><u style="width:${Math.min(100, Math.round(exp / need * 100))}%"></u></i>
-          <em>还差 ${Math.max(0, need - exp)} 经验升级</em>
+          <em>${av ? '已自定义头像（图片 / GIF）' : '点左上头像可更换图片 / GIF'}</em>
         </div>
         <div class="user-coins">🪙<b>${(State.coins || 0).toLocaleString()}</b><small>金币</small></div>
       </div>`;
@@ -6730,9 +6742,56 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       document.querySelectorAll('[data-user-go]').forEach(b => {
         b.onclick = () => { const k = b.getAttribute('data-user-go'); UI.closeModal(); if (k === 'codex') App.openCodex(); else if (k === 'achv') App.openAchv(); else if (k === 'shop') App.openShop(); };
       });
+      /* 头像：选择图片 / GIF */
+      const af = document.getElementById('avatar-file');
+      if (af) {
+        af.onchange = () => { const f = af.files && af.files[0]; if (f) App.setAvatar(f); af.value = ''; };
+      }
+      document.querySelectorAll('[data-user-avatar]').forEach(b => { b.onclick = () => { if (af) af.click(); }; });
+      document.querySelectorAll('[data-user-clear]').forEach(b => {
+        b.onclick = (e) => { e.stopPropagation(); App.clearAvatar(); };
+      });
+      if (av) MEDIA.getUrl(av.id).then(u => { const el = document.getElementById('user-avatar-img'); if (el && u) el.src = u; });
       document.querySelectorAll('[data-user-eq]').forEach(b => {
         b.onclick = () => { const id = b.getAttribute('data-user-eq'); const r = SHOP.equip(State, id, ITEMS); if (r.ok) { saveNow(); App.applyEquip(); App.updateCoins(); toast('已佩戴 ✓', 'ok'); App.openUser(); } else toast('还差 ' + (r.reason === 'not-owned' ? '一点金币' : '…'), 'warn'); };
       });
+    },
+    /* V5.0 · 更换头像（图片 / GIF，存 IndexedDB，重启保留） */
+    setAvatar(f) {
+      const type = f && f.type || '';
+      if (type.indexOf('image') !== 0) { toast('请选择图片（jpg / png / webp / gif）', 'error'); return; }
+      if (f.size > 8 * 1024 * 1024) { toast('文件太大，请选 ≤ 8MB 的图', 'error'); return; }
+      const id = 'av_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      const oldId = (State.avatar && State.avatar.id) || null;
+      const isGif = type === 'image/gif' || /\.gif$/i.test(f.name || '');
+      const done = (blob, gif) => {
+        MEDIA.put(id, blob).then(() => {
+          State.avatar = { id, name: f.name || '', gif: !!gif };
+          if (oldId && oldId !== id) MEDIA.del(oldId).catch(() => { /* 忽略 */ });
+          saveNow();
+          toast('头像已更换 🖼', 'success');
+          App.openUser();
+        }).catch(() => toast('头像保存失败，请重试', 'error'));
+      };
+      if (isGif) return done(f, true);   /* GIF 原样存，保留动画 */
+      const url = URL.createObjectURL(f);
+      const img = new Image();
+      img.onload = () => {
+        const S = 256, k = Math.min(S / img.width, S / img.height, 1);
+        const w = Math.max(1, Math.round(img.width * k)), h = Math.max(1, Math.round(img.height * k));
+        const c = document.createElement('canvas'); c.width = w; c.height = h;
+        try { const x = c.getContext('2d'); x.drawImage(img, 0, 0, w, h); } catch (e) { /* 忽略 */ }
+        URL.revokeObjectURL(url);
+        c.toBlob(b => done(b || f, false), 'image/png', .92);
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); done(f, false); };
+      img.src = url;
+    },
+    clearAvatar() {
+      const oldId = (State.avatar && State.avatar.id) || null;
+      State.avatar = '';
+      if (oldId) MEDIA.del(oldId).catch(() => { /* 忽略 */ });
+      saveNow(); toast('已恢复默认头像', 'ok'); App.openUser();
     },
     /* V5.0 · 图鉴（收藏集） */
     openCodex() {
