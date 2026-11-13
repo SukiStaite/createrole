@@ -1020,16 +1020,192 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
 .achv-bar u { display: block; height: 100%; background: linear-gradient(90deg, #f7a8c4, #e56a9a); border-radius: 99px; text-decoration: none; }
 .achv-tick { color: #2fa96b; font-weight: 700; font-size: .95rem; }
 
-/* ===== V5.0 · 任务体系 ===== */
-.task-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-bottom: 1px solid rgba(229,106,154,.08); }
-.task-done { background: linear-gradient(90deg, rgba(222,245,230,.7), rgba(255,255,255,.3)); }
-.task-claimed { background: linear-gradient(90deg, rgba(255,235,180,.6), rgba(255,255,255,.3)); }
-.task-ic { font-size: 1.1rem; }
+/* ===== V5.0 · 任务体系（高级卡片风） ===== */
+.qa-list { padding: 4px 2px 10px; }
+.task-caret { color: #e56a9a; font-size: .82rem; width: 13px; text-align: center; flex-shrink: 0; transition: color .2s; }
+/* 分区头（每日/每周/赛季） */
+.task-sec { display: flex; align-items: center; gap: 8px; padding: 10px 12px; margin: 7px 0 2px; border-radius: 14px; background: linear-gradient(135deg, #fce4ef, #fff0f6); border: 1px solid rgba(229,106,154,.22); cursor: pointer; box-shadow: 0 2px 8px rgba(229,106,154,.08); }
+.task-sec-ic { font-size: 1.15rem; }
+.task-sec-tx { flex: 1; display: flex; flex-direction: column; }
+.task-sec-tx b { font-size: .9rem; color: #8a2c55; }
+.task-sec-tx small { font-size: .72rem; color: #b06a8a; }
+.task-sec-pct { font-size: .76rem; font-weight: 700; color: #c9437e; background: rgba(229,106,154,.13); padding: 3px 9px; border-radius: 99px; }
+/* 折叠体 */
+.task-body { overflow: hidden; }
+.task-body.task-collapsed { display: none; }
+/* 阶段头（可折叠） */
+.task-phase { display: flex; align-items: center; gap: 8px; padding: 11px 12px; margin: 9px 0 2px; border-radius: 14px; background: linear-gradient(135deg, #f8b8d0, #f19ec0); color: #fff; cursor: pointer; box-shadow: 0 3px 10px rgba(229,106,154,.22); }
+.task-phase .task-caret { color: #fff; }
+.task-phase-ic { font-size: 1.05rem; }
+.task-phase-tx { flex: 1; display: flex; flex-direction: column; }
+.task-phase-tx b { font-size: .9rem; }
+.task-phase-tx small { font-size: .7rem; opacity: .92; }
+.task-phase-star { font-size: .76rem; font-weight: 700; background: rgba(255,255,255,.26); padding: 3px 9px; border-radius: 99px; }
+.task-phase-locked { opacity: .55; cursor: default; background: linear-gradient(135deg, #e3cdd6, #ecd9e0); box-shadow: none; }
+/* 组头（可折叠） */
+.task-group { display: flex; align-items: center; gap: 8px; padding: 8px 12px; margin: 5px 0 0 8px; border-radius: 11px; background: rgba(229,106,154,.07); border: 1px solid rgba(229,106,154,.12); cursor: pointer; }
+.task-kind { font-size: .64rem; font-weight: 700; color: #fff; background: #e56a9a; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
+.task-group-tx { flex: 1; display: flex; flex-direction: column; }
+.task-group-tx b { font-size: .82rem; color: #7a2a4c; }
+.task-group-tx small { font-size: .68rem; color: #b06a8a; }
+.task-group-star { font-size: .72rem; font-weight: 700; color: #c9437e; }
+/* 任务行（卡片） */
+.task-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; margin: 4px 0 4px 16px; border-radius: 11px; background: #fff; border: 1px solid rgba(229,106,154,.1); box-shadow: 0 1px 4px rgba(0,0,0,.03); transition: .15s; }
+.task-row:hover { box-shadow: 0 3px 10px rgba(229,106,154,.14); transform: translateY(-1px); }
+.task-done { background: linear-gradient(90deg, rgba(222,245,230,.75), rgba(255,255,255,.4)); }
+.task-claimed { background: linear-gradient(90deg, rgba(255,235,180,.65), rgba(255,255,255,.4)); }
+.task-ic { font-size: 1.05rem; }
 .task-tx { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-.task-tx b { font-size: .86rem; color: #4a3140; }
-.task-tx small { font-size: .73rem; color: #9a6a80; }
-.task-num { font-size: .8rem; color: #c9437e; font-weight: 700; }
-.task-claim { border: none; background: linear-gradient(90deg, #f7a8c4, #e56a9a); color: #fff; font-size: .76rem; padding: 4px 9px; border-radius: 99px; cursor: pointer; }
+.task-tx b { font-size: .85rem; color: #4a3140; }
+.task-tx small { font-size: .72rem; color: #9a6a80; }
+.task-num { font-size: .78rem; color: #c9437e; font-weight: 700; white-space: nowrap; }
+.task-claim { border: none; background: linear-gradient(90deg, #f7a8c4, #e56a9a); color: #fff; font-size: .75rem; padding: 4px 9px; border-radius: 99px; cursor: pointer; box-shadow: 0 2px 6px rgba(229,106,154,.3); }
+.task-safe { font-style: normal; font-size: .63rem; color: #fff; background: #e56a9a; padding: 1px 6px; border-radius: 6px; margin-left: 4px; white-space: nowrap; }
+/* 安全箱横幅（贴图） */
+.task-safe-banner { display: flex; align-items: center; gap: 10px; padding: 13px 14px; margin: 10px 0 2px; border-radius: 16px; position: relative; overflow: hidden; color: #fff; box-shadow: 0 4px 14px rgba(229,106,154,.3); }
+.task-safe-banner.safe-season { background: linear-gradient(135deg, #f7b843, #e89b2c); }
+.task-safe-banner.safe-day { background: linear-gradient(135deg, #f7a8c4, #e56a9a); }
+.task-safe-banner.safe-none { background: linear-gradient(135deg, #d9c8cf, #c7b1ba); box-shadow: 0 2px 8px rgba(120,90,100,.15); }
+.task-safe-sticker { font-size: 2rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.22)); animation: bob 2.4s ease-in-out infinite; }
+@keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+.task-safe-tx { flex: 1; display: flex; flex-direction: column; }
+.task-safe-tx b { font-size: .92rem; }
+.task-safe-tx small { font-size: .72rem; opacity: .95; }
+.task-safe-star { font-size: .8rem; font-weight: 800; background: rgba(255,255,255,.28); padding: 4px 10px; border-radius: 99px; }
+.task-spark { position: absolute; font-size: .95rem; opacity: .7; top: 7px; right: 12px; animation: twinkle 2.2s infinite; }
+.task-spark.s2 { top: auto; bottom: 6px; right: 38px; animation-delay: 1.1s; }
+@keyframes twinkle { 0%,100% { opacity: .35; transform: scale(.85); } 50% { opacity: .95; transform: scale(1.2); } }
+
+/* ===== V5.0 · 金币商城 ===== */
+.coin-btn { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: #c9437e; }
+.coin-btn #coin-amount { font-size: .8rem; }
+.coin-btn.cart-full { box-shadow: 0 0 0 2px #f5b93f inset; }
+.shop-wallet { display: flex; align-items: center; gap: 8px; padding: 10px 12px; margin: 6px 0 10px; border-radius: 14px; background: linear-gradient(135deg, #fff4d8, #ffe9a0); border: 1px solid rgba(229,160,44,.3); }
+.shop-wallet-ic { font-size: 1.3rem; }
+.shop-wallet b { font-size: 1.05rem; color: #b57a1c; }
+.shop-wallet > span:not(.shop-wallet-ic):not(.shop-ai) { font-size: .78rem; color: #a5762a; }
+.shop-ai { margin-left: auto; font-size: .72rem; color: #7a4a9c; background: rgba(169,138,224,.15); padding: 3px 8px; border-radius: 99px; }
+.shop-link { margin-left: auto; border: none; background: rgba(229,106,154,.12); color: #c9437e; font-size: .74rem; padding: 5px 10px; border-radius: 99px; cursor: pointer; }
+.shop-link + .shop-link { margin-left: 4px; }
+.shop-cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.shop-cat { border: 1px solid rgba(229,106,154,.25); background: #fff; color: #a03558; font-size: .74rem; padding: 5px 10px; border-radius: 99px; cursor: pointer; }
+.shop-cat.on { background: linear-gradient(90deg, #f7a8c4, #e56a9a); color: #fff; border-color: transparent; font-weight: 700; }
+.shop-list { display: flex; flex-direction: column; gap: 8px; max-height: 52vh; overflow-y: auto; }
+.shop-item { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 13px; background: #fff; border: 1px solid rgba(229,106,154,.12); box-shadow: 0 1px 5px rgba(0,0,0,.04); }
+.shop-item.owned { opacity: .72; }
+.shop-item-img { font-size: 1.5rem; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.shop-item-img svg { width: 34px; height: 34px; }
+.shop-item-tx { flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.shop-item-tx b { font-size: .85rem; color: #4a3140; }
+.shop-item-tx small { font-size: .7rem; color: #9a6a80; }
+.shop-owned { font-style: normal; font-size: .62rem; color: #2fa96b; background: rgba(47,169,107,.13); padding: 1px 6px; border-radius: 6px; margin-left: 4px; white-space: nowrap; }
+.shop-item-btns { display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
+.shop-btn { border: 1px solid rgba(229,106,154,.35); background: #fff; color: #c9437e; font-size: .68rem; padding: 4px 9px; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+.shop-btn.buy { background: linear-gradient(90deg, #f7a8c4, #e56a9a); color: #fff; border-color: transparent; font-weight: 700; }
+.shop-btn.carted { background: rgba(245,185,63,.15); color: #b57a1c; border-color: rgba(229,160,44,.4); }
+.shop-empty { text-align: center; color: #9a6a80; font-size: .85rem; padding: 26px 12px; }
+.cart-row { display: flex; align-items: center; gap: 10px; padding: 9px 11px; border-radius: 13px; background: #fff; border: 1px solid rgba(229,106,154,.12); }
+.cart-img { font-size: 1.3rem; }
+.cart-tx { flex: 1; display: flex; flex-direction: column; }
+.cart-tx b { font-size: .85rem; color: #4a3140; }
+.cart-tx small { font-size: .7rem; color: #9a6a80; }
+.cart-price { font-size: .8rem; font-weight: 700; color: #c9437e; white-space: nowrap; }
+.cart-x { border: none; background: rgba(229,106,154,.12); color: #c9437e; width: 22px; height: 22px; border-radius: 50%; cursor: pointer; }
+.cart-total { text-align: right; padding: 10px 4px; font-size: .85rem; color: #4a3140; }
+.cart-total b { color: #c9437e; font-size: 1rem; }
+.cart-checkout { width: 100%; margin-top: 4px; }
+.cart-checkout:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ===== V5.0 · 装备系统（物品实际用途） ===== */
+/* 顶栏等级 / 称号徽章 */
+.lv-badge { font-size: .72rem; font-weight: 700; color: #b57a1c; }
+.title-badge { font-size: .7rem; font-weight: 700; color: #c9437e; background: rgba(229,106,154,.12); padding: 2px 8px; border-radius: 99px; white-space: nowrap; }
+/* 库存装备态 / buff 条 */
+.shop-item.equipped { border-color: rgba(229,160,44,.5); box-shadow: 0 0 0 2px rgba(229,160,44,.18); }
+.shop-btn.equip.on { background: rgba(229,160,44,.18); color: #b57a1c; border-color: rgba(229,160,44,.45); font-weight: 700; }
+.shop-btn.use { background: linear-gradient(90deg, #a8d8b8, #4c9a6a); color: #fff; border-color: transparent; font-weight: 700; }
+.buff-strip { display: flex; flex-wrap: wrap; gap: 5px; margin: 4px 0 10px; }
+.buff-chip { font-size: .68rem; color: #7a4a9c; background: rgba(169,138,224,.16); padding: 3px 9px; border-radius: 99px; }
+
+/* 悬浮贴图装饰 */
+.equip-sticker { position: fixed; right: 14px; bottom: 90px; z-index: 880; pointer-events: none; width: 52px; height: 52px; display: none; align-items: center; justify-content: center; animation: eqBob 3.4s ease-in-out infinite; filter: drop-shadow(0 4px 8px rgba(0,0,0,.18)); }
+.equip-sticker svg { width: 52px; height: 52px; }
+@keyframes eqBob { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-9px) rotate(3deg); } }
+
+/* 头像框：屏幕四周装饰框（对齐物品 meta.frame） */
+body::after { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 860; box-shadow: none; transition: box-shadow .4s; }
+body[data-eq-frame="classic"]::after { box-shadow: inset 0 0 0 3px rgba(229,106,154,.45); }
+body[data-eq-frame="gold"]::after { box-shadow: inset 0 0 0 3px rgba(217,165,61,.55), inset 0 0 22px rgba(217,165,61,.18); }
+body[data-eq-frame="star"]::after { box-shadow: inset 0 0 0 3px rgba(138,106,229,.5), inset 0 0 26px rgba(138,106,229,.2); }
+body[data-eq-frame="wreath"]::after { box-shadow: inset 0 0 0 3px rgba(90,170,120,.5), inset 0 0 26px rgba(90,170,120,.2); }
+body[data-eq-frame="gem"]::after { box-shadow: inset 0 0 0 3px rgba(74,158,229,.5), inset 0 0 26px rgba(74,158,229,.22); }
+body[data-eq-frame="note"]::after { box-shadow: inset 0 0 0 3px rgba(120,90,200,.5), inset 0 0 26px rgba(120,90,200,.2); }
+body[data-eq-frame="butterfly"]::after { box-shadow: inset 0 0 0 3px rgba(240,140,180,.55), inset 0 0 26px rgba(240,140,180,.2); }
+body[data-eq-frame="heart"]::after { box-shadow: inset 0 0 0 3px rgba(240,90,130,.5), inset 0 0 26px rgba(240,90,130,.2); }
+body[data-eq-frame="crown"]::after { box-shadow: inset 0 0 0 3px rgba(217,165,61,.55), inset 0 0 30px rgba(217,165,61,.25); }
+body[data-eq-frame="rainbow"]::after { box-shadow: inset 0 0 0 3px rgba(229,106,154,.5), inset 0 0 28px rgba(138,106,229,.22); }
+
+/* 卡片特效：飘浮微光粒子层（对齐物品 meta.effect） */
+body::before { content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 859; opacity: 0; transition: opacity .4s; background-repeat: repeat; }
+body[data-eq-effect="sakura"]::before { opacity: .5; background-image: radial-gradient(3px 3px at 25% 40%, rgba(240,140,170,.7), transparent), radial-gradient(2px 2px at 60% 70%, rgba(240,140,170,.6), transparent), radial-gradient(2px 2px at 80% 25%, rgba(240,140,170,.6), transparent); background-size: 220px 220px; animation: eqSpark 8s linear infinite; }
+body[data-eq-effect="star"]::before { opacity: .5; background-image: radial-gradient(2px 2px at 18% 28%, rgba(255,255,255,.9), transparent), radial-gradient(3px 3px at 72% 58%, rgba(255,240,200,.8), transparent), radial-gradient(2px 2px at 44% 82%, rgba(200,180,255,.8), transparent); background-size: 180px 180px; animation: eqSpark 7s linear infinite; }
+body[data-eq-effect="fire"]::before { opacity: .5; background-image: radial-gradient(4px 4px at 30% 60%, rgba(255,160,80,.7), transparent), radial-gradient(3px 3px at 70% 30%, rgba(255,120,90,.6), transparent), radial-gradient(2px 2px at 50% 85%, rgba(255,200,120,.7), transparent); background-size: 200px 200px; animation: eqSpark 6s linear infinite; }
+body[data-eq-effect="snow"]::before { opacity: .5; background-image: radial-gradient(2px 2px at 35% 50%, rgba(255,255,255,.85), transparent), radial-gradient(3px 3px at 70% 30%, rgba(255,255,255,.7), transparent), radial-gradient(2px 2px at 55% 75%, rgba(255,255,255,.7), transparent); background-size: 180px 180px; animation: eqSpark 6s linear infinite; }
+body[data-eq-effect="bubble"]::before { opacity: .5; background-image: radial-gradient(circle 6px at 40% 30%, rgba(160,220,255,.35), transparent), radial-gradient(circle 4px at 70% 70%, rgba(160,220,255,.3), transparent), radial-gradient(circle 5px at 20% 75%, rgba(160,220,255,.3), transparent); background-size: 260px 260px; animation: eqBubble 10s linear infinite; }
+body[data-eq-effect="note"]::before { opacity: .5; background-image: radial-gradient(3px 3px at 25% 45%, rgba(180,160,255,.75), transparent), radial-gradient(2px 2px at 65% 60%, rgba(255,190,120,.7), transparent), radial-gradient(2px 2px at 80% 25%, rgba(150,220,180,.7), transparent); background-size: 200px 200px; animation: eqSpark 7s linear infinite; }
+body[data-eq-effect="thunder"]::before { opacity: .4; background-image: linear-gradient(115deg, transparent 44%, rgba(200,220,255,.6) 50%, transparent 56%); background-size: 240px 240px; animation: eqFlash 1.6s ease-in-out infinite; }
+body[data-eq-effect="rainbow"]::before { opacity: .45; background-image: linear-gradient(120deg, transparent 42%, rgba(255,180,200,.5) 50%, transparent 58%), linear-gradient(120deg, transparent 42%, rgba(180,220,255,.5) 50%, transparent 58%); background-size: 240px 240px; animation: eqSpark 8s linear infinite; }
+body[data-eq-effect="particle"]::before { opacity: .4; background-image: radial-gradient(46px 46px at 30% 30%, rgba(255,200,225,.35), transparent), radial-gradient(56px 56px at 75% 65%, rgba(200,225,255,.3), transparent); background-size: 320px 320px; animation: eqGlow 9s ease-in-out infinite; }
+@keyframes eqSpark { 0% { background-position: 0 0; } 100% { background-position: 180px 180px; } }
+@keyframes eqGlow { 0%,100% { background-position: 0 0; } 50% { background-position: 80px 80px; } }
+@keyframes eqBubble { 0% { background-position: 0 100%; } 100% { background-position: 0 0; } }
+@keyframes eqFlash { 0%,100% { opacity: .15; } 50% { opacity: .55; } }
+
+/* 主题色（商城主题覆盖默认 --primary） */
+body.eq-theme-sakura { --primary: #e56a9a; --primary-dark: #c94f7f; --primary-light: #f3a6c2; --bg: #fdf6f9; }
+body.eq-theme-star { --primary: #8a6ae5; --primary-dark: #6f4fc0; --primary-light: #bda6f0; --bg: #f7f4fd; }
+body.eq-theme-ocean { --primary: #4a9ee5; --primary-dark: #3379c0; --primary-light: #a5d2f5; --bg: #f2f8fd; }
+body.eq-theme-matcha { --primary: #4c9a6a; --primary-dark: #35794e; --primary-light: #a8d8b8; --bg: #f3faf5; }
+body.eq-theme-peach { --primary: #f08a4b; --primary-dark: #c9682f; --primary-light: #f6c9a5; --bg: #fdf5ef; }
+body.eq-theme-lavender { --primary: #a86ad0; --primary-dark: #844aa8; --primary-light: #d0b0e8; --bg: #f8f3fc; }
+body.eq-theme-aurora { --primary: #4fc9a8; --primary-dark: #38a386; --primary-light: #a8e2d2; --bg: #f1fbf8; }
+body.eq-theme-gold { --primary: #d9a53d; --primary-dark: #b07f27; --primary-light: #eccf92; --bg: #fdf8ee; }
+body.eq-theme-night { --primary: #6a6a9a; --primary-dark: #4d4d78; --primary-light: #a9a9cd; --bg: #f4f4fb; }
+body.eq-theme-rainbow { --primary: #e56a9a; --primary-dark: #c94f7f; --primary-light: #f3a6c2; --bg: #fdf6f9; }
+
+/* 字体（映射到系统可用字体族） */
+body.eq-font-round { --shop-font: 'sans-serif'; }
+body.eq-font-kai { --shop-font: 'serif'; }
+body.eq-font-hand { --shop-font: 'cursive'; }
+body.eq-font-pixel { --shop-font: 'monospace'; }
+body.eq-font-song { --shop-font: 'serif'; }
+body.eq-font-hei { --shop-font: 'sans-serif'; }
+body.eq-font-art { --shop-font: 'cursive'; }
+body[class*="eq-font-"] { font-family: var(--shop-font, inherit); }
+body[class*="eq-font-"] input, body[class*="eq-font-"] textarea, body[class*="eq-font-"] button, body[class*="eq-font-"] select { font-family: var(--shop-font, inherit); }
+
+/* 字色（覆盖主文字强调） */
+.card-title { color: color-mix(in srgb, var(--shop-text, var(--primary)) 78%, #333); }
+body.eq-text-rainbow .card-title { animation: eqRainbowText 6s linear infinite; }
+@keyframes eqRainbowText { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
+/* 记事本皮肤（对齐物品 meta.nb） */
+body[data-eq-nb="pink"] .note-box { border-color: rgba(229,106,154,.35); background: linear-gradient(160deg, #fff, #fdf0f5); }
+body[data-eq-nb="blue"] .note-box { border-color: rgba(74,158,229,.35); background: linear-gradient(160deg, #fff, #eef6fd); }
+body[data-eq-nb="green"] .note-box { border-color: rgba(76,154,106,.35); background: linear-gradient(160deg, #fff, #eef9f2); }
+body[data-eq-nb="yellow"] .note-box { border-color: rgba(217,165,61,.35); background: linear-gradient(160deg, #fff, #fdf7e8); }
+body[data-eq-nb="purple"] .note-box { border-color: rgba(138,106,229,.35); background: linear-gradient(160deg, #fff, #f1edfd); }
+body[data-eq-nb="grid"] .note-box { border-color: rgba(120,150,200,.35); background: repeating-linear-gradient(0deg, transparent 0 23px, rgba(74,158,229,.12) 23px 24px), #fff; }
+body[data-eq-nb="leather"] .note-box { border-color: rgba(160,120,90,.4); background: linear-gradient(160deg, #8a6a52, #6e5340); color: #fdf3e8; }
+body[data-eq-nb="gold"] .note-box { border-color: rgba(217,165,61,.4); background: linear-gradient(160deg, #fff, #fbf1d8); }
+
+/* 背景（全局氛围，对齐物品 meta.bg） */
+body[data-eq-bg="pink"] { background: radial-gradient(900px 600px at 12% 8%, rgba(229,106,154,.16), transparent 60%), var(--bg); }
+body[data-eq-bg="star"] { background: radial-gradient(900px 600px at 12% 8%, rgba(138,106,229,.16), transparent 60%), var(--bg); }
+body[data-eq-bg="sea"] { background: linear-gradient(135deg, #eef6fd, #e2f0fb); }
+body[data-eq-bg="forest"] { background: linear-gradient(135deg, #eef9f2, #e3f3ea); }
+body[data-eq-bg="city"] { background: linear-gradient(135deg, #f4f4fb, #e8e8f2); }
+body[data-eq-bg="aurora"] { background: linear-gradient(135deg, #eef9f2, #e2f0fb, #f1edfd); }
 
 /* ===== V5.0 · 深度适配（横屏 / 平板 / 桌面 / 超宽） ===== */
 /* 横屏（手机侧翻，max-height 窄屏） */
@@ -1074,6 +1250,7 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
 </style>
 </head>
 <body>
+  <div id="equip-sticker" class="equip-sticker" aria-hidden="true"></div>
 
 <!-- V5.0 自定义照片/视频背景层（≤4K，全局） -->
 <div id="media-bg" aria-hidden="true"></div>
@@ -1116,6 +1293,9 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
       </div>
     </div>
     <div class="header-tools">
+      <span class="hbtn title-badge" id="title-badge" title="称号" style="display:none"></span>
+      <span class="hbtn lv-badge" id="lv-badge" title="等级">⭐ 1</span>
+      <button class="hbtn coin-btn" id="btn-wallet" title="金币钱包">🪙<span id="coin-amount">0</span></button>
       <button class="hbtn" id="btn-theme" title="主题色">🎨</button>
       <button class="hbtn" id="btn-dark" title="暗色模式">🌙</button>
       <button class="hbtn" id="btn-lang" title="中/英">中</button>
@@ -3094,6 +3274,14 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       achv: { unlocked: {}, progress: {} },     // 成就 {id:true} / {id:当前进度}
       achvFlags: {},                             // 一次性功能标记（导出/导入/AI/背景…）
       tasks: { d: { date: '', done: {} }, w: { week: '', done: {} }, s: { done: {} } },  // 每日/每周/赛季任务
+      /* V5.0 金币商城 */
+      coins: 0,                                // 金币钱包余额
+      inventory: {},                           // 库存 {itemId:{count,at}}
+      cart: [],                                // 购物车 [itemId,...]
+      aiQuota: 0,                              // AI 次数（商城购买）
+      equip: {},                               // 已装备外观 {slot:itemId}
+      buff: {},                                // 道具 buff {coin2x,exp2x,skip,reset,lucky,aiAccel,aura}
+      level: { exp: 0, lv: 1 },                // 等级 / 经验
       marks: {},                                // 题目标记（收藏/易错）
       profile: {},                              // 多角色档案 {profileId: card}
       curProfile: '',                           // 当前档案 id
@@ -3765,9 +3953,9 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   const LAYERS = ['SFW', 'NSFW', 'DLC', '体系登记', '补完'];
   const LAYER_ICON = { SFW: '🌸', NSFW: '🌙', DLC: '💠', '体系登记': '📜', '补完': '✨' };
 
-  /* 逐档生成：base(def, values[]) -> defs[] */
+  /* 逐档生成：base(def, values[]) -> defs[]；每档给金币奖励（tier*20） */
   function tiers(base, values) {
-    return values.map((v, i) => Object.assign({}, base, { id: base.id + '_' + v, value: v, tier: i + 1 }));
+    return values.map((v, i) => Object.assign({}, base, { id: base.id + '_' + v, value: v, tier: i + 1, coin: (i + 1) * 20 }));
   }
 
   function defs() {
@@ -3939,10 +4127,16 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return d.getFullYear() + '-Q' + q;
   }
 
+  /* 从奖励文案解析金币数：'🪙 50 金币' → 50 */
+  function coinOf(reward) {
+    const m = String(reward || '').match(/🪙\s*([\d.]+)/);
+    return m ? Math.round(parseFloat(m[1])) : 0;
+  }
+
   /* 每日 10 个 */
   function buildDaily() {
     const d = [];
-    const push = (id, title, type, target, reward) => d.push({ id, title, type, target, reward });
+    const push = (id, title, type, target, reward) => d.push({ id, title, type, target, reward, coin: coinOf(reward) });
     push('d_ans5', '今日答 5 题', 'ans', 5, '🪙 5 金币');
     push('d_ans20', '今日答 20 题', 'ans', 20, '🪙 20 金币');
     push('d_ans50', '今日答 50 题', 'ans', 50, '🪙 50 金币');
@@ -3959,7 +4153,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   /* 每周 45 个 */
   function buildWeekly() {
     const w = [];
-    const push = (id, title, type, target, reward) => w.push({ id, title, type, target, reward });
+    const push = (id, title, type, target, reward) => w.push({ id, title, type, target, reward, coin: coinOf(reward) });
     [50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000, 5000].forEach(n =>
       push('w_ans' + n, '本周答 ' + n + ' 题', 'ans', n, '🪙 ' + (n / 10) + ' 金币'));
     [30, 60, 90, 120, 180, 300, 600, 900, 1200, 1800, 2400, 3000, 3600].forEach(n =>
@@ -3973,21 +4167,74 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return w;
   }
 
-  /* 赛季 600 个（里程碑阶梯） */
-  function buildSeason() {
-    const s = [];
-    const push = (id, title, type, target, reward) => s.push({ id, title, type, target, reward });
-    for (let i = 1; i <= 250; i++) { const n = i * 100; push('s_ans' + n, '本季答 ' + n + ' 题', 'ans', n, '🪙 ' + (n / 10) + ' 金币'); }
-    for (let i = 1; i <= 159; i++) { const n = i; push('s_char' + n, '本季生成 ' + n + ' 个角色', 'char', n, '🪙 ' + (n * 30) + ' 金币'); }
-    for (let i = 1; i <= 191; i++) { const n = i; push('s_achv' + n, '本季解锁 ' + n + ' 成就', 'achv', n, '🏅 成就勋章'); }
-    return s;
+  /* ============================================================
+   * 赛季任务 · 《三角洲行动》3x3 安全箱风格
+   *   阶段(phase) 由 ★星级 解锁；每阶段 = 主线组 + 支线组；
+   *   整组完成得组★；组末任务奖励「安全箱1天卡」，最终主线任务奖励「赛季卡」。
+   * ============================================================ */
+  function buildSeasonPhases() {
+    const meta = [
+      { id: 'sp1', title: '第一阶段 · 萤火初现', unlock: 0, groups: [
+        { t: '主线 · 启程', kind: 'main', stars: 5 },
+        { t: '深度定制', kind: 'side', stars: 3 }, { t: '再难告别', kind: 'side', stars: 3 },
+        { t: '逃脱艺术·基础', kind: 'side', stars: 2 }, { t: '保障有力', kind: 'side', stars: 2 }] },
+      { id: 'sp2', title: '第二阶段 · 风中之焰', unlock: 6, groups: [
+        { t: '主线 · 磨合', kind: 'main', stars: 5 },
+        { t: '披坚执锐', kind: 'side', stars: 5 }, { t: '寻味阿萨拉', kind: 'side', stars: 4 },
+        { t: '常胜冠军', kind: 'side', stars: 4 }, { t: '搜索与歼灭', kind: 'side', stars: 3 }] },
+      { id: 'sp3', title: '第三阶段 · 暗夜传火', unlock: 12, groups: [
+        { t: '主线 · 默契', kind: 'main', stars: 5 },
+        { t: '金枪客', kind: 'side', stars: 5 }, { t: '狙击精英', kind: 'side', stars: 5 },
+        { t: '博物馆幽灵', kind: 'side', stars: 5 }, { t: '过河卒', kind: 'side', stars: 4 }] },
+      { id: 'sp4', title: '第四阶段 · 羁绊', unlock: 14, groups: [
+        { t: '主线 · 羁绊', kind: 'main', stars: 5 },
+        { t: '区域猎手', kind: 'side', stars: 4 }, { t: '金蝉脱壳', kind: 'side', stars: 4 },
+        { t: '博物强识', kind: 'side', stars: 3 }, { t: '精致人生', kind: 'side', stars: 3 }] },
+      { id: 'sp5', title: '最终阶段 · 故土之归', unlock: 18, groups: [
+        { t: '主线 · 终章', kind: 'main', stars: 5 },
+        { t: '征服标杆', kind: 'side', stars: 5 }, { t: '一体两面', kind: 'side', stars: 4 },
+        { t: '生命线', kind: 'side', stars: 4 }, { t: '神兵天降', kind: 'side', stars: 4 }] },
+    ];
+    const types = ['ans', 'char', 'ai', 'note', 'achv', 'min'];
+    const label = { ans: '本季答', char: '本季生成', ai: '本季用', note: '本季写', achv: '本季解锁', min: '本季游玩' };
+    const unit = { ans: ' 题', char: ' 个角色', ai: ' 次 AI', note: ' 次记事本', achv: ' 成就', min: ' 分钟' };
+    const base = { ans: 100, char: 1, ai: 1, note: 1, achv: 5, min: 60 };
+    const step = { ans: 100, char: 1, ai: 1, note: 1, achv: 5, min: 60 };
+    const phases = []; let tid = 82000, gid = 160000;
+    meta.forEach((pm, pi) => {
+      const groups = [];
+      pm.groups.forEach((gm, gi) => {
+        const isMain = gm.kind === 'main';
+        const n = isMain ? 20 : 25;
+        const tasks = [];
+        for (let k = 0; k < n; k++) {
+          const type = types[(pi * 10 + gi * 3 + k) % types.length];
+          const target = base[type] + step[type] * (pi * 8 + Math.floor(k / 2));
+          const isLastSide = (!isMain) && k === n - 1;
+          const isFinalMain = isMain && pi === 4 && k === n - 1;
+          tasks.push({
+            id: 'season-task-' + (tid++), title: label[type] + ' ' + target + unit[type],
+            type, target, reward: '🪙 ' + Math.round(target / 10) + ' 金币', coin: Math.round(target / 10),
+            safe: isFinalMain ? 'season' : (isLastSide ? 'day' : null),
+          });
+        }
+        groups.push({ id: 'season-group-' + (gid++), title: gm.t, kind: gm.kind, stars: gm.stars, tasks });
+      });
+      phases.push({ id: pm.id, title: pm.title, order: pi + 1, unlockStars: pm.unlock, groups });
+    });
+    return phases;
   }
 
-  const taskDefs = { daily: buildDaily(), weekly: buildWeekly(), season: buildSeason() };
+  const seasonPhases = buildSeasonPhases();
+  /* 赛季任务扁平数组（600 个，供计数/兼容） */
+  const taskDefs = {
+    daily: buildDaily(), weekly: buildWeekly(),
+    season: seasonPhases.reduce((a, ph) => a.concat(ph.groups.reduce((b, g) => b.concat(g.tasks), [])), []),
+  };
 
   const DAYS = { 'ans': 'd', 'char': 'd', 'ai': 'd', 'note': 'd' };
   const WEEKS = { 'ans': 'w', 'char': 'w', 'achv': 'w', 'ai': 'w' };
-  const SEASONS = { 'ans': 's', 'char': 's', 'achv': 's' };
+  const SEASONS = { 'ans': 's', 'char': 's', 'ai': 's', 'note': 's', 'achv': 's' };
 
   /* 跨周期滚动：返回是否发生了滚动（调用方保存） */
   function rollover(state) {
@@ -3996,7 +4243,10 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     const today = dayStr(), week = weekStr(), season = seasonStr();
     if (t.day !== today) { t.day = today; t.d = { ans: 0, char: 0, ai: 0, note: 0 }; changed = true; }
     if (t.week !== week) { t.week = week; t.w = { ans: 0, min: 0, char: 0, achv: 0, ai: 0 }; changed = true; }
-    if (t.season !== season) { t.season = season; t.s = { ans: 0, char: 0, achv: 0 }; changed = true; }
+    if (t.season !== season) { t.season = season; t.s = { ans: 0, char: 0, ai: 0, note: 0, achv: 0 }; t.seasonStars = 0; t.safe = 0; t.safeUntil = 0; changed = true; }
+    if (typeof t.seasonStars !== 'number') t.seasonStars = 0;
+    if (typeof t.safe !== 'number') t.safe = 0;
+    if (!t.safeUntil) t.safeUntil = 0;
     if (!t.claimed) t.claimed = {};
     return changed;
   }
@@ -4024,6 +4274,20 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return Math.floor(sum / 60);
   }
 
+  /* 本季累计分钟（从 playTime.days 求和） */
+  function seasonMin(playTime) {
+    const days = (playTime && playTime.days) || {};
+    const now = new Date();
+    const q = Math.floor(now.getMonth() / 3);
+    const start = new Date(now.getFullYear(), q * 3, 1);
+    let sum = 0;
+    Object.keys(days).forEach(d => {
+      const t = new Date(d + 'T00:00:00');
+      if (t >= start) sum += (days[d] || 0);
+    });
+    return Math.floor(sum / 60);
+  }
+
   /* 计算各任务进度 */
   function progress(state, playTime) {
     rollover(state);
@@ -4034,21 +4298,533 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       return t.s[type] || 0;
     };
     const out = {};
-    Object.keys(taskDefs).forEach(grp => {
-      out[grp] = taskDefs[grp].map(d => {
-        let got = 0;
-        if (grp === 'daily') got = get('d', d.type);
-        else if (grp === 'weekly') got = (d.type === 'min') ? weekMin(playTime) : get('w', d.type);
-        else got = get('s', d.type);
-        const done = got >= d.target;
-        const claimed = !!(t.claimed && t.claimed[d.id]);
-        return { id: d.id, title: d.title, type: d.type, target: d.target, reward: d.reward, got: Math.min(got, d.target), done, claimed };
-      });
+    /* 每日 / 每周（保持原结构） */
+    out.daily = taskDefs.daily.map(d => {
+      const got = get('d', d.type), done = got >= d.target;
+      return { id: d.id, title: d.title, type: d.type, target: d.target, reward: d.reward, got: Math.min(got, d.target), done, claimed: !!(t.claimed && t.claimed[d.id]) };
     });
+    out.weekly = taskDefs.weekly.map(d => {
+      const got = (d.type === 'min') ? weekMin(playTime) : get('w', d.type), done = got >= d.target;
+      return { id: d.id, title: d.title, type: d.type, target: d.target, reward: d.reward, got: Math.min(got, d.target), done, claimed: !!(t.claimed && t.claimed[d.id]) };
+    });
+    /* 赛季：阶段 + 星级 + 安全箱 */
+    const stars = t.seasonStars || 0;
+    const safe = t.safe || 0;
+    const safeUntil = t.safeUntil || 0;
+    out.season = {
+      stars, safe, safeUntil,
+      phases: seasonPhases.map(ph => {
+        const unlocked = stars >= ph.unlockStars;
+        const groups = ph.groups.map(g => {
+          const tasks = g.tasks.map(d => {
+            const got = (d.type === 'min') ? seasonMin(playTime) : get('s', d.type);
+            const done = got >= d.target;
+            return { id: d.id, title: d.title, type: d.type, target: d.target, reward: d.reward, safe: d.safe, got: Math.min(got, d.target), done, claimed: !!(t.claimed && t.claimed[d.id]) };
+          });
+          return { id: g.id, title: g.title, kind: g.kind, stars: g.stars, done: tasks.every(x => x.claimed), tasks };
+        });
+        return { id: ph.id, title: ph.title, order: ph.order, unlockStars: ph.unlockStars, unlocked, groups };
+      }),
+    };
     return out;
   }
 
-  return { taskDefs, progress, rollover, bump, weekMin, dayStr, weekStr, seasonStr };
+  /* 领取赛季任务：标记完成 + 整组得★ + 安全箱卡 */
+  function claim(state, taskId) {
+    rollover(state);
+    const t = state.tasks;
+    let found = null, group = null;
+    for (const ph of seasonPhases) for (const g of ph.groups) for (const tk of g.tasks) {
+      if (tk.id === taskId) { found = tk; group = g; break; }
+    }
+    if (!found) return { ok: false, reason: 'not-found' };
+    if (t.claimed && t.claimed[taskId]) return { ok: false, reason: 'already' };
+    t.claimed = t.claimed || {};
+    t.claimed[taskId] = Date.now();
+    /* 领奖加金币（商城钱包；双倍金币卡生效） */
+    let coin = found.coin || coinOf(found.reward);
+    if (state.buff && state.buff.coin2x > 0) { coin *= 2; state.buff.coin2x--; }
+    if (coin) state.coins = (state.coins || 0) + coin;
+    /* 整组完成 → 结算组★ + 组末安全箱1天卡 */
+    const groupDone = group.tasks.every(tk => t.claimed[tk.id]);
+    if (groupDone) {
+      t.seasonStars = seasonPhases.reduce((sum, ph) => sum + ph.groups.reduce((s, g) =>
+        s + (g.tasks.every(tk => t.claimed[tk.id]) ? g.stars : 0), 0), 0);
+      if (group.tasks.some(tk => tk.safe === 'day')) { t.safe = 1; t.safeUntil = Date.now() + 86400000; }
+    }
+    /* 赛季终章主线任务 → 赛季卡 */
+    if (found.safe === 'season') { t.safe = 2; t.safeUntil = 0; }
+    return { ok: true, stars: t.seasonStars, safe: t.safe, groupDone, coin };
+  }
+
+  /* 任意任务（每日/每周/赛季）的金币奖励数 */
+  function coinFor(taskId) {
+    for (const d of taskDefs.daily) if (d.id === taskId) return d.coin || 0;
+    for (const w of taskDefs.weekly) if (w.id === taskId) return w.coin || 0;
+    for (const s of taskDefs.season) if (s.id === taskId) return s.coin || 0;
+    return 0;
+  }
+
+  return { taskDefs, seasonPhases, progress, rollover, bump, claim, coinFor, weekMin, seasonMin, dayStr, weekStr, seasonStr };
+});
+
+</script>
+<script>
+/* ============================================================
+ * 搭角色 V5.0 · items.js · 商城物品目录（100+ 件）
+ *   CATS  分类
+ *   ITEMS 物品
+ *   byId / cat / byCat
+ * 浏览器挂 window.AIRA；node 可测。
+ * ============================================================ */
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) module.exports = factory();
+  else { root.AIRA = root.AIRA || {}; Object.assign(root.AIRA, factory()); }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const CATS = [
+    { id: 'title', label: '限定称号', icon: '🏷️' },
+    { id: 'theme', label: '主题皮肤', icon: '🎨' },
+    { id: 'frame', label: '头像框', icon: '🖼️' },
+    { id: 'effect', label: '卡片特效', icon: '✨' },
+    { id: 'ai', label: 'AI 次数', icon: '🤖' },
+    { id: 'notebook', label: '记事本皮肤', icon: '📔' },
+    { id: 'font', label: '字体', icon: '🔤' },
+    { id: 'textcolor', label: '字色', icon: '🌈' },
+    { id: 'bgm', label: '背景音乐', icon: '🎵' },
+    { id: 'medal', label: '徽章', icon: '🎖️' },
+    { id: 'bg', label: '背景', icon: '🖼️' },
+    { id: 'sticker', label: '贴纸', icon: '🌟' },
+    { id: 'item', label: '道具', icon: '🎒' },
+  ];
+
+  const ITEMS = [];
+  function I(id, cat, name, price, emoji, desc, meta) {
+    ITEMS.push({ id, cat, name, price, emoji, desc, meta: meta || {} });
+  }
+
+  /* ---- 限定称号 ---- */
+  I('title_novice', 'title', '新手捏人师', 100, '🎀', '一切从第一次捏人开始。');
+  I('title_100', 'title', '百题斩', 300, '⚔️', '累计答对 100 题。');
+  I('title_collector', 'title', '角色收藏家', 500, '🗃️', '收藏角色是我的浪漫。');
+  I('title_ai', 'title', 'AI 魔法师', 600, '🪄', '与 AI 心灵相通。');
+  I('title_gold', 'title', '金牌捏人师', 900, '🥇', '每一张都值得金牌。');
+  I('title_legend', 'title', '传说捏人师', 1500, '👑', '传说级的手艺。');
+  I('title_home', 'title', '故土之归', 2000, '🏡', '回到故事开始的地方。');
+  I('title_galaxy', 'title', '星河旅人', 2200, '🌌', '把星河穿在角色身上。');
+  I('title_sakura', 'title', '樱花之心', 2500, '🌸', '心是樱花粉色的。');
+  I('title_dream', 'title', '梦境编织者', 3000, '💤', '在梦里捏了无数角色。');
+  I('title_eternal', 'title', '永恒之梦', 4000, '💎', '梦不会醒。');
+  I('title_creator', 'title', '创世之笔', 5000, '🖌️', '笔尖落下，世界诞生。');
+  I('title_season', 'title', '赛季冠军', 6000, '🏆', '赛季任务的王者。');
+  I('title_omni', 'title', '全能创造者', 8888, '🌟', '捏人界的全能传说。');
+
+  /* ---- 主题皮肤 ---- */
+  I('theme_sakura', 'theme', '樱花粉', 0, '🌸', '默认主题 · 樱花之恋。', { theme: 'sakura' });
+  I('theme_star', 'theme', '星空紫', 800, '🌌', '漫天星河落在界面上。', { theme: 'star' });
+  I('theme_ocean', 'theme', '海洋蓝', 800, '🌊', '清凉的海蓝，适合夏天。', { theme: 'ocean' });
+  I('theme_matcha', 'theme', '抹茶绿', 800, '🍵', '清新的抹茶，宁静治愈。', { theme: 'matcha' });
+  I('theme_peach', 'theme', '蜜桃橙', 800, '🍑', '甜甜的蜜桃色。', { theme: 'peach' });
+  I('theme_lav', 'theme', '薰衣草', 900, '💜', '淡淡的薰衣草香。', { theme: 'lavender' });
+  I('theme_aurora', 'theme', '极光', 1200, '❄️', '流动的极光色彩。', { theme: 'aurora' });
+  I('theme_gold', 'theme', '鎏金', 1500, '✨', '奢华的金色质感。', { theme: 'gold' });
+  I('theme_night', 'theme', '暗夜黑', 1500, '🌙', '神秘的暗夜主题。', { theme: 'night' });
+  I('theme_rainbow', 'theme', '彩虹', 2000, '🌈', '把所有颜色穿在身上。', { theme: 'rainbow' });
+
+  /* ---- 头像框 ---- */
+  I('frame_classic', 'frame', '经典粉框', 0, '🎀', '默认头像框。', { frame: 'classic' });
+  I('frame_gold', 'frame', '鎏金边框', 500, '👑', '金边闪闪，气质拉满。', { frame: 'gold' });
+  I('frame_star', 'frame', '星光边框', 500, '✨', '星星点点的光。', { frame: 'star' });
+  I('frame_wreath', 'frame', '花环边框', 600, '🌸', '樱花编成的花环。', { frame: 'wreath' });
+  I('frame_gem', 'frame', '宝石边框', 700, '💎', '镶嵌的宝石熠熠生辉。', { frame: 'gem' });
+  I('frame_note', 'frame', '音符边框', 600, '🎵', '跳动的音符环绕。', { frame: 'note' });
+  I('frame_butterfly', 'frame', '蝴蝶边框', 700, '🦋', '蝴蝶翩翩飞舞。', { frame: 'butterfly' });
+  I('frame_heart', 'frame', '爱心边框', 700, '💗', '满满的少女心。', { frame: 'heart' });
+  I('frame_crown', 'frame', '皇冠边框', 900, '👑', '戴上就是公主。', { frame: 'crown' });
+  I('frame_rainbow', 'frame', '彩虹边框', 1000, '🌈', '七色光环。', { frame: 'rainbow' });
+
+  /* ---- 卡片特效 ---- */
+  I('eff_none', 'effect', '无特效', 0, '⬜', '默认 · 干净清爽。', { effect: 'none' });
+  I('eff_sakura', 'effect', '樱花飘落', 600, '🌸', '角色卡上樱花纷飞。', { effect: 'sakura' });
+  I('eff_star', 'effect', '星光闪耀', 600, '✨', '星星在角色四周闪烁。', { effect: 'star' });
+  I('eff_fire', 'effect', '火焰环绕', 800, '🔥', '炽热的火环。', { effect: 'fire' });
+  I('eff_snow', 'effect', '雪花飞舞', 800, '❄️', '冬日的浪漫。', { effect: 'snow' });
+  I('eff_bubble', 'effect', '泡泡升起', 800, '🫧', '轻盈的泡泡。', { effect: 'bubble' });
+  I('eff_note', 'effect', '音符跳动', 800, '🎵', '音符随节奏舞动。', { effect: 'note' });
+  I('eff_thunder', 'effect', '雷电环绕', 900, '⚡', '帅气的电光。', { effect: 'thunder' });
+  I('eff_rainbow', 'effect', '彩虹流光', 1000, '🌈', '流光溢彩。', { effect: 'rainbow' });
+  I('eff_particle', 'effect', '粒子光效', 1200, '💫', '漫天粒子飘散。', { effect: 'particle' });
+
+  /* ---- AI 次数 ---- */
+  I('ai_1', 'ai', 'AI 次数 ×1', 100, '🤖', '获得 1 次 AI 使用次数。', { ai: 1 });
+  I('ai_3', 'ai', 'AI 次数 ×3', 280, '🤖', '获得 3 次 AI 使用次数。', { ai: 3 });
+  I('ai_5', 'ai', 'AI 次数 ×5', 450, '🤖', '获得 5 次 AI 使用次数。', { ai: 5 });
+  I('ai_10', 'ai', 'AI 次数 ×10', 850, '🤖', '获得 10 次 AI 使用次数。', { ai: 10 });
+  I('ai_month', 'ai', 'AI 月卡', 2500, '📅', '一次性获得 30 次 AI。', { ai: 30 });
+
+  /* ---- 记事本皮肤 ---- */
+  I('nb_pink', 'notebook', '樱花记事本', 0, '🌸', '默认 · 粉色小本本。', { nb: 'pink' });
+  I('nb_blue', 'notebook', '海蓝记事本', 300, '📘', '清爽的蓝色。', { nb: 'blue' });
+  I('nb_green', 'notebook', '薄荷记事本', 300, '📗', '薄荷绿，清凉。', { nb: 'green' });
+  I('nb_yellow', 'notebook', '暖黄记事本', 300, '📙', '阳光般的暖黄。', { nb: 'yellow' });
+  I('nb_purple', 'notebook', '星空记事本', 400, '📕', '紫罗兰的星空。', { nb: 'purple' });
+  I('nb_grid', 'notebook', '格子记事本', 400, '📓', '复古方格纸。', { nb: 'grid' });
+  I('nb_leather', 'notebook', '皮革记事本', 500, '📔', '质感皮革封面。', { nb: 'leather' });
+  I('nb_gold', 'notebook', '鎏金记事本', 700, '📒', '金色烫印，贵气。', { nb: 'gold' });
+
+  /* ---- 字体 ---- */
+  I('font_default', 'font', '系统字体', 0, '🔤', '默认字体。', { font: 'system' });
+  I('font_round', 'font', '圆润体', 300, '🟢', '可爱圆润。', { font: 'round' });
+  I('font_kai', 'font', '楷体', 300, '🖋️', '端正的楷书。', { font: 'kai' });
+  I('font_hand', 'font', '手写体', 400, '✍️', '随性的手写风。', { font: 'hand' });
+  I('font_pixel', 'font', '像素体', 400, '🎮', '复古像素。', { font: 'pixel' });
+  I('font_song', 'font', '宋体', 300, '📄', '经典宋体。', { font: 'song' });
+  I('font_hei', 'font', '黑体', 300, '⬛', '简洁黑体。', { font: 'hei' });
+  I('font_art', 'font', '艺术字', 600, '🎨', '花体艺术字。', { font: 'art' });
+
+  /* ---- 字色 ---- */
+  I('tc_pink', 'textcolor', '樱粉', 200, '🌸', '樱花粉的文字。', { color: '#e56a9a' });
+  I('tc_peach', 'textcolor', '蜜桃', 200, '🍑', '蜜桃橙的文字。', { color: '#ff9a76' });
+  I('tc_sky', 'textcolor', '天蓝', 200, '💧', '天蓝的文字。', { color: '#5aa7e5' });
+  I('tc_mint', 'textcolor', '薄荷', 200, '🌿', '薄荷绿的文字。', { color: '#5fc9a2' });
+  I('tc_lav', 'textcolor', '薰衣草', 250, '💜', '薰衣草紫的文字。', { color: '#a98ae0' });
+  I('tc_gold', 'textcolor', '金色', 300, '✨', '金色的文字。', { color: '#e8b23f' });
+  I('tc_rose', 'textcolor', '玫瑰红', 300, '🌹', '玫瑰红文字。', { color: '#e0536e' });
+  I('tc_rainbow', 'textcolor', '彩虹', 400, '🌈', '渐变彩虹文字。', { color: 'rainbow' });
+
+  /* ---- 背景音乐 ---- */
+  I('bgm_none', 'bgm', '静音', 0, '🔇', '无背景音乐。', { bgm: 'none' });
+  I('bgm_quiet', 'bgm', '轻音乐', 300, '🎹', '安静的钢琴曲。', { bgm: 'quiet' });
+  I('bgm_cheer', 'bgm', '欢快', 300, '🎉', '轻快的旋律。', { bgm: 'cheer' });
+  I('bgm_ancient', 'bgm', '古风', 400, '🏮', '悠远的古筝。', { bgm: 'ancient' });
+  I('bgm_elec', 'bgm', '电子', 400, '🎧', '动感的电子乐。', { bgm: 'elec' });
+  I('bgm_piano', 'bgm', '钢琴曲', 500, '🎹', '温柔的钢琴。', { bgm: 'piano' });
+
+  /* ---- 徽章 ---- */
+  I('medal_achv', 'medal', '成就大师', 500, '🎖️', '解锁全部成就的证明。', { medal: 'achv' });
+  I('medal_task', 'medal', '任务大师', 500, '📋', '赛季任务全清。', { medal: 'task' });
+  I('medal_quiz', 'medal', '问答之星', 500, '⭐', '答题达人。', { medal: 'quiz' });
+  I('medal_streak', 'medal', '连续签到', 600, '🔥', '连续每日打卡。', { medal: 'streak' });
+  I('medal_gan', 'medal', '肝帝', 800, '💪', '肝任务的天选之人。', { medal: 'gan' });
+  I('medal_coll', 'medal', '收藏家', 800, '🗃️', '物品收藏家。', { medal: 'coll' });
+  I('medal_champ', 'medal', '赛季冠军', 1000, '🏆', '赛季第一。', { medal: 'champ' });
+  I('medal_legend', 'medal', '传奇', 1500, '🌟', '传说中的存在。', { medal: 'legend' });
+
+  /* ---- 背景 ---- */
+  I('bg_pink', 'bg', '樱花背景', 0, '🌸', '默认 · 樱花。', { bg: 'pink' });
+  I('bg_star', 'bg', '星空背景', 400, '🌌', '静谧星空。', { bg: 'star' });
+  I('bg_sea', 'bg', '海边背景', 400, '🌊', '海浪与阳光。', { bg: 'sea' });
+  I('bg_forest', 'bg', '森林背景', 400, '🌲', '绿意盎然。', { bg: 'forest' });
+  I('bg_city', 'bg', '城市夜景', 500, '🌃', '霓虹闪烁。', { bg: 'city' });
+  I('bg_aurora', 'bg', '极光背景', 600, '❄️', '北国的光。', { bg: 'aurora' });
+
+  /* ---- 贴纸 ---- */
+  I('st_sakura', 'sticker', '樱花贴纸', 200, '🌸', '可爱的樱花贴纸。', { sticker: 'sakura' });
+  I('st_heart', 'sticker', '爱心贴纸', 200, '💗', '甜甜的爱心。', { sticker: 'heart' });
+  I('st_star', 'sticker', '星星贴纸', 200, '⭐', '闪亮的小星星。', { sticker: 'star' });
+  I('st_cat', 'sticker', '猫咪贴纸', 250, '🐱', '软软的猫猫。', { sticker: 'cat' });
+  I('st_bear', 'sticker', '小熊贴纸', 250, '🐻', '圆滚滚的小熊。', { sticker: 'bear' });
+  I('st_bunny', 'sticker', '兔兔贴纸', 250, '🐰', '蹦蹦跳跳的兔子。', { sticker: 'bunny' });
+  I('st_crown', 'sticker', '皇冠贴纸', 300, '👑', '公主的皇冠。', { sticker: 'crown' });
+  I('st_ribbon', 'sticker', '蝴蝶结贴纸', 300, '🎀', '粉粉的蝴蝶结。', { sticker: 'ribbon' });
+  I('st_rainbow', 'sticker', '彩虹贴纸', 350, '🌈', '雨后彩虹。', { sticker: 'rainbow' });
+  I('st_glitter', 'sticker', '闪粉贴纸', 400, '✨', '闪闪发光。', { sticker: 'glitter' });
+
+  /* ---- 道具 ---- */
+  I('item_coin2x', 'item', '双倍金币卡', 300, '💰', '下一次任务奖励金币 ×2。', { prop: 'coin2x' });
+  I('item_exp2x', 'item', '双倍经验卡', 300, '📈', '下一次任务经验 ×2。', { prop: 'exp2x' });
+  I('item_skip', 'item', '答题跳过券', 400, '🎟️', '跳过一道不想答的题。', { prop: 'skip' });
+  I('item_ai_accel', 'item', 'AI 加速', 400, '⚡', '下一次 AI 回复更快。', { prop: 'aiAccel' });
+  I('item_reset', 'item', '角色重置石', 500, '🪨', '重置一个角色重新捏。', { prop: 'reset' });
+  I('item_save', 'item', '一键存档', 300, '💾', '立即保存当前进度。', { prop: 'save' });
+  I('item_charm', 'item', '幸运符', 600, '🍀', '好运加持，出金概率提升。', { prop: 'lucky' });
+  I('item_aura', 'item', '经验护符', 600, '🛡️', '任务经验永久 +10%。', { prop: 'aura' });
+
+  const byId = id => ITEMS.find(i => i.id === id) || null;
+  const byCat = c => ITEMS.filter(i => i.cat === c);
+  const catCount = () => { const o = {}; CATS.forEach(c => o[c.id] = byCat(c.id).length); return o; };
+
+  return { CATS, ITEMS, byId, byCat, catCount };
+});
+
+</script>
+<script>
+/* ============================================================
+ * 搭角色 V5.0 · stickers.js · 内嵌 SVG 可爱贴图（离线可用）
+ *   STICKERS  贴纸表  { id: { name, svg } }
+ *   get(id) / list()
+ * 浏览器挂 window.AIRA；node 可测。
+ * ============================================================ */
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) module.exports = factory();
+  else { root.AIRA = root.AIRA || {}; Object.assign(root.AIRA, factory()); }
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const W = (inner, extra) => `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" ${extra || ''}>${inner}</svg>`;
+
+  const STICKERS = {
+    sakura: { name: '樱花', svg: W(`
+      <defs><radialGradient id="sk" cx="50%" cy="40%"><stop offset="0%" stop-color="#fff0f6"/><stop offset="100%" stop-color="#f8b8d0"/></radialGradient></defs>
+      <g fill="url(#sk)" stroke="#e56a9a" stroke-width="1.4">
+        <ellipse cx="32" cy="13" rx="8" ry="11"/><ellipse cx="48" cy="25" rx="8" ry="11" transform="rotate(72 48 25)"/><ellipse cx="41" cy="44" rx="8" ry="11" transform="rotate(144 41 44)"/><ellipse cx="23" cy="44" rx="8" ry="11" transform="rotate(216 23 44)"/><ellipse cx="16" cy="25" rx="8" ry="11" transform="rotate(288 16 25)"/>
+      </g>
+      <circle cx="32" cy="32" r="6" fill="#e56a9a"/><circle cx="32" cy="32" r="2.5" fill="#fff"/>`) },
+
+    heart: { name: '爱心', svg: W(`
+      <defs><linearGradient id="ht" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff8fb3"/><stop offset="100%" stop-color="#e56a9a"/></linearGradient></defs>
+      <path d="M32 55C18 44 8 34 8 23 8 14 15 8 22 8c4 0 8 2 10 6 2-4 6-6 10-6 7 0 14 6 14 15 0 11-10 21-24 32z" fill="url(#ht)" stroke="#d14a80" stroke-width="1.5"/>
+      <ellipse cx="24" cy="22" rx="4" ry="5" fill="#ffffff" opacity=".5"/>`) },
+
+    star: { name: '星星', svg: W(`
+      <defs><linearGradient id="st" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffe9a0"/><stop offset="100%" stop-color="#f5b93f"/></linearGradient></defs>
+      <path d="M32 6l7 15 16 2-12 11 3 16-14-8-14 8 3-16L9 23l16-2z" fill="url(#st)" stroke="#e0a32c" stroke-width="1.5" stroke-linejoin="round"/>
+      <circle cx="27" cy="26" r="2.5" fill="#fff" opacity=".7"/>`) },
+
+    cat: { name: '猫咪', svg: W(`
+      <path d="M16 22l4-12 8 8h8l8-8 4 12v10a16 16 0 0 1-32 0z" fill="#ffd7e2" stroke="#e56a9a" stroke-width="1.6" stroke-linejoin="round"/>
+      <path d="M22 20l-2-6 6 4zM42 20l2-6-6 4z" fill="#f8b8d0"/>
+      <circle cx="25" cy="33" r="2.6" fill="#5a3140"/><circle cx="39" cy="33" r="2.6" fill="#5a3140"/>
+      <path d="M29 39c2 2 4 2 6 0" stroke="#5a3140" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M24 27l4 1M40 27l-4 1" stroke="#e56a9a" stroke-width="1.4" stroke-linecap="round"/>`) },
+
+    bear: { name: '小熊', svg: W(`
+      <circle cx="20" cy="18" r="7" fill="#c9976f"/><circle cx="44" cy="18" r="7" fill="#c9976f"/>
+      <circle cx="32" cy="34" r="21" fill="#d8a97f" stroke="#b07f55" stroke-width="1.5"/>
+      <circle cx="20" cy="16" r="3" fill="#e8c3a0"/><circle cx="44" cy="16" r="3" fill="#e8c3a0"/>
+      <circle cx="25" cy="32" r="2.6" fill="#4a3020"/><circle cx="39" cy="32" r="2.6" fill="#4a3020"/>
+      <ellipse cx="32" cy="38" rx="4" ry="3" fill="#f0d0b0"/>
+      <circle cx="32" cy="38" r="1.4" fill="#4a3020"/>
+      <path d="M29 43c2 1.5 4 1.5 6 0" stroke="#4a3020" stroke-width="1.6" fill="none" stroke-linecap="round"/>`) },
+
+    bunny: { name: '兔兔', svg: W(`
+      <ellipse cx="24" cy="16" rx="5" ry="12" fill="#ffe9f0" stroke="#f0a8c0" stroke-width="1.4"/><ellipse cx="40" cy="16" rx="5" ry="12" fill="#ffe9f0" stroke="#f0a8c0" stroke-width="1.4"/>
+      <ellipse cx="24" cy="17" rx="2.4" ry="8" fill="#f8b8d0"/><ellipse cx="40" cy="17" rx="2.4" ry="8" fill="#f8b8d0"/>
+      <circle cx="32" cy="37" r="18" fill="#fff" stroke="#f0a8c0" stroke-width="1.5"/>
+      <circle cx="26" cy="35" r="2.6" fill="#5a3140"/><circle cx="38" cy="35" r="2.6" fill="#5a3140"/>
+      <path d="M28 41l4 2 4-2" stroke="#f0a8c0" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <circle cx="30" cy="31" r="1.2" fill="#f8b8d0"/><circle cx="34" cy="31" r="1.2" fill="#f8b8d0"/>`) },
+
+    crown: { name: '皇冠', svg: W(`
+      <path d="M10 22l10 8 8-12 4 8 8-8 10 12 4-8v20a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4z" fill="#ffe9a0" stroke="#e0a32c" stroke-width="1.6" stroke-linejoin="round"/>
+      <circle cx="32" cy="18" r="3" fill="#f5b93f"/><circle cx="18" cy="20" r="2.2" fill="#f5b93f"/><circle cx="46" cy="20" r="2.2" fill="#f5b93f"/>
+      <circle cx="32" cy="38" r="3" fill="#e0566e"/>`) },
+
+    ribbon: { name: '蝴蝶结', svg: W(`
+      <path d="M32 30C22 18 8 20 8 30c0 8 12 10 24 4z" fill="#f8b8d0" stroke="#e56a9a" stroke-width="1.4"/>
+      <path d="M32 30c10-12 24-10 24 0 0 8-12 10-24 4z" fill="#f8b8d0" stroke="#e56a9a" stroke-width="1.4"/>
+      <circle cx="32" cy="31" r="4.5" fill="#e56a9a"/><circle cx="32" cy="31" r="1.6" fill="#fff"/>
+      <path d="M32 35v10" stroke="#e56a9a" stroke-width="3" stroke-linecap="round"/>`) },
+
+    rainbow: { name: '彩虹', svg: W(`
+      <path d="M10 44a22 22 0 0 1 44 0" fill="none" stroke="#e0566e" stroke-width="5"/><path d="M14 44a18 18 0 0 1 36 0" fill="none" stroke="#f5b93f" stroke-width="5"/><path d="M18 44a14 14 0 0 1 28 0" fill="none" stroke="#7fc9a2" stroke-width="5"/><path d="M22 44a10 10 0 0 1 20 0" fill="none" stroke="#5aa7e5" stroke-width="5"/>
+      <ellipse cx="16" cy="46" rx="6" ry="3" fill="#9ad0b0"/><ellipse cx="48" cy="46" rx="6" ry="3" fill="#9ad0b0"/>`) },
+
+    sparkle: { name: '闪粉', svg: W(`
+      <path d="M32 8l4 14 14 4-14 4-4 14-4-14-14-4 14-4z" fill="#ffe9a0" stroke="#f5b93f" stroke-width="1.2" stroke-linejoin="round"/>
+      <circle cx="47" cy="17" r="2.5" fill="#f5b93f"/><circle cx="17" cy="47" r="2.5" fill="#f5b93f"/><circle cx="49" cy="43" r="1.8" fill="#f5b93f"/>`) },
+
+    cloud: { name: '云朵', svg: W(`
+      <g fill="#fff" stroke="#cfd8e8" stroke-width="1.4"><circle cx="22" cy="34" r="12"/><circle cx="38" cy="30" r="14"/><circle cx="50" cy="38" r="9"/><rect x="14" y="34" width="42" height="12" rx="6"/></g>
+      <circle cx="28" cy="32" r="3" fill="#eef2fa"/><circle cx="40" cy="30" r="4" fill="#eef2fa"/>`) },
+
+    moon: { name: '月亮', svg: W(`
+      <path d="M42 8a22 22 0 1 0 14 38 18 18 0 0 1-14-38z" fill="#fff3c9" stroke="#f5b93f" stroke-width="1.4"/>
+      <circle cx="44" cy="20" r="2" fill="#f5b93f"/><circle cx="50" cy="30" r="1.5" fill="#f5b93f"/><circle cx="38" cy="14" r="1.5" fill="#f5b93f"/>`) },
+
+    butterfly: { name: '蝴蝶', svg: W(`
+      <path d="M32 30c-8-12-22-14-24-4-2 8 10 14 20 10z" fill="#a98ae0" stroke="#8a68c0" stroke-width="1.3"/>
+      <path d="M32 30c8-12 22-14 24-4 2 8-10 14-20 10z" fill="#a98ae0" stroke="#8a68c0" stroke-width="1.3"/>
+      <path d="M32 32c-6 6-14 8-16 2-2-5 8-8 16-4zM32 32c6 6 14 8 16 2 2-5-8-8-16-4z" fill="#c9b0f0"/>
+      <path d="M32 18v32" stroke="#5a3140" stroke-width="2.4" stroke-linecap="round"/>`) },
+
+    gift: { name: '礼物', svg: W(`
+      <rect x="10" y="26" width="44" height="30" rx="4" fill="#f8b8d0" stroke="#e56a9a" stroke-width="1.5"/>
+      <rect x="10" y="20" width="44" height="12" rx="3" fill="#e56a9a"/>
+      <path d="M32 20v36" stroke="#e56a9a" stroke-width="3"/><path d="M32 18c-8 0-12-4-12-8 0-3 3-5 6-4 4 1 6 6 6 12zM32 18c8 0 12-4 12-8 0-3-3-5-6-4-4 1-6 6-6 12z" fill="#fff" stroke="#e56a9a" stroke-width="1.2"/>`) },
+
+    gem: { name: '宝石', svg: W(`
+      <path d="M18 16h28l8 12-22 24L10 28z" fill="#8ed6e0" stroke="#5aa7e5" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M10 28h44M22 16l10 12 10-12M32 28v24" stroke="#5aa7e5" stroke-width="1.2" fill="none"/>
+      <path d="M22 16l-4 6 6 6z" fill="#fff" opacity=".5"/>`) },
+
+    sun: { name: '太阳', svg: W(`
+      <g stroke="#f5b93f" stroke-width="3" stroke-linecap="round"><path d="M32 4v8M32 52v8M4 32h8M52 32h8M12 12l6 6M46 46l6 6M52 12l-6 6M18 46l-6 6"/></g>
+      <circle cx="32" cy="32" r="13" fill="#ffd76e" stroke="#f5b93f" stroke-width="1.5"/>`) },
+    glitter: { name: '闪片', svg: W(`
+      <g fill="#ffd76e"><path d="M32 8l3.4 8.6L44 20l-8.6 3.4L32 32l-3.4-8.6L20 20l8.6-3.4z"/><path d="M14 40l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f3a6c2"/><path d="M50 34l1.7 4.3L56 40l-4.3 1.7L50 46l-1.7-4.3L44 40l4.3-1.7z" fill="#a98ae0"/><circle cx="34" cy="46" r="2.2" fill="#fff"/><circle cx="22" cy="22" r="1.8" fill="#fff"/></g>`) },
+  };
+
+  const get = id => STICKERS[id] || null;
+  const list = () => Object.keys(STICKERS).map(id => ({ id, ...STICKERS[id] }));
+
+  return { STICKERS, get, list };
+});
+
+</script>
+<script>
+/* ============================================================
+ * 搭角色 V5.0 · shop.js · 金币钱包 / 商城 / 购物车 / 库存
+ *   addCoins / spendCoins / balance
+ *   buy(直接购买) / cartAdd / cartRemove / cartClear / cartTotal / checkout
+ *   owned / inventory
+ * 浏览器挂 window.AIRA；node 可测。
+ * ============================================================ */
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) module.exports = factory(root);
+  else { root.AIRA = root.AIRA || {}; Object.assign(root.AIRA, factory(root)); }
+})(typeof self !== 'undefined' ? self : this, function (root) {
+  'use strict';
+
+  /* 可重复购买的分类（消耗品） */
+  const CONSUMABLE = { ai: true, item: true };
+
+  function balance(state) { return (state && state.coins) || 0; }
+
+  function addCoins(state, n) {
+    if (!state) return 0;
+    n = Math.max(0, Math.round(n) || 0);
+    state.coins = (state.coins || 0) + n;
+    return state.coins;
+  }
+
+  function spendCoins(state, n) {
+    if (!state) return false;
+    n = Math.max(0, Math.round(n) || 0);
+    if ((state.coins || 0) < n) return false;
+    state.coins = (state.coins || 0) - n;
+    return true;
+  }
+
+  /* 购买一件（直接买）：返回 {ok, reason} */
+  function buy(state, id, items) {
+    items = items || root.AIRA || {};
+    const it = (items.byId ? items.byId(id) : null) || null;
+    if (!it) return { ok: false, reason: 'not-found' };
+    state.inventory = state.inventory || {};
+    const owned = state.inventory[id];
+    if (!CONSUMABLE[it.cat] && owned) return { ok: false, reason: 'owned' };
+    if ((state.coins || 0) < it.price) return { ok: false, reason: 'no-coin' };
+    state.coins = (state.coins || 0) - it.price;
+    state.inventory[id] = { count: (owned ? owned.count : 0) + 1, at: Date.now() };
+    /* 一次性外观：购买后自动装备 */
+    const slot = slotOf(it);
+    if (slot && !owned && it.price > 0) { state.equip = state.equip || {}; state.equip[slot] = id; }
+    /* AI 次数立即生效 */
+    if (it.cat === 'ai' && it.meta && it.meta.ai) state.aiQuota = (state.aiQuota || 0) + it.meta.ai;
+    return { ok: true, item: it };
+  }
+
+  /* 购物车 */
+  function cartAdd(state, id) {
+    state.cart = state.cart || [];
+    if (state.cart.includes(id)) return { ok: false, reason: 'in-cart' };
+    state.cart.push(id);
+    return { ok: true };
+  }
+  function cartRemove(state, id) {
+    state.cart = (state.cart || []).filter(x => x !== id);
+    return state.cart;
+  }
+  function cartClear(state) { state.cart = []; return []; }
+  function cartTotal(state, items) {
+    items = items || root.AIRA || {};
+    let t = 0;
+    (state.cart || []).forEach(id => { const it = items.byId ? items.byId(id) : null; if (it) t += it.price; });
+    return t;
+  }
+
+  /* 结算购物车：一次性买下全部 */
+  function checkout(state, items) {
+    items = items || root.AIRA || {};
+    const cart = state.cart || [];
+    if (!cart.length) return { ok: false, reason: 'empty' };
+    let total = 0; const list = [];
+    cart.forEach(id => {
+      const it = items.byId ? items.byId(id) : null;
+      if (!it) return;
+      const owned = state.inventory && state.inventory[id];
+      if (!CONSUMABLE[it.cat] && owned) return; /* 已拥有的一次性物品跳过 */
+      total += it.price; list.push(it);
+    });
+    if (!list.length) return { ok: false, reason: 'all-owned' };
+    if ((state.coins || 0) < total) return { ok: false, reason: 'no-coin', total };
+    state.coins = (state.coins || 0) - total;
+    state.inventory = state.inventory || {};
+    list.forEach(it => {
+      const owned = state.inventory[it.id];
+      state.inventory[it.id] = { count: (owned ? owned.count : 0) + 1, at: Date.now() };
+      if (it.cat === 'ai' && it.meta && it.meta.ai) state.aiQuota = (state.aiQuota || 0) + it.meta.ai;
+    });
+    state.cart = [];
+    return { ok: true, total, count: list.length };
+  }
+
+  function owned(state, id, items) {
+    items = items || root.AIRA;
+    if (state.inventory && state.inventory[id]) return true;
+    const it = items && items.byId ? items.byId(id) : null;
+    return !!(it && it.price === 0); /* 免费默认 = 始终拥有 */
+  }
+  function invCount(state, id) { const o = state.inventory && state.inventory[id]; return o ? o.count : 0; }
+
+  /* ===== 装备系统 ===== */
+  const SLOT = { title: 'title', theme: 'theme', frame: 'frame', effect: 'effect', notebook: 'nb', font: 'font', textcolor: 'textcolor', bgm: 'bgm', medal: 'medal', bg: 'bg', sticker: 'sticker' };
+  function slotOf(it) { return (it && SLOT[it.cat]) || null; }
+  function equipped(state, slot) { return ((state.equip || {})[slot]) || null; }
+  /* 装备一件（须已拥有） */
+  function equip(state, id, items) {
+    items = items || root.AIRA;
+    const it = items.byId ? items.byId(id) : null;
+    if (!it) return { ok: false, reason: 'not-found' };
+    const slot = slotOf(it);
+    if (!slot) return { ok: false, reason: 'not-equippable' };
+    if (!owned(state, id, items)) return { ok: false, reason: 'not-owned' };
+    state.equip = state.equip || {};
+    state.equip[slot] = id;
+    return { ok: true, slot, item: it };
+  }
+  /* 自动补默认装备（迁移：免费默认装到对应槽位） */
+  function grantDefaultEquip(state) {
+    state.equip = state.equip || {};
+    const defaults = { theme: 'theme_sakura', frame: 'frame_classic', effect: 'eff_none', nb: 'nb_pink', font: 'font_default', bgm: 'bgm_none', bg: 'bg_pink' };
+    Object.keys(defaults).forEach(slot => { if (!state.equip[slot]) state.equip[slot] = defaults[slot]; });
+    return state.equip;
+  }
+
+  /* ===== 消耗品 ===== */
+  const ITEM_BUFF = { item_coin2x: 'coin2x', item_exp2x: 'exp2x', item_skip: 'skip', item_ai_accel: 'aiAccel', item_reset: 'reset', item_charm: 'lucky', item_aura: 'aura' };
+  /* 使用一个消耗品道具：扣库存 + 设 buff（aura 永久） */
+  function useItem(state, id) {
+    const buff = ITEM_BUFF[id];
+    if (!buff) return { ok: false, reason: 'not-item' };
+    const inv = state.inventory && state.inventory[id];
+    if (!inv || inv.count < 1) return { ok: false, reason: 'none' };
+    state.inventory[id].count--;
+    if (state.inventory[id].count <= 0) delete state.inventory[id];
+    state.buff = state.buff || {};
+    state.buff[buff] = (state.buff[buff] || 0) + (buff === 'aura' ? 0 : 1);
+    if (buff === 'aura') state.buff.aura = 1; /* 永久 */
+    return { ok: true, buff, itemId: id };
+  }
+  /* 消耗 buff（使用一次，aura 不消耗） */
+  function useBuff(state, key) {
+    if (!(state.buff && state.buff[key] > 0)) return false;
+    if (key !== 'aura') state.buff[key]--;
+    return true;
+  }
+  function hasBuff(state, key) { return !!(state.buff && state.buff[key] > 0); }
+  /* 使用 AI 次数（从 aiQuota 扣） */
+  function useAI(state, n) {
+    n = n || 1;
+    if ((state.aiQuota || 0) < n) return false;
+    state.aiQuota -= n;
+    return true;
+  }
+  function aiLeft(state) { return (state.aiQuota || 0); }
+
+  return { balance, addCoins, spendCoins, buy, cartAdd, cartRemove, cartClear, cartTotal, checkout, owned, invCount, CONSUMABLE, slotOf, equipped, equip, grantDefaultEquip, useItem, useBuff, hasBuff, useAI, aiLeft };
 });
 
 </script>
@@ -4071,6 +4847,9 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   const MD = AIRA;
   const ACHV = AIRA;
   const TASK = AIRA;
+  const ITEMS = AIRA;
+  const SHOP = AIRA;
+  const STICKERS = AIRA;
 
   /* ===== 工具 ===== */
   const $ = (sel) => document.querySelector(sel);
@@ -4136,17 +4915,38 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       earned.forEach(e => { if (!achv.unlocked[e.id]) { achv.unlocked[e.id] = Date.now(); fresh.push(e); } });
       if (fresh.length) {
         try { TASK.bump(State, 'achv', fresh.length); } catch (e) { /* 忽略 */ }
+        /* 成就金币奖励 */
+        const coin = fresh.reduce((a, e) => a + ((e.coin || (e.tier || 1) * 20)), 0);
+        if (coin) State.coins = (State.coins || 0) + coin;
         scheduleSave();
+        if (typeof App !== 'undefined' && App.updateCoins) { try { App.updateCoins(); } catch (e) { /* 忽略 */ } }
         if (!silent) {
           const top = fresh.slice(0, 3).map(e => e.icon + ' ' + e.name).join('、');
-          toast('🏆 解锁成就：' + top + (fresh.length > 3 ? ' 等 ' + fresh.length + ' 个' : ''), 'success');
+          toast('🏆 解锁成就：' + top + (fresh.length > 3 ? ' 等 ' + fresh.length + ' 个' : '') + (coin ? ' · +' + coin + ' 🪙' : ''), 'success');
         }
       }
       return fresh.length;
     } catch (e) { return 0; }
   }
+  /* V5.0 · 等级/经验（商城 exp 道具生效） */
+  function gainExp(n) {
+    try {
+      const L = State.level = State.level || { exp: 0, lv: 1 };
+      let mult = 1;
+      if (SHOP.hasBuff(State, 'exp2x')) { mult *= 2; SHOP.useBuff(State, 'exp2x'); }
+      if (SHOP.hasBuff(State, 'aura')) mult *= 1.1;
+      L.exp += Math.round(n * mult);
+      const need = lv => 50 + lv * 25;
+      let ups = 0;
+      while (L.exp >= need(L.lv)) { L.exp -= need(L.lv); L.lv++; ups++; }
+      if (ups > 0) { try { toast('🎉 等级提升！Lv.' + L.lv + (ups > 1 ? ' ×' + ups : ''), 'success'); } catch (e) { /* 忽略 */ } }
+      return L.exp;
+    } catch (e) { return 0; }
+  }
   function bumpTask(key) {
     try { TASK.bump(State, key); scheduleSave(); } catch (e) { /* 忽略 */ }
+    const exp = { ans: 2, char: 5, ai: 3, note: 1, achv: 10 }[key] || 0;
+    if (exp) gainExp(exp);
   }
   /* V5.0 · 深度适配：设备类型 + 方向检测 */
   function detectDevice() {
@@ -4240,6 +5040,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       <button class="side-item" data-side-act="stats"><span class="si-icon">📊</span><span>统计 / 时长</span></button>
       <button class="side-item" data-side-act="achv"><span class="si-icon">🏆</span><span>成就</span></button>
       <button class="side-item" data-side-act="tasks"><span class="si-icon">🗓</span><span>任务</span></button>
+      <button class="side-item" data-side-act="shop"><span class="si-icon">🛍️</span><span>金币商城</span></button>
       <button class="side-item" data-side-act="note"><span class="si-icon">📝</span><span>记事本</span></button>
       <button class="side-item" data-side-act="theme"><span class="si-icon">🎨</span><span>主题色</span></button>
       <button class="side-item" data-side-act="dark"><span class="si-icon">🌙</span><span>暗色模式</span></button>
@@ -4256,6 +5057,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       else if (a === 'stats') App.openStats();
       else if (a === 'achv') App.openAchv();
       else if (a === 'tasks') App.openTasks();
+      else if (a === 'shop') App.openShop();
       else if (a === 'note') App.openNote();
       else if (a === 'theme') App.toggleTheme();
       else if (a === 'dark') App.toggleDark();
@@ -4899,7 +5701,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
         <div class="btn-row left mt-8">
           <button class="btn btn-soft" id="btn-savemem">💾 存进记忆</button>
           <button class="btn btn-soft" id="btn-progress">📊 进度</button>
-          <button class="btn btn-soft" id="btn-skip">⏭ 跳过这题</button>
+          <button class="btn btn-soft" id="btn-skip">${SHOP.hasBuff(State, 'skip') ? '⏭ 跳过（有券）' : '⏭ 跳过这题'}</button>
           <button class="btn btn-soft" id="btn-mand">${State.customMandatory[p.qid] ? '🔓 取消必答' : '🔒 标为必答'}</button>
           <button class="btn btn-soft" id="btn-reskip">⏩ 跳到未答</button>
           <button class="btn btn-soft" id="btn-reroll">🎲 重新抽取题库</button>
@@ -5242,6 +6044,9 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     saveNow();
   }
 
+  /* 任务面板 · 折叠状态（会话内记忆；每日/每周默认收起） */
+  const taskUI = { collapsed: { daily: true, weekly: true } };
+
   const App = {
     start() {
       const saved = STORE.load();
@@ -5367,13 +6172,17 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     clearAnswer(qid) { delete State.answers[qid]; render(); },
 
     reroll() {
-      const ok = confirm('重新抽取题库将清空当前所有答案，确定继续？');
-      if (!ok) return;
+      /* 重置石：有 buff 时免确认直接重抽并消耗 */
+      const hasStone = SHOP.hasBuff(State, 'reset');
+      if (!hasStone) {
+        const ok = confirm('重新抽取题库将清空当前所有答案，确定继续？');
+        if (!ok) return;
+      } else { SHOP.useBuff(State, 'reset'); saveNow(); if (typeof App.updateCoins === 'function') App.updateCoins(); }
       State.plan = ENGINE.buildPlan(State.meta, window.QUESTIONS);
       State.currentIndex = 0;
       State.answers = {};
       render();
-      toast('已重新抽取题库 🎲', 'success');
+      toast(hasStone ? '已重置题库（消耗重置石 🔄）' : '已重新抽取题库 🎲', 'success');
     },
 
     openProgress() {
@@ -5565,6 +6374,8 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       saveNow(); render();
       UI.closeModal();
       setAchvFlag('ai_use'); bumpTask('ai');
+      /* 消耗商城 AI 次数（有配额则扣） */
+      if (SHOP.aiLeft(State) > 0) { SHOP.useAI(State, 1); if (typeof App.updateCoins === 'function') App.updateCoins(); }
       toast('已写入人设内核 ✅', 'success');
     },
     aiCopy() {
@@ -5620,28 +6431,285 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     openTasks() {
       try { TASK.rollover(State); } catch (e) { /* 忽略 */ }
       const p = TASK.progress(State, STATS.getPlayTime(State));
-      const grpLabel = { daily: '📅 每日', weekly: '📆 每周', season: '🏆 赛季' };
+      const isC = k => taskUI.collapsed[k] ? ' task-collapsed' : '';
+      const caret = k => taskUI.collapsed[k] ? '▸' : '▾';
+      const bar = (got, target) => `<i class="achv-bar"><u style="width:${Math.min(100, Math.round(got / target * 100))}%"></u></i>`;
       let html = '';
-      ['daily', 'weekly', 'season'].forEach(g => {
+      const taskRow = t => {
+        const cls = t.claimed ? 'task-claimed' : (t.done ? 'task-done' : '');
+        const safeBadge = t.safe ? (t.safe === 'season' ? '<em class="task-safe">🧰 赛季卡</em>' : '<em class="task-safe">🔐 1天卡</em>') : '';
+        return `<div class="task-row ${cls}"><span class="task-ic">${t.claimed ? '✅' : t.done ? '🎯' : '⭕'}</span><span class="task-tx"><b>${esc(t.title)}${safeBadge}</b><small>${esc(t.reward)}</small>${bar(t.got, t.target)}</span><span class="task-num">${t.got}/${t.target}</span>${t.done && !t.claimed ? `<button class="task-claim" data-task="${t.id}">领取</button>` : ''}</div>`;
+      };
+      /* 每日 / 每周（可折叠分区） */
+      ['daily', 'weekly'].forEach(g => {
         const done = p[g].filter(t => t.done).length;
-        html += `<div class="qa-layer">${grpLabel[g]} · ${done}/${p[g].length} 完成</div>`;
-        p[g].forEach(t => {
-          const cls = t.claimed ? 'task-claimed' : (t.done ? 'task-done' : '');
-          html += `<div class="task-row ${cls}"><span class="task-ic">${t.claimed ? '✅' : t.done ? '🎯' : '⭕'}</span><span class="task-tx"><b>${esc(t.title)}</b><small>${esc(t.reward)}</small><i class="achv-bar"><u style="width:${Math.min(100, Math.round(t.got / t.target * 100))}%"></u></i></span><span class="task-num">${t.got}/${t.target}</span>${t.done && !t.claimed ? `<button class="task-claim" data-task="${t.id}">领取</button>` : ''}</div>`;
-        });
+        const icon = g === 'daily' ? '📅' : '📆';
+        html += `<div class="task-sec task-toggle" data-toggle="${g}"><span class="task-caret">${caret(g)}</span><span class="task-sec-ic">${icon}</span><span class="task-sec-tx"><b>${g === 'daily' ? '每日' : '每周'}</b><small>${done}/${p[g].length} 完成</small></span><span class="task-sec-pct">${Math.round(done / p[g].length * 100)}%</span></div>`;
+        html += `<div class="task-body${isC(g)}" data-body="${g}">${p[g].map(taskRow).join('')}</div>`;
       });
+      /* 赛季 · 安全箱横幅（贴图） */
+      const se = p.season;
+      const safeCls = se.safe === 2 ? 'safe-season' : se.safe === 1 ? 'safe-day' : 'safe-none';
+      const safeTxt = se.safe === 2 ? '🧰 赛季安全箱权限卡 · 整个赛季' : se.safe === 1 ? `🧰 安全箱1天权限卡 · 至 ${new Date(se.safeUntil).toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' })}` : '🔒 完成赛季任务解锁安全箱';
+      html += `<div class="task-safe-banner ${safeCls}"><span class="task-safe-sticker">🧰</span><div class="task-safe-tx"><b>赛季安全箱</b><small>${safeTxt}</small></div><span class="task-safe-star">★ ${se.stars}</span><span class="task-spark">✦</span><span class="task-spark s2">✧</span></div>`;
+      /* 赛季任务（阶段折叠） */
+      const seKey = 'season';
+      const seDone = se.phases.reduce((a, x) => a + x.groups.reduce((b, g) => b + g.tasks.filter(t => t.claimed).length, 0), 0);
+      const seTotal = se.phases.reduce((a, x) => a + x.groups.reduce((b, g) => b + g.tasks.length, 0), 0);
+      html += `<div class="task-sec task-toggle" data-toggle="${seKey}"><span class="task-caret">${caret(seKey)}</span><span class="task-sec-ic">🏆</span><span class="task-sec-tx"><b>赛季任务</b><small>${seDone}/${seTotal} 完成</small></span><span class="task-sec-pct">★ ${se.stars}</span></div>`;
+      html += `<div class="task-body${isC(seKey)}" data-body="${seKey}">`;
+      se.phases.forEach(ph => {
+        const done = ph.groups.reduce((a, g) => a + g.tasks.filter(t => t.claimed).length, 0);
+        const total = ph.groups.reduce((a, g) => a + g.tasks.length, 0);
+        const pk = 'phase-' + ph.id;
+        if (!ph.unlocked) {
+          html += `<div class="task-phase task-phase-locked"><span class="task-caret">🔒</span><span class="task-phase-ic">🔒</span><span class="task-phase-tx"><b>${esc(ph.title)}</b><small>未解锁 · 还需 ★${ph.unlockStars - se.stars}</small></span></div>`;
+          return;
+        }
+        html += `<div class="task-phase task-toggle" data-toggle="${pk}"><span class="task-caret">${caret(pk)}</span><span class="task-phase-ic">🌟</span><span class="task-phase-tx"><b>${esc(ph.title)}</b><small>${done}/${total} 完成</small></span><span class="task-phase-star">★ ${ph.unlockStars}</span></div>`;
+        html += `<div class="task-body${isC(pk)}" data-body="${pk}">`;
+        ph.groups.forEach(g => {
+          const gk = 'group-' + g.id;
+          const gdone = g.tasks.filter(t => t.claimed).length;
+          html += `<div class="task-group task-toggle" data-toggle="${gk}"><span class="task-caret">${caret(gk)}</span><span class="task-kind">${g.kind === 'main' ? '主线' : '支线'}</span><span class="task-group-tx"><b>${esc(g.title)}</b><small>${gdone}/${g.tasks.length} · ${g.done ? '⭐ 已结算' : '组★' + g.stars}</small></span><span class="task-group-star">${g.done ? '✓ 结算' : '★' + g.stars}</span></div>`;
+          html += `<div class="task-body${isC(gk)}" data-body="${gk}">${g.tasks.map(taskRow).join('')}</div>`;
+        });
+        html += `</div>`;
+      });
+      html += `</div>`;
       UI.showModal('🗓 任务体系',
         `<div class="qa-list">${html}</div>`,
         `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+      /* 领取 */
       $$('.task-claim').forEach(b => b.onclick = () => {
         const id = b.getAttribute('data-task');
-        State.tasks = State.tasks || {};
-        State.tasks.claimed = State.tasks.claimed || {};
-        State.tasks.claimed[id] = Date.now();
-        saveNow();
-        toast('已领取奖励 🎁', 'success');
+        if (id.indexOf('season-task-') === 0) {
+          const r = TASK.claim(State, id);
+          if (r.ok) {
+            saveNow();
+            if (typeof App.updateCoins === 'function') App.updateCoins();
+            const c = r.coin ? ' · +' + r.coin + ' 🪙' : '';
+            toast(r.safe === 2 ? '已获得赛季安全箱权限卡 🧰' + c : r.safe === 1 ? '已获得安全箱1天权限卡 🔐' + c : '已领取奖励 🎁' + c, 'success');
+          } else if (r.reason === 'already') { toast('已领取过啦', 'info'); }
+        } else {
+          State.tasks = State.tasks || {};
+          State.tasks.claimed = State.tasks.claimed || {};
+          State.tasks.claimed[id] = Date.now();
+          let coin = TASK.coinFor(id);
+          if (State.buff && State.buff.coin2x > 0) { coin *= 2; State.buff.coin2x--; }
+          if (coin) State.coins = (State.coins || 0) + coin;
+          saveNow();
+          if (typeof App.updateCoins === 'function') App.updateCoins();
+          toast('已领取奖励 🎁' + (coin ? ' · +' + coin + ' 🪙' : ''), 'success');
+        }
         App.openTasks();
       });
+      /* 折叠 / 展开 */
+      $$('.task-toggle').forEach(h => h.onclick = () => {
+        const key = h.getAttribute('data-toggle');
+        const body = document.querySelector('[data-body="' + key + '"]');
+        if (!body) return;
+        const nowCollapsed = body.classList.toggle('task-collapsed');
+        const c = h.querySelector('.task-caret');
+        if (c) c.textContent = nowCollapsed ? '▸' : '▾';
+        taskUI.collapsed[key] = nowCollapsed;
+      });
+    },
+
+    /* ===== V5.0 · 应用已装备外观 ===== */
+    applyEquip() {
+      try {
+        const eq = State.equip = State.equip || {};
+        const get = slot => { const id = eq[slot]; return id ? ITEMS.byId(id) : null; };
+        const body = document.body;
+        if (!body) return;
+        /* 主题 */
+        const th = get('theme'), thName = (th && th.meta && th.meta.theme) || '';
+        ['sakura', 'star', 'ocean', 'matcha', 'peach', 'lavender', 'aurora', 'gold', 'night', 'rainbow'].forEach(t => body.classList.remove('eq-theme-' + t));
+        if (thName) body.classList.add('eq-theme-' + thName);
+        /* 字体 */
+        const ft = get('font'), fName = (ft && ft.meta && ft.meta.font) || 'system';
+        ['system', 'round', 'kai', 'hand', 'pixel', 'song', 'hei', 'art'].forEach(f => body.classList.remove('eq-font-' + f));
+        if (fName) body.classList.add('eq-font-' + fName);
+        /* 字色 */
+        const tc = get('textcolor'), tcColor = (tc && tc.meta && tc.meta.color) || '';
+        const rootEl = document.documentElement;
+        if (rootEl) {
+          if (tcColor && tcColor !== 'rainbow') rootEl.style.setProperty('--shop-text', tcColor);
+          else if (tcColor === 'rainbow') { rootEl.style.setProperty('--shop-text', '#e56a9a'); body.classList.add('eq-text-rainbow'); }
+          else { rootEl.style.removeProperty('--shop-text'); body.classList.remove('eq-text-rainbow'); }
+        }
+        /* 头像框 / 特效 / 记事本 / 背景 / 贴纸（用 data 属性供 CSS 定位） */
+        const fr = get('frame'), ef = get('effect'), nb = get('nb'), bg = get('bg'), st = get('sticker');
+        body.dataset.eqFrame = (fr && fr.meta && fr.meta.frame) || 'classic';
+        body.dataset.eqEffect = (ef && ef.meta && ef.meta.effect) || 'none';
+        body.dataset.eqNb = (nb && nb.meta && nb.meta.nb) || 'pink';
+        body.dataset.eqBg = (bg && bg.meta && bg.meta.bg) || 'pink';
+        body.dataset.eqSticker = st ? st.id : '';
+        /* 贴纸悬浮装饰 */
+        const stickerEl = $('#equip-sticker');
+        if (stickerEl) {
+          if (st) { const s = STICKERS.get(st.meta.sticker); stickerEl.innerHTML = s ? s.svg : st.emoji; stickerEl.style.display = 'flex'; }
+          else stickerEl.style.display = 'none';
+        }
+        /* 背景音乐（bgm 物品 → 曲目；默认静音不强制关用户已开的音乐） */
+        const bgm = get('bgm'), bgmName = (bgm && bgm.meta && bgm.meta.bgm) || 'none';
+        const trackMap = { quiet: 0, cheer: 1, ancient: 2, elec: 3, piano: 0 };
+        if (trackMap[bgmName] != null) { State.musicOn = true; State.musicIndex = trackMap[bgmName]; try { if (typeof renderMusicPlayer === 'function') renderMusicPlayer(); } catch (e) { /* 忽略 */ } }
+        this.updateCoins();
+      } catch (e) { /* 忽略 */ }
+    },
+    /* ===== V5.0 · 金币商城（钱包/购物车/库存） ===== */
+    updateCoins() {
+      const el = $('#coin-amount');
+      if (el) el.textContent = (State.coins || 0);
+      const cw = $('#btn-wallet');
+      if (cw) cw.classList.toggle('cart-full', (State.cart || []).length > 0);
+      const lb = $('#lv-badge');
+      if (lb) lb.textContent = '⭐ ' + ((State.level && State.level.lv) || 1);
+      const tb = $('#title-badge');
+      if (tb) {
+        const tit = SHOP.equipped(State, 'title'), titItem = tit ? ITEMS.byId(tit) : null;
+        const med = SHOP.equipped(State, 'medal'), medItem = med ? ITEMS.byId(med) : null;
+        const shown = titItem || medItem;
+        if (shown) { tb.textContent = shown.emoji + ' ' + shown.name; tb.style.display = ''; }
+        else tb.style.display = 'none';
+      }
+    },
+    openShop() {
+      this.updateCoins();
+      const cats = ITEMS.CATS || [];
+      const activeCat = this._shopCat || cats[0].id;
+      const catLabel = id => ((cats.find(c => c.id === id) || {}).label) || '';
+      const itemCard = it => {
+        const owned = SHOP.owned(State, it.id);
+        const cnt = SHOP.invCount(State, it.id);
+        const inCart = (State.cart || []).includes(it.id);
+        const consumable = !!SHOP.CONSUMABLE[it.cat];
+        const canBuy = consumable || !owned;
+        const slot = SHOP.slotOf(it);
+        const isEq = slot && SHOP.equipped(State, slot) === it.id;
+        let img = it.emoji;
+        if (it.cat === 'sticker') { const s = STICKERS.get(it.meta.sticker); if (s) img = s.svg; }
+        const badge = owned && !consumable ? `<em class="shop-owned">已拥有</em>` : (cnt > 0 ? `<em class="shop-owned">×${cnt}</em>` : '');
+        let btns = '';
+        if (canBuy) btns += (inCart ? `<button class="shop-btn carted" data-cart-remove="${it.id}">🛒 已在车</button>` : `<button class="shop-btn" data-cart="${it.id}">+ 购物车</button>`);
+        if (canBuy && !inCart) btns += `<button class="shop-btn buy" data-buy="${it.id}">${it.price === 0 ? '免费' : '🪙 ' + it.price}</button>`;
+        if (slot && owned && !consumable) btns += `<button class="shop-btn equip ${isEq ? 'on' : ''}" data-eq="${it.id}">${isEq ? '✓ 已装备' : '装备'}</button>`;
+        return `<div class="shop-item ${(owned && !consumable) ? 'owned' : ''}">
+          <div class="shop-item-img">${img}</div>
+          <div class="shop-item-tx"><b>${esc(it.name)}${badge}</b><small>${esc(it.desc)}</small></div>
+          <div class="shop-item-btns">${btns}</div>
+        </div>`;
+      };
+      let html = `<div class="shop-wallet"><span class="shop-wallet-ic">🪙</span><b>${State.coins || 0}</b><span>金币</span><button class="shop-link" data-nav="cart">🛒 购物车${(State.cart || []).length ? ' (' + (State.cart || []).length + ')' : ''}</button><button class="shop-link" data-nav="inv">🎒 库存</button></div>`;
+      html += `<div class="shop-cats">` + cats.map(c => `<button class="shop-cat ${c.id === activeCat ? 'on' : ''}" data-cat="${c.id}">${c.icon} ${c.label}</button>`).join('') + `</div>`;
+      html += `<div class="shop-list">` + (ITEMS.byCat(activeCat) || []).map(itemCard).join('') + `</div>`;
+      UI.showModal('🛍️ 金币商城', html, `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+      $$('[data-cat]').forEach(b => b.onclick = () => { this._shopCat = b.getAttribute('data-cat'); this.openShop(); });
+      $$('[data-buy]').forEach(b => b.onclick = () => {
+        const id = b.getAttribute('data-buy');
+        const r = SHOP.buy(State, id, ITEMS);
+        if (r.ok) { saveNow(); this.updateCoins(); toast('已购买：' + r.item.name + ' 🎉', 'success'); this.openShop(); }
+        else if (r.reason === 'owned') toast('已拥有啦', 'info');
+        else if (r.reason === 'no-coin') toast('金币不够哦，去做任务赚金币吧 🪙', 'error');
+        else toast('没有找到这个物品', 'info');
+      });
+      $$('[data-cart]').forEach(b => b.onclick = () => {
+        const id = b.getAttribute('data-cart');
+        const r = SHOP.cartAdd(State, id);
+        if (r.ok) { saveNow(); this.openShop(); toast('已加入购物车 🛒', 'success'); }
+      });
+      $$('[data-cart-remove]').forEach(b => b.onclick = () => { SHOP.cartRemove(State, b.getAttribute('data-cart-remove')); saveNow(); this.openShop(); });
+      $$('[data-eq]').forEach(b => b.onclick = () => {
+        const r = SHOP.equip(State, b.getAttribute('data-eq'), ITEMS);
+        if (r.ok) { saveNow(); this.applyEquip(); toast('已装备：' + r.item.name + ' ✨', 'success'); this.openShop(); }
+        else toast('装备失败', 'error');
+      });
+      $$('[data-nav]').forEach(b => b.onclick = () => {
+        const n = b.getAttribute('data-nav');
+        if (n === 'cart') this.openCart(); else if (n === 'inv') this.openInventory();
+      });
+    },
+    openCart() {
+      this.updateCoins();
+      const cart = State.cart || [];
+      let total = 0;
+      const rows = cart.map(id => { const it = ITEMS.byId(id); if (it) total += it.price; return it; }).filter(Boolean);
+      let html = `<div class="shop-wallet"><span class="shop-wallet-ic">🪙</span><b>${State.coins || 0}</b><span>金币</span></div>`;
+      if (!rows.length) html += `<div class="shop-empty">🛒 购物车空空的，去商城挑点好东西吧～</div>`;
+      else html += rows.map(it => `<div class="cart-row"><span class="cart-img">${it.emoji}</span><div class="cart-tx"><b>${esc(it.name)}</b><small>${esc(((ITEMS.CATS || []).find(c => c.id === it.cat) || {}).label || '')}</small></div><span class="cart-price">🪙 ${it.price}</span><button class="cart-x" data-cx="${it.id}">✕</button></div>`).join('');
+      html += `<div class="cart-total">合计：<b>🪙 ${total}</b></div>`;
+      html += `<button class="btn btn-primary cart-checkout" ${rows.length ? '' : 'disabled'}>结算购买</button>`;
+      UI.showModal('🛒 购物车', html, `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+      $$('[data-cx]').forEach(b => b.onclick = () => { SHOP.cartRemove(State, b.getAttribute('data-cx')); saveNow(); this.openCart(); });
+      const co = $('.cart-checkout');
+      if (co) co.onclick = () => {
+        const r = SHOP.checkout(State, ITEMS);
+        if (r.ok) { saveNow(); this.updateCoins(); toast('购买成功 ' + r.count + ' 件 · -' + r.total + ' 🪙 🎉', 'success'); this.openShop(); }
+        else if (r.reason === 'no-coin') toast('金币不够哦，去任务里赚金币吧 🪙', 'error');
+        else if (r.reason === 'all-owned') toast('购物车里都是已拥有的～', 'info');
+        else toast('购物车是空的', 'info');
+      };
+    },
+    openInventory() {
+      this.updateCoins();
+      const inv = State.inventory || {};
+      const ids = Object.keys(inv);
+      const buffs = State.buff || {};
+      const buffLabel = { coin2x: '双倍金币', exp2x: '双倍经验', skip: '跳过券', reset: '重置石', lucky: '幸运', aiAccel: 'AI加速', aura: '经验护符' };
+      let html = `<div class="shop-wallet"><span class="shop-wallet-ic">🪙</span><b>${State.coins || 0}</b><span>金币</span>${State.aiQuota ? `<span class="shop-ai">🤖 AI 剩余 ${State.aiQuota}</span>` : ''}</div>`;
+      /* 生效中的 buff */
+      const active = Object.keys(buffs).filter(k => buffs[k] > 0);
+      if (active.length) html += `<div class="buff-strip">` + active.map(k => `<span class="buff-chip">${buffLabel[k] || k}${k !== 'aura' ? ' ×' + buffs[k] : ''}</span>`).join('') + `</div>`;
+      if (!ids.length) html += `<div class="shop-empty">🎒 库存空空，去商城逛逛吧～</div>`;
+      else html += ids.map(id => {
+        const it = ITEMS.byId(id); if (!it) return '';
+        const cnt = inv[id].count;
+        let img = it.emoji;
+        if (it.cat === 'sticker') { const s = STICKERS.get(it.meta.sticker); if (s) img = s.svg; }
+        const slot = SHOP.slotOf(it);
+        const isEquipped = slot && SHOP.equipped(State, slot) === id;
+        let btn = '';
+        if (slot) {
+          if (it.price === 0) btn = `<button class="shop-btn equip ${isEquipped ? 'on' : ''}" data-eq="${id}">${isEquipped ? '✓ 已装备' : '装备'}</button>`;
+          else btn = `<button class="shop-btn equip ${isEquipped ? 'on' : ''}" data-eq="${id}">${isEquipped ? '✓ 已装备' : '装备'}</button>`;
+        } else if (it.cat === 'item') {
+          btn = `<button class="shop-btn use" data-use="${id}">使用 ×${cnt}</button>`;
+        } else if (it.cat === 'ai') {
+          btn = `<span class="shop-ai">🤖 次数已到账</span>`;
+        }
+        return `<div class="shop-item ${isEquipped ? 'equipped' : ''}"><div class="shop-item-img">${img}</div><div class="shop-item-tx"><b>${esc(it.name)}${cnt > 1 && it.cat !== 'item' ? ' ×' + cnt : ''}</b><small>${esc(it.desc)}</small></div><div class="shop-item-btns">${btn}</div></div>`;
+      }).join('');
+      UI.showModal('🎒 库存', html, `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+      $$('[data-eq]').forEach(b => b.onclick = () => {
+        const r = SHOP.equip(State, b.getAttribute('data-eq'), ITEMS);
+        if (r.ok) { saveNow(); this.applyEquip(); toast('已装备：' + r.item.name + ' ✨', 'success'); this.openInventory(); }
+        else toast('装备失败', 'error');
+      });
+      $$('[data-use]').forEach(b => b.onclick = () => this.useItemById(b.getAttribute('data-use')));
+    },
+    /* 使用一个消耗品道具（含道具专属即时效果） */
+    useItemById(id) {
+      const it = ITEMS.byId(id); if (!it) return toast('物品不存在', 'error');
+      if (it.cat === 'item') {
+        if (id === 'item_save') {
+          saveNow(); toast('已保存当前进度 💾', 'success');
+          const r = SHOP.useItem(State, id); if (r.ok) { saveNow(); this.openInventory(); }
+          return;
+        }
+        const r = SHOP.useItem(State, id);
+        if (!r.ok) return toast('使用失败', 'error');
+        saveNow();
+        const buffNames = { coin2x: '双倍金币卡已生效，下次任务领奖金币 ×2 🪙', exp2x: '双倍经验卡已生效，下次行动经验 ×2 ⭐', skip: '跳过券已生效，答题页会出现「跳过」✈️', reset: '重置石已生效，生成角色时可一键重置 🔄', lucky: '幸运加持已生效 🍀', aiAccel: 'AI 加速已生效 ⚡', aura: '经验护符已永久激活，经验 +10% ♾️' };
+        toast(buffNames[r.buff] || '已使用', 'success');
+        this.openInventory();
+      } else if (it.cat === 'ai') {
+        toast('AI 次数在生成时自动消耗 🤖', 'info');
+      } else {
+        const r = SHOP.equip(State, id, ITEMS);
+        if (r.ok) { saveNow(); this.applyEquip(); toast('已装备：' + r.item.name + ' ✨', 'success'); this.openInventory(); }
+      }
     },
 
     toggleCheck(id) { State.checks[id] = !State.checks[id]; render(); },
@@ -6165,7 +7233,8 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       State.currentIndex++;
       vibrate(15);
       render();
-      toast('已跳过（稍后可回题修改）', 'warn');
+      if (SHOP.hasBuff(State, 'skip')) { SHOP.useBuff(State, 'skip'); saveNow(); if (typeof App.updateCoins === 'function') App.updateCoins(); toast('已跳过（消耗跳过券 ✈️）', 'warn'); }
+      else toast('已跳过（稍后可回题修改）', 'warn');
       log('跳过第 ' + p.qid + ' 题');
     },
 
@@ -6678,6 +7747,12 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     const bl = $('#btn-lang'); if (bl) bl.onclick = () => App.setLang();
     const ba = $('#btn-about'); if (ba) ba.onclick = () => App.openAbout();
     const bs = $('#btn-settings'); if (bs) bs.onclick = () => App.openSettings();
+    // 金币钱包 → 打开商城
+    const bw = $('#btn-wallet'); if (bw) bw.onclick = () => App.openShop();
+    // 迁移默认装备 + 应用已装备外观（等级/称号/主题/贴图…）
+    try { SHOP.grantDefaultEquip(State); } catch (e) { /* 忽略 */ }
+    if (typeof App.applyEquip === 'function') App.applyEquip();
+    if (typeof App.updateCoins === 'function') App.updateCoins();
     // 侧边栏开关
     const bm = $('#btn-menu'); if (bm) bm.onclick = () => App.openSidebar();
     const sc = $('#side-close'); if (sc) sc.onclick = () => App.closeSidebar();
@@ -6767,6 +7842,8 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   /* 显式挂载全局 */
   window.App = App;
   window.State = State;
+  App.gainExp = gainExp; /* 公开：等级经验（商城 exp 道具） */
+  App.bumpTask = bumpTask;
   window.UI = UI;
   window.render = render;
   window.getQuestionAnswer = getQuestionAnswer;
