@@ -1019,6 +1019,8 @@ body.no-vlist .rail-list .rail-item { content-visibility: visible; }
 .achv-bar { display: block; height: 4px; background: rgba(229,106,154,.15); border-radius: 99px; overflow: hidden; margin-top: 3px; }
 .achv-bar u { display: block; height: 100%; background: linear-gradient(90deg, #f7a8c4, #e56a9a); border-radius: 99px; text-decoration: none; }
 .achv-tick { color: #2fa96b; font-weight: 700; font-size: .95rem; }
+.achv-num { font-size: .72rem; color: #c9437e; font-weight: 700; white-space: nowrap; margin-top: 1px; }
+.achv-got .achv-num { color: #2fa96b; }
 
 /* ===== V5.0 · 任务体系（高级卡片风） ===== */
 .qa-list { padding: 4px 2px 10px; }
@@ -1247,6 +1249,109 @@ body[data-eq-bg="aurora"] { background: linear-gradient(135deg, #eef9f2, #e2f0fb
   .modal { max-width: 1000px; }
 }
 
+/* ============================================================
+ * 用户页 · 称号/勋章佩戴特效 · 图鉴
+ * ============================================================ */
+.user-panel { display: flex; flex-direction: column; gap: 12px; }
+.user-hero { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background: linear-gradient(135deg, rgba(255,222,235,.85), rgba(255,255,255,.65)); border: 1px solid rgba(229,106,154,.25); }
+.user-avatar { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.9rem; background: linear-gradient(135deg, #ffd7e8, #f3e0ff); box-shadow: 0 4px 12px rgba(229,106,154,.25); }
+.user-idtx { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.user-idtx b { font-size: 1rem; color: #4a3140; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-idtx small { font-size: .74rem; color: #9a6a80; }
+.user-idtx em { font-size: .7rem; color: #c9437e; font-style: normal; }
+.user-expbar { display: block; height: 6px; border-radius: 99px; background: rgba(229,106,154,.15); overflow: hidden; }
+.user-expbar u { display: block; height: 100%; background: linear-gradient(90deg, #f7a8c4, #e56a9a); border-radius: 99px; transition: width .35s; }
+.user-coins { display: flex; align-items: baseline; gap: 3px; color: #d4a017; white-space: nowrap; }
+.user-coins b { font-size: 1rem; }
+.user-coins small { font-size: .68rem; color: #9a6a80; }
+
+/* 称号 / 勋章佩戴卡 */
+.user-badge-group { display: flex; flex-direction: column; gap: 8px; }
+.user-badge { position: relative; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; color: #4a3140; overflow: hidden; transition: transform .3s; }
+.user-badge.on { border: 1px solid rgba(229,106,154,.3); }
+.user-badge.off { background: rgba(229,106,154,.06); border: 1px dashed rgba(229,106,154,.3); }
+.user-badge .ub-ic { font-size: 1.5rem; filter: drop-shadow(0 2px 3px rgba(0,0,0,.15)); }
+.user-badge .ub-tx { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.user-badge .ub-tx b { font-size: .92rem; }
+.user-badge .ub-tx small { font-size: .72rem; color: #8a5f74; }
+.user-badge.off .ub-tx b { color: #a08a96; }
+.user-badge .ub-spark { position: absolute; font-style: normal; color: #fff; opacity: .8; animation: fxSpark 2.4s ease-in-out infinite; text-shadow: 0 0 6px currentColor; }
+.user-badge .ub-spark.s1 { top: 4px; right: 14%; }
+.user-badge .ub-spark.s2 { bottom: 3px; right: 26%; animation-delay: .8s; font-size: .8rem; }
+.user-badge .ub-spark.s3 { top: 12px; right: 6%; animation-delay: 1.5s; font-size: .7rem; }
+
+/* 称号/勋章专属特效：每种 fx 独有渐变 + 动效 */
+.fx-pink { background: linear-gradient(120deg, #ffd7e8, #ffb3d1 55%, #ffe0f0); --fxglow: rgba(229,106,154,.55); animation: fxPulse 2.2s ease-in-out infinite; }
+.fx-blade { background: linear-gradient(120deg, #cfd8e6, #9fb4d4 50%, #eef3fa); --fxglow: rgba(74,120,180,.55); animation: fxShine 2.8s linear infinite; background-size: 220% 100%; }
+.fx-archive { background: linear-gradient(120deg, #e8d5bd, #c9a47a 55%, #f3e6d5); --fxglow: rgba(160,110,60,.5); animation: fxFloat 3.4s ease-in-out infinite; color: #4a3320; }
+.fx-magic { background: linear-gradient(120deg, #e6d6ff, #b38aff 55%, #ffd6f5); --fxglow: rgba(160,110,255,.55); animation: fxBreathe 2.6s ease-in-out infinite; color: #3a2352; }
+.fx-gold { background: linear-gradient(120deg, #ffefc2, #e6c25a 55%, #fff7dd); --fxglow: rgba(217,165,61,.6); animation: fxPulse 2.4s ease-in-out infinite; color: #4a3a10; }
+.fx-crown { background: linear-gradient(120deg, #ffe9a8, #d4af37 45%, #b39ddb 80%, #ffe9a8); --fxglow: rgba(212,175,55,.65); animation: fxHue 6s linear infinite; color: #40300a; }
+.fx-home { background: linear-gradient(120deg, #ffe0c2, #ffb088 50%, #d8f0dd); --fxglow: rgba(255,150,100,.55); animation: fxWave 3s ease-in-out infinite; background-size: 200% 100%; color: #4a2a15; }
+.fx-galaxy { background: linear-gradient(120deg, #2b2350, #5a3d99 50%, #2b3f7a); --fxglow: rgba(120,90,200,.6); animation: fxBreathe 3.2s ease-in-out infinite; color: #f0ebff; }
+.fx-sakura { background: linear-gradient(120deg, #ffdcec, #ffaecf 50%, #fff0f8); --fxglow: rgba(255,150,190,.6); animation: fxSpark 2.2s ease-in-out infinite; color: #5a2340; }
+.fx-dream { background: linear-gradient(120deg, #c7d2ea, #7f95c4 55%, #e6e0f7); --fxglow: rgba(110,130,190,.55); animation: fxFloat 3.8s ease-in-out infinite; color: #1f2745; }
+.fx-gem { background: linear-gradient(120deg, #d8f5ff, #7fd4f0 50%, #b8f0e6); --fxglow: rgba(90,200,230,.6); animation: fxShine 2.4s linear infinite; background-size: 220% 100%; color: #0f3a4a; }
+.fx-brush { background: linear-gradient(120deg, #3a3a4a, #1f1f2a 55%, #c9a46a); --fxglow: rgba(201,164,106,.55); animation: fxShine 3s linear infinite; background-size: 220% 100%; color: #f5ecd8; }
+.fx-trophy { background: linear-gradient(120deg, #ffe4b0, #f0a94a 50%, #e0c88a); --fxglow: rgba(240,169,74,.6); animation: fxPulse 2s ease-in-out infinite; color: #4a2f0a; }
+.fx-omni { background: linear-gradient(120deg, #ffb3d1, #a98ae0, #7fd4f0, #ffe08a, #ffb3d1); --fxglow: rgba(255,180,220,.6); animation: fxHue 5s linear infinite; color: #3a1f45; }
+.fx-m-achv { background: linear-gradient(120deg, #ffd7c2, #ff9e9e 55%, #ffe9dd); --fxglow: rgba(255,130,120,.55); animation: fxPulse 2.4s ease-in-out infinite; color: #4a1f1a; }
+.fx-m-task { background: linear-gradient(120deg, #d2ecff, #7fb8e8 55%, #eaf5ff); --fxglow: rgba(90,160,220,.55); animation: fxShine 2.6s linear infinite; background-size: 220% 100%; color: #10304a; }
+.fx-m-quiz { background: linear-gradient(120deg, #fff3c2, #ffd75a 55%, #fffbe0); --fxglow: rgba(255,200,60,.6); animation: fxSpark 2s ease-in-out infinite; color: #4a380a; }
+.fx-m-fire { background: linear-gradient(120deg, #ffb08a, #ff6a4a 50%, #ffd08a); --fxglow: rgba(255,100,70,.6); animation: fxSpark 1.4s ease-in-out infinite; color: #4a150a; }
+.fx-m-gan { background: linear-gradient(120deg, #d8a0b0, #9e4a6a 55%, #f0c0cc); --fxglow: rgba(180,70,110,.55); animation: fxWave 2.8s ease-in-out infinite; background-size: 200% 100%; color: #fff0f5; }
+.fx-m-coll { background: linear-gradient(120deg, #d8e8d0, #90b890 55%, #eef5ea); --fxglow: rgba(130,170,130,.55); animation: fxFloat 3.6s ease-in-out infinite; color: #1f3a1f; }
+.fx-m-champ { background: linear-gradient(120deg, #ffe0a0, #f0a03a 45%, #b8a0e0 80%, #ffe0a0); --fxglow: rgba(240,160,58,.6); animation: fxHue 6s linear infinite; color: #4a2f0a; }
+.fx-m-legend { background: linear-gradient(120deg, #d0b8ff, #9060e0 50%, #ffb8e8); --fxglow: rgba(150,100,230,.6); animation: fxHue 5.5s linear infinite; color: #fff4ff; }
+@keyframes fxPulse { 0%,100% { box-shadow: 0 0 4px var(--fxglow, rgba(229,106,154,.3)); } 50% { box-shadow: 0 0 16px var(--fxglow, rgba(229,106,154,.65)); } }
+@keyframes fxBreathe { 0%,100% { opacity: .78; } 50% { opacity: 1; } }
+@keyframes fxFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes fxShine { 0% { background-position: -120% 0; } 100% { background-position: 220% 0; } }
+@keyframes fxWave { 0%,100% { background-position: 0 0; } 50% { background-position: 60px 0; } }
+@keyframes fxSpark { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.45); } }
+@keyframes fxHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
+/* 已拥有的称号/勋章选择条 */
+.user-pick { border: 1px solid rgba(229,106,154,.18); border-radius: 14px; padding: 10px; background: rgba(255,255,255,.5); }
+.up-hd { font-size: .78rem; color: #9a6a80; margin-bottom: 8px; font-weight: 600; }
+.up-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.up-chip { display: inline-flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 99px; border: 1px solid rgba(229,106,154,.3); background: rgba(255,255,255,.75); font-size: .78rem; color: #5a3f4d; cursor: pointer; transition: transform .2s, box-shadow .25s; }
+.up-chip:active { transform: scale(.95); }
+.up-chip.on { outline: 2px solid #e56a9a; font-weight: 700; }
+.up-chip.on::before { content: '📌'; font-size: .7rem; }
+
+/* 用户数据格 */
+.user-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.user-stats .us { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 6px; border-radius: 12px; background: rgba(255,255,255,.6); border: 1px solid rgba(229,106,154,.15); }
+.user-stats .us b { font-size: .98rem; color: #c9437e; }
+.user-stats .us small { font-size: .7rem; color: #9a6a80; }
+
+/* 图鉴 */
+.codex-sum { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 10px 12px; border-radius: 14px; background: linear-gradient(120deg, rgba(255,222,235,.9), rgba(255,255,255,.6)); font-size: .82rem; color: #5a3f4d; }
+.codex-sum b { color: #c9437e; }
+.codex-sumbar { flex: 1; min-width: 80px; height: 8px; border-radius: 99px; background: rgba(229,106,154,.15); overflow: hidden; }
+.codex-sumbar u { display: block; height: 100%; background: linear-gradient(90deg, #f7a8c4, #e56a9a); border-radius: 99px; }
+.codex-sec { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid rgba(229,106,154,.08); cursor: pointer; transition: background .2s; }
+.codex-sec:active { background: rgba(229,106,154,.07); }
+.codex-sec .codex-caret { font-size: .75rem; color: #c9437e; width: 14px; }
+.codex-sec .codex-ic { font-size: 1.15rem; }
+.codex-sec .codex-tx { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.codex-sec .codex-tx b { font-size: .86rem; color: #4a3140; }
+.codex-sec .codex-tx small { font-size: .72rem; color: #9a6a80; }
+.codex-sec .codex-pct { font-size: .8rem; color: #c9437e; font-weight: 700; white-space: nowrap; }
+.codex-body { max-height: 260px; overflow-y: auto; }
+.codex-body.codex-collapsed { display: none; }
+.codex-row { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 30px; border-bottom: 1px solid rgba(229,106,154,.05); }
+.codex-row .codex-row-ic { font-size: 1.05rem; width: 22px; text-align: center; }
+.codex-row .codex-row-tx { flex: 1; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.codex-row .codex-row-tx b { font-size: .8rem; color: #4a3140; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.codex-row .codex-row-tx small { font-size: .68rem; color: #a08a96; }
+.codex-row.codex-done .codex-row-ic { filter: none; }
+.codex-row:not(.codex-done) .codex-row-ic { filter: grayscale(1); opacity: .6; }
+.codex-row:not(.codex-done) .codex-row-tx b { color: #b0a0aa; }
+.codex-tick { color: #2fa96b; font-weight: 700; font-size: .8rem; }
+@media (max-width: 560px) { .user-stats { grid-template-columns: repeat(3, 1fr); } }
+
 </style>
 </head>
 <body>
@@ -1296,6 +1401,7 @@ body[data-eq-bg="aurora"] { background: linear-gradient(135deg, #eef9f2, #e2f0fb
       <span class="hbtn title-badge" id="title-badge" title="称号" style="display:none"></span>
       <span class="hbtn lv-badge" id="lv-badge" title="等级">⭐ 1</span>
       <button class="hbtn coin-btn" id="btn-wallet" title="金币钱包">🪙<span id="coin-amount">0</span></button>
+      <button class="hbtn" id="btn-user" title="用户">👤</button>
       <button class="hbtn" id="btn-theme" title="主题色">🎨</button>
       <button class="hbtn" id="btn-dark" title="暗色模式">🌙</button>
       <button class="hbtn" id="btn-lang" title="中/英">中</button>
@@ -3941,7 +4047,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
  *   - defs()            生成全部成就定义（模板批量，保证 >=190）
  *   - metrics(state, QUESTIONS, playTime)  计算实时指标
  *   - evaluate(defs, m)  返回已达成成就
- *   - progress(def, m)   返回 {got, need, pct} 供进度条
+ *   - achvProgress(def, m) 返回 {got, need, pct} 供进度条
  * 浏览器挂 window.AIRA；node 可测。
  * ============================================================ */
 (function (root, factory) {
@@ -3955,29 +4061,32 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
 
   /* 逐档生成：base(def, values[]) -> defs[]；每档给金币奖励（tier*20） */
   function tiers(base, values) {
-    return values.map((v, i) => Object.assign({}, base, { id: base.id + '_' + v, value: v, tier: i + 1, coin: (i + 1) * 20 }));
+    return values.map((v, i) => Object.assign({}, base, {
+      id: base.id + '_' + v, value: v, tier: i + 1, coin: (i + 1) * 20,
+      name: base.name + ' ' + v + (base.unit || ''),
+    }));
   }
 
   function defs() {
     const out = [];
     // 累计答题
-    out.push(...tiers({ id: 'ans', cat: '答题', icon: '✏️', name: '答', desc: '累计回答题数', type: 'answers' }, [1, 10, 50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000, 5000, 10000]));
+    out.push(...tiers({ id: 'ans', cat: '答题', icon: '✏️', name: '答', unit: ' 题', desc: '累计回答题数', type: 'answers' }, [1, 10, 50, 100, 200, 300, 500, 800, 1000, 1500, 2000, 3000, 5000, 10000]));
     // 完成角色
-    out.push(...tiers({ id: 'char', cat: '角色', icon: '👧', name: '角色', desc: '生成完整角色数', type: 'chars' }, [1, 3, 5, 10, 25, 50, 100, 200, 500, 1000]));
+    out.push(...tiers({ id: 'char', cat: '角色', icon: '👧', name: '角色', unit: ' 位', desc: '生成完整角色数', type: 'chars' }, [1, 3, 5, 10, 25, 50, 100, 200, 500, 1000]));
     // 游玩时长（分钟）
-    out.push(...tiers({ id: 'min', cat: '时长', icon: '⏰', name: '时长', desc: '累计游玩分钟', type: 'playMin' }, [5, 30, 60, 180, 600, 1440, 2880, 7200, 14400]));
+    out.push(...tiers({ id: 'min', cat: '时长', icon: '⏰', name: '时长', unit: ' 分钟', desc: '累计游玩分钟', type: 'playMin' }, [5, 30, 60, 180, 600, 1440, 2880, 7200, 14400]));
     // 活跃天数
-    out.push(...tiers({ id: 'day', cat: '活跃', icon: '📅', name: '活跃', desc: '累计活跃天数', type: 'activeDays' }, [2, 5, 10, 30, 60, 100, 150, 200]));
+    out.push(...tiers({ id: 'day', cat: '活跃', icon: '📅', name: '活跃', unit: ' 天', desc: '累计活跃天数', type: 'activeDays' }, [2, 5, 10, 30, 60, 100, 150, 200]));
     // 连续天数
-    out.push(...tiers({ id: 'streak', cat: '活跃', icon: '🔥', name: '连续', desc: '连续活跃天数', type: 'streakDays' }, [2, 3, 5, 7, 14, 30, 60, 90, 180]));
+    out.push(...tiers({ id: 'streak', cat: '活跃', icon: '🔥', name: '连续', unit: ' 天', desc: '连续活跃天数', type: 'streakDays' }, [2, 3, 5, 7, 14, 30, 60, 90, 180]));
     // 单次会话连答
-    out.push(...tiers({ id: 'sess', cat: '答题', icon: '⚡', name: '连答', desc: '单次会话连续答题', type: 'sessionAnswers' }, [10, 50, 100, 200, 500]));
+    out.push(...tiers({ id: 'sess', cat: '答题', icon: '⚡', name: '连答', unit: ' 题', desc: '单次会话连续答题', type: 'sessionAnswers' }, [10, 50, 100, 200, 500]));
     // 各层完成数
-    LAYERS.forEach(L => out.push(...tiers({ id: 'layer_' + L, cat: '层', icon: LAYER_ICON[L], name: L + ' 完成', desc: L + ' 层完成题数', type: 'layer_' + L }, [1, 3, 5, 10, 20])));
+    LAYERS.forEach(L => out.push(...tiers({ id: 'layer_' + L, cat: '层', icon: LAYER_ICON[L], name: L + ' 完成', unit: ' 题', desc: L + ' 层完成题数', type: 'layer_' + L }, [1, 3, 5, 10, 20])));
     // 题库进度（随总题数增长）
-    out.push(...tiers({ id: 'qb', cat: '题库', icon: '📚', name: '题库', desc: '题库总题数达到', type: 'qbank' }, [100, 300, 630, 800, 1000, 1200, 1500]));
+    out.push(...tiers({ id: 'qb', cat: '题库', icon: '📚', name: '题库', unit: ' 题', desc: '题库总题数达到', type: 'qbank' }, [100, 300, 630, 800, 1000, 1200, 1500]));
     // 唯一已答题
-    out.push(...tiers({ id: 'uq', cat: '答题', icon: '🧩', name: '已答', desc: '回答过不同题目数', type: 'uniqueQ' }, [100, 300, 630, 800, 1000, 1500]));
+    out.push(...tiers({ id: 'uq', cat: '答题', icon: '🧩', name: '已答', unit: ' 题', desc: '回答过不同题目数', type: 'uniqueQ' }, [100, 300, 630, 800, 1000, 1500]));
     // 主题使用
     ['祈宝粉', 'iOS27', 'Material3'].forEach(t => out.push({ id: 'theme_' + t, cat: '外观', icon: '🎨', name: '主题 · ' + t, desc: '使用「' + t + '」主题', type: 'theme', value: t }));
     // 风格使用
@@ -4001,12 +4110,12 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     // 分类名由调用方在 metrics 中注入（cat_<cat>），这里按通用占位生成 45 个
     for (let i = 1; i <= 45; i++) out.push({ id: 'cat_' + i, cat: '分类', icon: '🗂', name: '分类 ' + i + ' 答满', desc: '答满第 ' + i + ' 个分类全部题', type: 'catAny', value: i, dyn: true });
     // 累计答满分类数
-    out.push(...tiers({ id: 'catcum', cat: '分类', icon: '🏅', name: '答满分类', desc: '答满不同分类数', type: 'catAny' }, [1, 5, 10, 20, 30, 45]));
+    out.push(...tiers({ id: 'catcum', cat: '分类', icon: '🏅', name: '答满分类', unit: ' 个', desc: '答满不同分类数', type: 'catAny' }, [1, 5, 10, 20, 30, 45]));
     // 更高档位
-    out.push(...tiers({ id: 'ans', cat: '答题', icon: '✏️', name: '答', desc: '累计回答题数', type: 'answers' }, [20000, 50000]).filter(d => !out.some(o => o.id === d.id)));
-    out.push(...tiers({ id: 'qb', cat: '题库', icon: '📚', name: '题库', desc: '题库总题数达到', type: 'qbank' }, [2000]).filter(d => !out.some(o => o.id === d.id)));
-    out.push(...tiers({ id: 'min', cat: '时长', icon: '⏰', name: '时长', desc: '累计游玩分钟', type: 'playMin' }, [28800]).filter(d => !out.some(o => o.id === d.id)));
-    out.push(...tiers({ id: 'day', cat: '活跃', icon: '📅', name: '活跃', desc: '累计活跃天数', type: 'activeDays' }, [300]).filter(d => !out.some(o => o.id === d.id)));
+    out.push(...tiers({ id: 'ans', cat: '答题', icon: '✏️', name: '答', unit: ' 题', desc: '累计回答题数', type: 'answers' }, [20000, 50000]).filter(d => !out.some(o => o.id === d.id)));
+    out.push(...tiers({ id: 'qb', cat: '题库', icon: '📚', name: '题库', unit: ' 题', desc: '题库总题数达到', type: 'qbank' }, [2000]).filter(d => !out.some(o => o.id === d.id)));
+    out.push(...tiers({ id: 'min', cat: '时长', icon: '⏰', name: '时长', unit: ' 分钟', desc: '累计游玩分钟', type: 'playMin' }, [28800]).filter(d => !out.some(o => o.id === d.id)));
+    out.push(...tiers({ id: 'day', cat: '活跃', icon: '📅', name: '活跃', unit: ' 天', desc: '累计活跃天数', type: 'activeDays' }, [300]).filter(d => !out.some(o => o.id === d.id)));
     // 更多一次性功能成就
     const moreSpecials = [
       ['landscape', '📱', '首次横屏', '进入横屏布局'], ['tablet', '📐', '首次平板布局', '进入平板/大屏布局'],
@@ -4083,7 +4192,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   }
 
   /* 进度：{got, need, pct} */
-  function progress(def, m) {
+  function achvProgress(def, m) {
     if (def.type === 'special') return { got: m.special[def.value] ? 1 : 0, need: 1, pct: m.special[def.value] ? 100 : 0 };
     if (def.type === 'theme') return { got: m.theme === def.value ? 1 : 0, need: 1, pct: m.theme === def.value ? 100 : 0 };
     if (def.type === 'style') return { got: m.style === def.value ? 1 : 0, need: 1, pct: m.style === def.value ? 100 : 0 };
@@ -4092,7 +4201,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return { got, need: def.value, pct: Math.min(100, got / def.value * 100) };
   }
 
-  return { defs, metrics, evaluate, progress, LAYERS };
+  return { defs, metrics, evaluate, achvProgress, LAYERS };
 });
 
 </script>
@@ -4100,7 +4209,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
 /* ============================================================
  * 搭角色 V5.0 · tasks.js · 每日/每周/赛季任务体系
  *   - defs()            任务定义 {daily[], weekly[], season[]}
- *   - progress(state, playTime)  各任务实时进度
+ *   - taskProgress(state, playTime)  各任务实时进度
  *   - rollover(state)   跨周期自动重置（返回是否滚动）
  *   - bump(state, key, n)  累加计数（ans/char/ai/note/achv）
  * 浏览器挂 window.AIRA；node 可测。
@@ -4111,14 +4220,18 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
+  /* 刷新边界：每天 4:00（北京时间）；日/周任务按此切分 */
+  const BOUND_H = 4;
   function dayStr(d) {
     d = d || new Date();
+    const x = new Date(d.getTime()); x.setHours(x.getHours() - BOUND_H);
     const p = n => String(n).padStart(2, '0');
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+    return x.getFullYear() + '-' + p(x.getMonth() + 1) + '-' + p(x.getDate());
   }
   function weekStr(d) {
     d = d || new Date();
-    const mon = new Date(d); mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    const x = new Date(d.getTime()); x.setHours(x.getHours() - BOUND_H);
+    const mon = new Date(x); mon.setDate(x.getDate() - ((x.getDay() + 6) % 7));
     return dayStr(mon);
   }
   function seasonStr(d) {
@@ -4289,7 +4402,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   }
 
   /* 计算各任务进度 */
-  function progress(state, playTime) {
+  function taskProgress(state, playTime) {
     rollover(state);
     const t = state.tasks;
     const get = (grp, type) => {
@@ -4365,7 +4478,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     return 0;
   }
 
-  return { taskDefs, seasonPhases, progress, rollover, bump, claim, coinFor, weekMin, seasonMin, dayStr, weekStr, seasonStr };
+  return { taskDefs, seasonPhases, taskProgress, rollover, bump, claim, coinFor, weekMin, seasonMin, dayStr, weekStr, seasonStr };
 });
 
 </script>
@@ -4405,20 +4518,20 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   }
 
   /* ---- 限定称号 ---- */
-  I('title_novice', 'title', '新手捏人师', 100, '🎀', '一切从第一次捏人开始。');
-  I('title_100', 'title', '百题斩', 300, '⚔️', '累计答对 100 题。');
-  I('title_collector', 'title', '角色收藏家', 500, '🗃️', '收藏角色是我的浪漫。');
-  I('title_ai', 'title', 'AI 魔法师', 600, '🪄', '与 AI 心灵相通。');
-  I('title_gold', 'title', '金牌捏人师', 900, '🥇', '每一张都值得金牌。');
-  I('title_legend', 'title', '传说捏人师', 1500, '👑', '传说级的手艺。');
-  I('title_home', 'title', '故土之归', 2000, '🏡', '回到故事开始的地方。');
-  I('title_galaxy', 'title', '星河旅人', 2200, '🌌', '把星河穿在角色身上。');
-  I('title_sakura', 'title', '樱花之心', 2500, '🌸', '心是樱花粉色的。');
-  I('title_dream', 'title', '梦境编织者', 3000, '💤', '在梦里捏了无数角色。');
-  I('title_eternal', 'title', '永恒之梦', 4000, '💎', '梦不会醒。');
-  I('title_creator', 'title', '创世之笔', 5000, '🖌️', '笔尖落下，世界诞生。');
-  I('title_season', 'title', '赛季冠军', 6000, '🏆', '赛季任务的王者。');
-  I('title_omni', 'title', '全能创造者', 8888, '🌟', '捏人界的全能传说。');
+  I('title_novice', 'title', '新手捏人师', 100, '🎀', '一切从第一次捏人开始。', { fx: 'pink' });
+  I('title_100', 'title', '百题斩', 300, '⚔️', '累计答对 100 题。', { fx: 'blade' });
+  I('title_collector', 'title', '角色收藏家', 500, '🗃️', '收藏角色是我的浪漫。', { fx: 'archive' });
+  I('title_ai', 'title', 'AI 魔法师', 600, '🪄', '与 AI 心灵相通。', { fx: 'magic' });
+  I('title_gold', 'title', '金牌捏人师', 900, '🥇', '每一张都值得金牌。', { fx: 'gold' });
+  I('title_legend', 'title', '传说捏人师', 1500, '👑', '传说级的手艺。', { fx: 'crown' });
+  I('title_home', 'title', '故土之归', 2000, '🏡', '回到故事开始的地方。', { fx: 'home' });
+  I('title_galaxy', 'title', '星河旅人', 2200, '🌌', '把星河穿在角色身上。', { fx: 'galaxy' });
+  I('title_sakura', 'title', '樱花之心', 2500, '🌸', '心是樱花粉色的。', { fx: 'sakura' });
+  I('title_dream', 'title', '梦境编织者', 3000, '💤', '在梦里捏了无数角色。', { fx: 'dream' });
+  I('title_eternal', 'title', '永恒之梦', 4000, '💎', '梦不会醒。', { fx: 'gem' });
+  I('title_creator', 'title', '创世之笔', 5000, '🖌️', '笔尖落下，世界诞生。', { fx: 'brush' });
+  I('title_season', 'title', '赛季冠军', 6000, '🏆', '赛季任务的王者。', { fx: 'trophy' });
+  I('title_omni', 'title', '全能创造者', 8888, '🌟', '捏人界的全能传说。', { fx: 'omni' });
 
   /* ---- 主题皮肤 ---- */
   I('theme_sakura', 'theme', '樱花粉', 0, '🌸', '默认主题 · 樱花之恋。', { theme: 'sakura' });
@@ -4502,14 +4615,14 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   I('bgm_piano', 'bgm', '钢琴曲', 500, '🎹', '温柔的钢琴。', { bgm: 'piano' });
 
   /* ---- 徽章 ---- */
-  I('medal_achv', 'medal', '成就大师', 500, '🎖️', '解锁全部成就的证明。', { medal: 'achv' });
-  I('medal_task', 'medal', '任务大师', 500, '📋', '赛季任务全清。', { medal: 'task' });
-  I('medal_quiz', 'medal', '问答之星', 500, '⭐', '答题达人。', { medal: 'quiz' });
-  I('medal_streak', 'medal', '连续签到', 600, '🔥', '连续每日打卡。', { medal: 'streak' });
-  I('medal_gan', 'medal', '肝帝', 800, '💪', '肝任务的天选之人。', { medal: 'gan' });
-  I('medal_coll', 'medal', '收藏家', 800, '🗃️', '物品收藏家。', { medal: 'coll' });
-  I('medal_champ', 'medal', '赛季冠军', 1000, '🏆', '赛季第一。', { medal: 'champ' });
-  I('medal_legend', 'medal', '传奇', 1500, '🌟', '传说中的存在。', { medal: 'legend' });
+  I('medal_achv', 'medal', '成就大师', 500, '🎖️', '解锁全部成就的证明。', { medal: 'achv', fx: 'm-achv' });
+  I('medal_task', 'medal', '任务大师', 500, '📋', '赛季任务全清。', { medal: 'task', fx: 'm-task' });
+  I('medal_quiz', 'medal', '问答之星', 500, '⭐', '答题达人。', { medal: 'quiz', fx: 'm-quiz' });
+  I('medal_streak', 'medal', '连续签到', 600, '🔥', '连续每日打卡。', { medal: 'streak', fx: 'm-fire' });
+  I('medal_gan', 'medal', '肝帝', 800, '💪', '肝任务的天选之人。', { medal: 'gan', fx: 'm-gan' });
+  I('medal_coll', 'medal', '收藏家', 800, '🗃️', '物品收藏家。', { medal: 'coll', fx: 'm-coll' });
+  I('medal_champ', 'medal', '赛季冠军', 1000, '🏆', '赛季第一。', { medal: 'champ', fx: 'm-champ' });
+  I('medal_legend', 'medal', '传奇', 1500, '🌟', '传说中的存在。', { medal: 'legend', fx: 'm-legend' });
 
   /* ---- 背景 ---- */
   I('bg_pink', 'bg', '樱花背景', 0, '🌸', '默认 · 樱花。', { bg: 'pink' });
@@ -4656,10 +4769,10 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       <g fill="#ffd76e"><path d="M32 8l3.4 8.6L44 20l-8.6 3.4L32 32l-3.4-8.6L20 20l8.6-3.4z"/><path d="M14 40l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f3a6c2"/><path d="M50 34l1.7 4.3L56 40l-4.3 1.7L50 46l-1.7-4.3L44 40l4.3-1.7z" fill="#a98ae0"/><circle cx="34" cy="46" r="2.2" fill="#fff"/><circle cx="22" cy="22" r="1.8" fill="#fff"/></g>`) },
   };
 
-  const get = id => STICKERS[id] || null;
+  const stickerGet = id => STICKERS[id] || null;
   const list = () => Object.keys(STICKERS).map(id => ({ id, ...STICKERS[id] }));
 
-  return { STICKERS, get, list };
+  return { STICKERS, stickerGet, list };
 });
 
 </script>
@@ -4830,6 +4943,120 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
 </script>
 <script>
 /* ============================================================
+ * 搭角色 V5.0 · compendium.js · 图鉴（收藏集）
+ *   build(state, ctx)  → { total, done, pct, groups:[{id,name,icon,count,done,items}] }
+ *   聚合：成就 / 商城全部商品 / 贴图 / 角色档案，按分类分组展示。
+ * 浏览器挂 window.AIRA；node 可测。
+ * ============================================================ */
+(function (root, factory) {
+  if (typeof module !== 'undefined' && module.exports) module.exports = factory(root);
+  else { root.AIRA = root.AIRA || {}; Object.assign(root.AIRA, factory(root)); }
+})(typeof self !== 'undefined' ? self : this, function (root) {
+  'use strict';
+
+  const A = (root && root.AIRA) || {};
+
+  /* 扁平 AIRA 命名空间下的取数（各模块直接挂在 AIRA 上） */
+  const defsAll = () => (typeof A.defs === 'function' ? (A.defs() || []) : []);
+  const met = (st, q, pt) => (typeof A.metrics === 'function' ? A.metrics(st, q || [], pt || {}) : null);
+  const evalAll = (d, m) => (typeof A.evaluate === 'function' ? (A.evaluate(d, m) || []) : []);
+  const itemById = id => (typeof A.byId === 'function' ? A.byId(id) : null);
+  const itemsList = () => (Array.isArray(A.ITEMS) ? A.ITEMS : []);
+  const stickersList = () => {
+    const m = A.STICKERS || {};
+    return Object.keys(m).map(k => ({ id: k, name: (m[k] && m[k].name) || k }));
+  };
+
+  /* 外观类从商城物品里拆出来单列 */
+  const LOOK_CATS = ['title', 'medal', 'theme', 'frame', 'effect', 'notebook', 'font', 'textcolor', 'bgm', 'bg', 'ai', 'item', 'sticker'];
+
+  function build(state, ctx) {
+    const st = state || {};
+    const inv = st.inventory || {};
+    const equip = st.equip || {};
+    const ctx2 = ctx || {};
+    const groups = [];
+    let total = 0, done = 0;
+
+    const isOwned = id => !!(inv[id] && inv[id].count > 0) || !!(itemById(id) && itemById(id).price === 0);
+    const push = (g, id, name, icon, isDone, tip) => {
+      g.items.push({ id, name: name || '', icon: icon || '🎀', done: !!isDone, tip: tip || '' });
+      total++;
+      if (isDone) done++;
+    };
+
+    /* 1) 成就图鉴 */
+    const defs = defsAll();
+    const m = met(st, ctx2.QUESTIONS, ctx2.playTime);
+    const earned = {};
+    if (m) evalAll(defs, m).forEach(e => { earned[e.id] = true; });
+    const gAchv = { id: 'achv', name: '成就', icon: '🏆', items: [] };
+    defs.forEach(d => { push(gAchv, d.id, d.name, d.icon, earned[d.id], d.desc); });
+    groups.push(gAchv);
+
+    /* 2) 商城商品图鉴（按分类分组） */
+    const list = itemsList();
+    const byCat = {};
+    list.forEach(it => { (byCat[it.cat] = byCat[it.cat] || []).push(it); });
+    LOOK_CATS.forEach(cat => {
+      const arr = byCat[cat] || [];
+      if (!arr.length) return;
+      const g = { id: 'shop_' + cat, name: catLabel(cat), icon: catIcon(cat), items: [] };
+      const slot = (cat === 'notebook') ? 'nb' : cat;
+      arr.forEach(it => {
+        const o = isOwned(it.id);
+        const eq = equip[slot] === it.id;
+        push(g, it.id, it.name, it.emoji, o, o ? (eq ? '已装备' : '已拥有') : ('🪙 ' + it.price));
+      });
+      groups.push(g);
+    });
+
+    /* 3) 贴图图鉴（内嵌 SVG） */
+    const gStk = { id: 'stk', name: '贴图', icon: '🎀', items: [] };
+    stickersList().forEach(s => {
+      const own = !!(inv['st_' + s.id] && inv['st_' + s.id].count > 0) ||
+        list.some(i => i.cat === 'sticker' && i.meta && i.meta.sticker === s.id && i.price === 0);
+      push(gStk, 'stk_' + s.id, s.name, '🖼️', own, '内嵌 SVG 贴图');
+    });
+    groups.push(gStk);
+
+    /* 4) 角色档案图鉴 */
+    const gCh = { id: 'char', name: '角色档案', icon: '👧', items: [] };
+    const pks = Object.keys(st.profile || {});
+    pks.forEach((k, i) => {
+      const c = (st.profile || {})[k];
+      push(gCh, 'prof_' + k, (c && (c.name || c.nickName)) || ('档案 ' + (i + 1)), '👧', true, '已生成');
+    });
+    if (!pks.length) push(gCh, 'prof_empty', '还没有档案', '🌸', false, '去捏第一个角色吧');
+    groups.push(gCh);
+
+    return {
+      total, done,
+      pct: total ? Math.round(done / total * 100) : 0,
+      groups: groups.map(g => ({
+        id: g.id, name: g.name, icon: g.icon,
+        count: g.items.length,
+        done: g.items.filter(x => x.done).length,
+        items: g.items,
+      })),
+    };
+  }
+
+  function catLabel(cat) {
+    return ({ title: '限定称号', medal: '勋章', theme: '主题皮肤', frame: '头像框', effect: '卡片特效',
+      notebook: '记事本', font: '字体', textcolor: '文字颜色', bgm: '背景音乐', bg: '背景',
+      ai: 'AI 次数', item: '道具', sticker: '贴纸' })[cat] || cat;
+  }
+  function catIcon(cat) {
+    return ({ title: '👑', medal: '🎖️', theme: '🎨', frame: '🖼️', effect: '✨', notebook: '📝',
+      font: '🔤', textcolor: '🌈', bgm: '🎵', bg: '🏞️', ai: '🤖', item: '🎁', sticker: '🎀' })[cat] || '🎀';
+  }
+
+  return { build, catLabel, catIcon };
+});
+</script>
+<script>
+/* ============================================================
  * 搭角色 V4.1 · app.js · UI 层（浏览器专用）
  * 依赖：window.AIRA（config/schema/engine/storage，由前置 script 注入）
  * ============================================================ */
@@ -4850,6 +5077,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
   const ITEMS = AIRA;
   const SHOP = AIRA;
   const STICKERS = AIRA;
+  const COD = AIRA;
 
   /* ===== 工具 ===== */
   const $ = (sel) => document.querySelector(sel);
@@ -5040,6 +5268,8 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       <button class="side-item" data-side-act="stats"><span class="si-icon">📊</span><span>统计 / 时长</span></button>
       <button class="side-item" data-side-act="achv"><span class="si-icon">🏆</span><span>成就</span></button>
       <button class="side-item" data-side-act="tasks"><span class="si-icon">🗓</span><span>任务</span></button>
+      <button class="side-item" data-side-act="user"><span class="si-icon">👤</span><span>用户</span></button>
+      <button class="side-item" data-side-act="codex"><span class="si-icon">📖</span><span>图鉴</span></button>
       <button class="side-item" data-side-act="shop"><span class="si-icon">🛍️</span><span>金币商城</span></button>
       <button class="side-item" data-side-act="note"><span class="si-icon">📝</span><span>记事本</span></button>
       <button class="side-item" data-side-act="theme"><span class="si-icon">🎨</span><span>主题色</span></button>
@@ -5058,6 +5288,8 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
       else if (a === 'achv') App.openAchv();
       else if (a === 'tasks') App.openTasks();
       else if (a === 'shop') App.openShop();
+      else if (a === 'user') App.openUser();
+      else if (a === 'codex') App.openCodex();
       else if (a === 'note') App.openNote();
       else if (a === 'theme') App.toggleTheme();
       else if (a === 'dark') App.toggleDark();
@@ -6046,6 +6278,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
 
   /* 任务面板 · 折叠状态（会话内记忆；每日/每周默认收起） */
   const taskUI = { collapsed: { daily: true, weekly: true } };
+  const codexUI = { collapsed: { achv: true, shop_title: true, shop_medal: true, stk: true, char: true, shop_theme: true, shop_frame: true, shop_effect: true, shop_notebook: true, shop_font: true, shop_textcolor: true, shop_bgm: true, shop_bg: true, shop_ai: true, shop_item: true, shop_sticker: true } };
 
   const App = {
     start() {
@@ -6419,18 +6652,126 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
         html += `<div class="qa-layer">${cat} · ${groups[cat].length}</div>`;
         groups[cat].forEach(d => {
           const got = earnedIds.has(d.id);
-          const p = ACHV.progress(d, m);
-          html += `<div class="achv-row ${got ? 'achv-got' : ''}"><span class="achv-ic">${d.icon}</span><span class="achv-tx"><b>${esc(d.name)}</b><small>${esc(d.desc)}</small><i class="achv-bar"><u style="width:${p.pct}%"></u></i></span>${got ? '<span class="achv-tick">✓</span>' : ''}</div>`;
+          const p = ACHV.achvProgress(d, m);
+          const num = p.need > 1 ? `<span class="achv-num">${p.got}/${p.need}</span>` : `<span class="achv-num">${got ? '1/1' : '0/1'}</span>`;
+          html += `<div class="achv-row ${got ? 'achv-got' : ''}"><span class="achv-ic">${d.icon}</span><span class="achv-tx"><b>${esc(d.name)}</b><small>${esc(d.desc)} · 还差 ${Math.max(0, p.need - p.got)}</small>${'<i class="achv-bar"><u style="width:' + p.pct + '%"></u></i>'}${num}</span>${got ? '<span class="achv-tick">✓</span>' : ''}</div>`;
         });
       });
       UI.showModal('🏆 成就 · ' + earnedIds.size + '/' + defs.length,
         `<div class="qa-list">${html}</div>`,
         `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
     },
+    /* V5.0 · 用户页：称号/勋章佩戴展示 + 等级 + 数据 */
+    openUser() {
+      const byId = ITEMS.byId || ((id) => null);
+      const titleId = SHOP.equipped(State, 'title'), medalId = SHOP.equipped(State, 'medal');
+      const t = titleId ? byId(titleId) : null, md = medalId ? byId(medalId) : null;
+      const fx = it => (it && it.meta && it.meta.fx) ? ' fx-' + it.meta.fx : ' fx-none';
+      const lv = (State.level || {}).lv || 1, exp = (State.level || {}).exp || 0;
+      const need = 50 + lv * 25;
+      const achvDone = (State.achv && Object.keys(State.achv.unlocked || {}).length) || 0;
+      const st = State.stats || {};
+      const play = STATS.getPlayTime(State) || { total: 0 };
+      const hrs = Math.floor((play.total || 0) / 3600), mins = Math.floor(((play.total || 0) % 3600) / 60);
+      let codexPct = 0, codexDone = 0, codexTotal = 0;
+      try { const c = COD.build(State, { QUESTIONS: window.QUESTIONS || [], playTime: play }); codexPct = c.pct; codexDone = c.done; codexTotal = c.total; } catch (e) { /* 忽略 */ }
+      const arc = State.generatedArchive || null;
+      const avatar = arc && (arc.emoji || arc.avatar) ? (arc.emoji || arc.avatar) : '👧';
+      const name = (arc && (arc.name || arc.nickName)) || (State.meta && State.meta.gender) || '祈宝';
+      const ownedOf = slot => (ITEMS.byCat ? ITEMS.byCat(slot) : []).filter(i => SHOP.owned(State, i.id, ITEMS));
+
+      const badge = (it, kind, slot) => {
+        const on = it ? `<div class="user-badge on${fx(it)}"><span class="ub-ic">${it.emoji}</span><span class="ub-tx"><b>${esc(it.name)}</b><small>${esc(kind)}</small></span><i class="ub-spark">✦</i><i class="ub-spark s2">✧</i><i class="ub-spark s3">✦</i></div>`
+          : `<div class="user-badge off"><span class="ub-ic">🔒</span><span class="ub-tx"><b>未佩戴</b><small>${esc(kind)} · 去商城挑一个</small></span></div>`;
+        return on;
+      };
+
+      let html = `
+      <div class="user-hero">
+        <div class="user-avatar">${avatar}</div>
+        <div class="user-idtx">
+          <b>${esc(name)}</b>
+          <small>⭐ Lv.${lv} · 经验 ${exp}/${need}</small>
+          <i class="user-expbar"><u style="width:${Math.min(100, Math.round(exp / need * 100))}%"></u></i>
+          <em>还差 ${Math.max(0, need - exp)} 经验升级</em>
+        </div>
+        <div class="user-coins">🪙<b>${(State.coins || 0).toLocaleString()}</b><small>金币</small></div>
+      </div>`;
+
+      html += `<div class="user-badge-group">
+        <div class="ub-title">${badge(t, '限定称号', 'title')}</div>
+        <div class="ub-title">${badge(md, '勋章', 'medal')}</div>
+      </div>`;
+
+      /* 已拥有的称号/勋章（点击佩戴） */
+      const pickRow = (slot, kind) => {
+        const arr = ownedOf(slot);
+        if (!arr.length) return '';
+        return `<div class="user-pick"><div class="up-hd">${esc(kind)} · ${arr.length} 个（点击佩戴）</div><div class="up-list">${arr.map(i => `<button class="up-chip${fx(i)}${SHOP.equipped(State, slot) === i.id ? ' on' : ''}" data-user-eq="${i.id}"><span>${i.emoji}</span>${esc(i.name)}</button>`).join('')}</div></div>`;
+      };
+      html += pickRow('title', '限定称号');
+      html += pickRow('medal', '勋章');
+
+      html += `<div class="user-stats">
+        <div class="us"><b>${(st.answers || 0).toLocaleString()}</b><small>答题数</small></div>
+        <div class="us"><b>${(st.chars || 0).toLocaleString()}</b><small>角色数</small></div>
+        <div class="us"><b>${hrs}h ${mins}m</b><small>游玩时长</small></div>
+        <div class="us"><b>${(st.activeDays || 0)}</b><small>活跃天数</small></div>
+        <div class="us"><b>${achvDone}</b><small>成就</small></div>
+        <div class="us"><b>${codexPct}%</b><small>图鉴 ${codexDone}/${codexTotal}</small></div>
+      </div>`;
+
+      const footer = `<button class="btn btn-primary" data-user-go="codex">📖 图鉴</button>
+        <button class="btn" data-user-go="achv">🏆 成就</button>
+        <button class="btn" data-user-go="shop">🛍️ 商城</button>
+        <button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`;
+
+      UI.showModal('👤 用户', `<div class="user-panel">${html}</div>`, footer);
+      document.querySelectorAll('[data-user-go]').forEach(b => {
+        b.onclick = () => { const k = b.getAttribute('data-user-go'); UI.closeModal(); if (k === 'codex') App.openCodex(); else if (k === 'achv') App.openAchv(); else if (k === 'shop') App.openShop(); };
+      });
+      document.querySelectorAll('[data-user-eq]').forEach(b => {
+        b.onclick = () => { const id = b.getAttribute('data-user-eq'); const r = SHOP.equip(State, id, ITEMS); if (r.ok) { saveNow(); App.applyEquip(); App.updateCoins(); toast('已佩戴 ✓', 'ok'); App.openUser(); } else toast('还差 ' + (r.reason === 'not-owned' ? '一点金币' : '…'), 'warn'); };
+      });
+    },
+    /* V5.0 · 图鉴（收藏集） */
+    openCodex() {
+      let c = null;
+      try { c = COD.build(State, { QUESTIONS: window.QUESTIONS || [], playTime: STATS.getPlayTime(State) }); } catch (e) { toast('图鉴加载失败', 'warn'); return; }
+      if (!c || !c.groups || !c.groups.length) { toast('图鉴是空的', 'warn'); return; }
+      const store = codexUI;
+      const sec = (g, i) => {
+        const open = !store.collapsed[g.id];
+        return `<div class="codex-sec${open ? ' codex-open' : ''}" data-codex-sec="${i}">
+          <span class="codex-caret">${open ? '▾' : '▸'}</span>
+          <span class="codex-ic">${g.icon}</span>
+          <span class="codex-tx"><b>${esc(g.name)}</b><small>${g.done}/${g.count} 已收集</small></span>
+          <span class="codex-pct">${g.count ? Math.round(g.done / g.count * 100) : 0}%</span>
+        </div>`;
+      };
+      let html = `<div class="codex-sum">已收集 <b>${c.done}</b> / ${c.total} · <b>${c.pct}%</b><i class="codex-sumbar"><u style="width:${c.pct}%"></u></i></div>`;
+      c.groups.forEach((g, i) => {
+        html += sec(g, i);
+        html += `<div class="codex-body${store.collapsed[g.id] ? ' codex-collapsed' : ''}" data-codex-body="${i}">${g.items.map(x => `<div class="codex-row${x.done ? ' codex-done' : ''}"><span class="codex-row-ic">${x.done ? x.icon : '🔒'}</span><span class="codex-row-tx"><b>${esc(x.name)}</b><small>${esc(x.tip)}</small></span>${x.done ? '<span class="codex-tick">✓</span>' : ''}</div>`).join('')}</div>`;
+      });
+      UI.showModal('📖 图鉴 · ' + c.done + '/' + c.total, `<div class="qa-list">${html}</div>`,
+        `<button class="btn btn-primary" onclick="UI.closeModal()">关闭</button>`);
+      document.querySelectorAll('[data-codex-sec]').forEach(el => {
+        el.onclick = () => {
+          const i = el.getAttribute('data-codex-sec');
+          const key = (c.groups[i] && c.groups[i].id) || ('g' + i);
+          store.collapsed[key] = !store.collapsed[key];
+          el.classList.toggle('codex-open', !store.collapsed[key]);
+          el.querySelector('.codex-caret').textContent = store.collapsed[key] ? '▸' : '▾';
+          const b = document.querySelector('[data-codex-body="' + i + '"]');
+          if (b) b.classList.toggle('codex-collapsed', !!store.collapsed[key]);
+        };
+      });
+    },
     /* V5.0 · 每日/每周/赛季任务 */
     openTasks() {
       try { TASK.rollover(State); } catch (e) { /* 忽略 */ }
-      const p = TASK.progress(State, STATS.getPlayTime(State));
+      const p = TASK.taskProgress(State, STATS.getPlayTime(State));
       const isC = k => taskUI.collapsed[k] ? ' task-collapsed' : '';
       const caret = k => taskUI.collapsed[k] ? '▸' : '▾';
       const bar = (got, target) => `<i class="achv-bar"><u style="width:${Math.min(100, Math.round(got / target * 100))}%"></u></i>`;
@@ -6549,7 +6890,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
         /* 贴纸悬浮装饰 */
         const stickerEl = $('#equip-sticker');
         if (stickerEl) {
-          if (st) { const s = STICKERS.get(st.meta.sticker); stickerEl.innerHTML = s ? s.svg : st.emoji; stickerEl.style.display = 'flex'; }
+          if (st) { const s = STICKERS.stickerGet(st.meta.sticker); stickerEl.innerHTML = s ? s.svg : st.emoji; stickerEl.style.display = 'flex'; }
           else stickerEl.style.display = 'none';
         }
         /* 背景音乐（bgm 物品 → 曲目；默认静音不强制关用户已开的音乐） */
@@ -6590,7 +6931,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
         const slot = SHOP.slotOf(it);
         const isEq = slot && SHOP.equipped(State, slot) === it.id;
         let img = it.emoji;
-        if (it.cat === 'sticker') { const s = STICKERS.get(it.meta.sticker); if (s) img = s.svg; }
+        if (it.cat === 'sticker') { const s = STICKERS.stickerGet(it.meta.sticker); if (s) img = s.svg; }
         const badge = owned && !consumable ? `<em class="shop-owned">已拥有</em>` : (cnt > 0 ? `<em class="shop-owned">×${cnt}</em>` : '');
         let btns = '';
         if (canBuy) btns += (inCart ? `<button class="shop-btn carted" data-cart-remove="${it.id}">🛒 已在车</button>` : `<button class="shop-btn" data-cart="${it.id}">+ 购物车</button>`);
@@ -6667,7 +7008,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
         const it = ITEMS.byId(id); if (!it) return '';
         const cnt = inv[id].count;
         let img = it.emoji;
-        if (it.cat === 'sticker') { const s = STICKERS.get(it.meta.sticker); if (s) img = s.svg; }
+        if (it.cat === 'sticker') { const s = STICKERS.stickerGet(it.meta.sticker); if (s) img = s.svg; }
         const slot = SHOP.slotOf(it);
         const isEquipped = slot && SHOP.equipped(State, slot) === id;
         let btn = '';
@@ -7749,6 +8090,7 @@ window.QUESTION_EXT = {"1":{"descs":{"苏晚星":"「晚星」是夜色里最亮
     const bs = $('#btn-settings'); if (bs) bs.onclick = () => App.openSettings();
     // 金币钱包 → 打开商城
     const bw = $('#btn-wallet'); if (bw) bw.onclick = () => App.openShop();
+    const bu = $('#btn-user'); if (bu) bu.onclick = () => App.openUser();
     // 迁移默认装备 + 应用已装备外观（等级/称号/主题/贴图…）
     try { SHOP.grantDefaultEquip(State); } catch (e) { /* 忽略 */ }
     if (typeof App.applyEquip === 'function') App.applyEquip();
